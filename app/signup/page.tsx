@@ -102,12 +102,7 @@ const SignUpContent = () => {
             <div className="pt-6">
               <button
                 type="submit"
-                className="w-full bg-foreground text-background py-4 uppercase tracking-[0.12em] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay"
-                style={{
-                  fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif",
-                  fontWeight: 400,
-                  fontSize: '11px',
-                }}
+                className="font-helvetica font-normal text-[11px] w-full bg-foreground text-background py-4 uppercase tracking-[0.12em] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay"
               >
                 Enter
               </button>

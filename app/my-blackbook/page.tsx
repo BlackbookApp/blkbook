@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { routes } from '@/lib/routes';
+import { demoProfile } from '@/lib/demo-data/profiles';
 import { Pencil, ExternalLink, Eye, Mail, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -21,16 +23,7 @@ const MyBlackbook = () => {
   const router = useRouter();
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
-  // Demo profile data
-  const profile = {
-    name: 'Julia Reyes',
-    title: 'Creative Director & Brand Strategist',
-    location: 'Brooklyn, NY',
-    handle: 'julia',
-    portfolioImages: [portfolio1, portfolio2, portfolio3],
-    lastViewed: '2 hours ago',
-    viewsThisWeek: 47,
-  };
+  const profile = { ...demoProfile, portfolioImages: [portfolio1, portfolio2, portfolio3] };
 
   const handleShareLink = async () => {
     // Generate unique referral link (mock for now)
@@ -80,18 +73,13 @@ const MyBlackbook = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1
-            className="text-[19px] font-light tracking-[0.01em] uppercase mb-1"
-            style={{ color: '#0E0E0E', fontFamily: "'GT Super Display', serif" }}
-          >
+          <h1 className="font-display font-light text-[19px] tracking-[0.01em] uppercase text-bb-dark mb-1">
             Your Blackbook Profile
           </h1>
           <p className="blackbook-label">
-            <span style={{ color: '#0E0E0E' }}>Live</span>
-            <span className="mx-2" style={{ color: '#9A9691' }}>
-              |
-            </span>
-            <span style={{ color: '#9A9691' }}>Your first impression starts here</span>
+            <span className="text-bb-dark">Live</span>
+            <span className="mx-2 text-bb-muted">|</span>
+            <span className="text-bb-muted">Your first impression starts here</span>
           </p>
         </motion.div>
 
@@ -106,7 +94,7 @@ const MyBlackbook = () => {
           {/* Large Portrait */}
           <div
             className="aspect-[4/5] relative cursor-pointer group"
-            onClick={() => router.push('/creative-director')}
+            onClick={() => router.push(routes.creativeDirector)}
           >
             <Image src={juliaPortrait} alt={profile.name} fill className="object-cover" />
 
@@ -122,7 +110,7 @@ const MyBlackbook = () => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                router.push('/edit-profile');
+                router.push(routes.editProfile);
               }}
               className="absolute top-4 right-4 p-3 bg-background/90 backdrop-blur-sm hover:bg-background transition-colors border border-border"
               aria-label="Edit profile"
@@ -135,18 +123,11 @@ const MyBlackbook = () => {
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h2
-                  className="text-[15px] uppercase mb-0.5"
-                  style={{ fontFamily: "'GT Super Display', serif", fontWeight: 300 }}
-                >
+                <h2 className="font-display font-light text-[15px] uppercase mb-0.5">
                   {profile.name}
                 </h2>
-                <p className="blackbook-label" style={{ color: '#9A9691' }}>
-                  {profile.title}
-                </p>
-                <p className="blackbook-label mt-1" style={{ color: '#9A9691' }}>
-                  {profile.location}
-                </p>
+                <p className="blackbook-label text-bb-muted">{profile.title}</p>
+                <p className="blackbook-label text-bb-muted mt-1">{profile.location}</p>
               </div>
             </div>
 
@@ -163,7 +144,7 @@ const MyBlackbook = () => {
             </div>
 
             {/* Profile Link */}
-            <div className="flex items-center gap-2 blackbook-label" style={{ color: '#9A9691' }}>
+            <div className="flex items-center gap-2 blackbook-label text-bb-muted">
               <ExternalLink className="w-3 h-3" />
               <span>blkbook.me/{profile.handle}</span>
             </div>
@@ -177,19 +158,15 @@ const MyBlackbook = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <p className="blackbook-label" style={{ color: '#9A9691' }}>
-            Last viewed {profile.lastViewed}
-          </p>
-          <p className="blackbook-label" style={{ color: '#9A9691' }}>
-            <span style={{ color: '#0E0E0E', fontWeight: 700 }}>{profile.viewsThisWeek}</span> views
-            this week
+          <p className="blackbook-label text-bb-muted">Last viewed {profile.lastViewed}</p>
+          <p className="blackbook-label text-bb-muted">
+            <span className="text-bb-dark font-bold">{profile.viewsThisWeek}</span> views this week
           </p>
         </motion.div>
 
         {/* Bottom Tagline */}
         <motion.p
-          className="text-center blackbook-label mt-12"
-          style={{ color: '#9A9691' }}
+          className="text-center blackbook-label text-bb-muted mt-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
@@ -210,14 +187,12 @@ const MyBlackbook = () => {
           </DialogHeader>
 
           <div className="py-4 space-y-4">
-            <p className="blackbook-label text-center leading-relaxed" style={{ color: '#9A9691' }}>
+            <p className="blackbook-label text-bb-muted text-center leading-relaxed">
               Share a golden ticket invite. Your guest will skip the application queue and join
               Blackbook directly.
             </p>
 
-            <p className="blackbook-label text-center" style={{ color: '#9A9691' }}>
-              Link expires in 7 days
-            </p>
+            <p className="blackbook-label text-bb-muted text-center">Link expires in 7 days</p>
 
             <div className="space-y-3 pt-2">
               {/* Share Link Button */}

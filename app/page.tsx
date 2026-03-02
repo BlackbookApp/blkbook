@@ -4,24 +4,11 @@ import { Button } from '@/components/ui/button';
 import profilePhoto from '@/assets/profile-photo.jpeg';
 import Logo from '@/components/Logo';
 import { useRouter } from 'next/navigation';
+import { routes } from '@/lib/routes';
+import { publicProfile as profile } from '@/lib/demo-data/profiles';
 
 const PublicProfile = () => {
   const router = useRouter();
-
-  // Demo profile data
-  const profile = {
-    name: 'Alexandra Chen',
-    role: 'Creative Director',
-    bio: 'Building brands that matter. Previously at Apple, now leading design at an early-stage startup in Brooklyn.',
-    portfolioImages: [
-      'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1561998338-13ad7883b20f?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1561998338-13ad7883b20f?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1618556450994-a6a128ef0d9d?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400&h=400&fit=crop',
-    ],
-  };
 
   return (
     <div className="blackbook-container bg-background">
@@ -55,7 +42,11 @@ const PublicProfile = () => {
         <div className="flex-1" />
 
         {/* CTA */}
-        <Button variant="blackbook" size="full" onClick={() => router.push('/save-confirmation')}>
+        <Button
+          variant="blackbook"
+          size="full"
+          onClick={() => router.push(routes.saveConfirmation)}
+        >
           Save to my Blackbook
         </Button>
       </div>

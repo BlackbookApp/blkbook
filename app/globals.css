@@ -97,6 +97,20 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
+  /* Blackbook typefaces */
+  --font-display: 'GT Super Display', 'Canela Deck', serif;
+  --font-helvetica: 'Helvetica Neue', Helvetica, sans-serif;
+  --font-editorial: 'PP Editorial Old', serif;
+  --font-playfair: 'Playfair Display', serif;
+  --font-garamond: 'EB Garamond', serif;
+  --font-engravers: 'Engravers Gothic', 'Helvetica Neue', sans-serif;
+
+  /* Blackbook brand colours */
+  --color-bb-dark: #0e0e0e;
+  --color-bb-muted: #9a9691;
+  --color-bb-nav: #1a1a1a;
+  --color-bb-cream: #f5f4f0;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 4px);
@@ -129,7 +143,7 @@
 
   .blackbook-title {
     @apply text-2xl font-light tracking-tight text-foreground;
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: var(--font-display);
   }
 
   .blackbook-subtitle {
@@ -142,6 +156,37 @@
 
   .blackbook-grid {
     @apply grid grid-cols-3 gap-1;
+  }
+
+  /* Small label text used across pages */
+  .blackbook-label {
+    @apply text-[11px] tracking-[0.04em];
+  }
+
+  /* Common CTA button: full-width, uppercase, Helvetica */
+  .bb-btn-primary {
+    @apply w-full h-[52px] bg-foreground text-background uppercase tracking-[0.12em] text-[11px] font-normal hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden;
+    font-family: var(--font-helvetica);
+  }
+
+  .bb-btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* Frosted-glass search dropdown */
+  .bb-dropdown-panel {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(245, 244, 240, 0.85);
+  }
+
+  /* Frosted-glass drawer/sheet */
+  .bb-drawer-panel {
+    background: rgba(255, 255, 255, 0.92);
   }
 
   /* Subtle film-grain overlay for buttons/cards */

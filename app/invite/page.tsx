@@ -44,8 +44,7 @@ const InvitationContent = () => {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xl tracking-tight text-foreground mb-4 leading-tight uppercase"
-            style={{ fontFamily: "'GT Super Display', 'Canela Deck', serif", fontWeight: 300 }}
+            className="font-display font-light text-xl tracking-tight text-foreground mb-4 leading-tight uppercase"
           >
             Welcome to Blackbook.
           </motion.h1>
@@ -68,12 +67,7 @@ const InvitationContent = () => {
           >
             <button
               onClick={handleAccept}
-              className="w-full max-w-[280px] mx-auto block bg-foreground text-background py-4 uppercase tracking-[0.12em] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay"
-              style={{
-                fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif",
-                fontWeight: 400,
-                fontSize: '11px',
-              }}
+              className="font-helvetica font-normal text-[11px] w-full max-w-[280px] mx-auto block bg-foreground text-background py-4 uppercase tracking-[0.12em] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay"
             >
               Accept Invitation
             </button>

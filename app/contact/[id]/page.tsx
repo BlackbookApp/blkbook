@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter, useParams } from 'next/navigation';
+import { routes } from '@/lib/routes';
 import { Button } from '@/components/ui/button';
 import { Plus, Instagram } from 'lucide-react';
 import Image from 'next/image';
@@ -20,6 +21,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
+import { getContactDetail } from '@/lib/demo-data/contacts';
 
 const ContactDetail = () => {
   const router = useRouter();
@@ -30,71 +32,7 @@ const ContactDetail = () => {
   const [showInviteDialog, setShowInviteDialog] = useState(false);
   const [inviteSent, setInviteSent] = useState(false);
 
-  // Demo contact data — pick contact based on ID
-  const contactsMap: Record<string, typeof defaultContact> = {
-    '1': {
-      id: '1',
-      name: 'James Chen',
-      role: 'Photographer',
-      email: 'james@studio.com',
-      phone: '+1 (555) 987-6543',
-      instagram: '@jameschen',
-      instagramFollowers: '12.4K',
-      hasPhoto: true,
-      addedDate: 'Jan 10',
-      addedLocation: 'New York',
-      notes: [
-        { id: '1', text: 'Met at the gallery opening in SoHo', date: 'Jan 15' },
-        { id: '2', text: 'Interested in collaboration on editorial project', date: 'Jan 18' },
-      ],
-    },
-  };
-
-  const defaultContact = {
-    id,
-    name: 'James Chen',
-    role: 'Photographer',
-    email: 'james@studio.com',
-    phone: '+1 (555) 987-6543',
-    instagram: '@jameschen',
-    instagramFollowers: '12.4K',
-    hasPhoto: true as boolean,
-    addedDate: 'Jan 10',
-    addedLocation: 'New York',
-    notes: [
-      { id: '1', text: 'Met at the gallery opening in SoHo', date: 'Jan 15' },
-      { id: '2', text: 'Interested in collaboration on editorial project', date: 'Jan 18' },
-    ],
-  };
-
-  const getContact = () => {
-    if (contactsMap[Number(id)]) return contactsMap[Number(id)];
-    // For demo, derive name from vault list or use default
-    const names: Record<string, { name: string; role: string; city: string }> = {
-      '2': { name: 'Sarah Miller', role: 'Brand Strategist', city: 'London' },
-      '3': { name: 'Marcus Wright', role: 'Industrial Designer', city: 'Berlin' },
-      '4': { name: 'Elena Vance', role: 'Art Director', city: 'Paris' },
-      '5': { name: 'Alexander Beaumont', role: 'Creative Director', city: 'Los Angeles' },
-      '6': { name: 'Charlotte Kim', role: 'Fashion Editor', city: 'Seoul' },
-      '7': { name: 'David Okonkwo', role: 'Architect', city: 'Lagos' },
-      '8': { name: 'Alessandro Tocchi', role: 'Event Planner', city: 'Milan' },
-      '9': { name: 'Camille Renard', role: 'Gallery Director', city: 'Paris' },
-    };
-    const info = names[id || ''];
-    if (info) {
-      return {
-        ...defaultContact,
-        id,
-        name: info.name,
-        role: info.role,
-        addedLocation: info.city,
-        hasPhoto: false,
-      };
-    }
-    return defaultContact;
-  };
-
-  const [contact, setContact] = useState(getContact());
+  const [contact, setContact] = useState(() => getContactDetail(id));
 
   const [editForm, setEditForm] = useState({
     name: contact.name,
@@ -106,7 +44,17 @@ const ContactDetail = () => {
 
   const handleAddNote = () => {
     if (newNote.trim()) {
-      // Would save note here
+      setContact((prev) => ({
+        ...prev,
+        notes: [
+          ...prev.notes,
+          {
+            id: crypto.randomUUID(),
+            text: newNote.trim(),
+            date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+          },
+        ],
+      }));
       setNewNote('');
       setShowNoteInput(false);
     }
@@ -129,16 +77,14 @@ const ContactDetail = () => {
         {/* Header */}
         <div className="flex items-center justify-between mt-4 mb-6">
           <button
-            onClick={() => router.push('/vault')}
-            className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground/50 hover:text-foreground transition-colors"
-            style={{ fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif" }}
+            onClick={() => router.push(routes.vault)}
+            className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-muted-foreground/50 hover:text-foreground transition-colors"
           >
             Back
           </button>
           <button
             onClick={() => setShowEditDialog(true)}
-            className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground/50 hover:text-foreground transition-colors"
-            style={{ fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif" }}
+            className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-muted-foreground/50 hover:text-foreground transition-colors"
           >
             Edit
           </button>
@@ -151,14 +97,7 @@ const ContactDetail = () => {
               <Image src={contactPhoto} alt={contact.name} fill className="object-cover" />
             </div>
             <div className="text-center mb-4">
-              <h1
-                className="blackbook-title mb-1"
-                style={{
-                  fontFamily: "'GT Super Display', 'Canela Deck', serif",
-                  fontWeight: 300,
-                  letterSpacing: '0.01em',
-                }}
-              >
+              <h1 className="font-display font-light blackbook-title tracking-[0.01em] mb-1">
                 {contact.name}
               </h1>
               <p className="blackbook-subtitle mb-1">{contact.role}</p>
@@ -177,30 +116,17 @@ const ContactDetail = () => {
           </>
         ) : (
           <div
-            className="w-full -mx-6 px-6 py-8 mb-6 relative overflow-hidden grain-overlay"
-            style={{ width: 'calc(100% + 3rem)', backgroundColor: '#1A1A1A' }}
+            className="w-full -mx-6 px-6 py-8 mb-6 relative overflow-hidden grain-overlay bg-bb-nav"
+            style={{ width: 'calc(100% + 3rem)' }}
           >
-            <h1
-              className="text-2xl font-light tracking-tight uppercase text-background mb-0.5"
-              style={{
-                fontFamily: "'GT Super Display', 'Canela Deck', serif",
-                fontWeight: 300,
-                letterSpacing: '0.01em',
-              }}
-            >
+            <h1 className="font-display font-light text-2xl tracking-[0.01em] uppercase text-background mb-0.5">
               {contact.name}
             </h1>
-            <p
-              className="text-[12px] italic normal-case tracking-[0.01em] text-background/60 mb-0"
-              style={{ fontFamily: "'PP Editorial Old', serif", fontWeight: 200 }}
-            >
+            <p className="font-editorial font-extralight text-[12px] italic normal-case tracking-[0.01em] text-background/60 mb-0">
               {contact.role}
             </p>
             {contact.addedLocation && (
-              <p
-                className="text-[11px] tracking-[0.02em] uppercase text-background/35 mt-0.5"
-                style={{ fontFamily: "'GT Super Display', 'Canela Deck', serif", fontWeight: 300 }}
-              >
+              <p className="font-display font-light text-[11px] tracking-[0.02em] uppercase text-background/35 mt-0.5">
                 {contact.addedLocation}
               </p>
             )}
@@ -241,14 +167,7 @@ const ContactDetail = () => {
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
                 placeholder="Add a note..."
-                className="blackbook-input resize-none mb-2"
-                style={{
-                  fontFamily: "'PP Editorial Old', serif",
-                  fontStyle: 'italic',
-                  textTransform: 'none',
-                  fontSize: '13px',
-                  letterSpacing: '0.01em',
-                }}
+                className="font-editorial italic normal-case text-[13px] tracking-[0.01em] blackbook-input resize-none mb-2"
                 rows={3}
                 autoFocus
               />
@@ -386,18 +305,18 @@ const ContactDetail = () => {
                   setShowInviteDialog(false);
                   setInviteSent(false);
                 }}
-                className="flex-1 bg-primary text-primary-foreground py-3 uppercase font-normal tracking-[0.12em] text-[11px] [font-family:'Helvetica_Neue','Helvetica',sans-serif]"
+                className="flex-1 bg-primary text-primary-foreground py-3 uppercase font-normal tracking-[0.12em] text-[11px] font-helvetica"
               >
                 Done
               </AlertDialogAction>
             ) : (
               <>
-                <AlertDialogCancel className="flex-1 border-border text-foreground py-3 uppercase font-normal tracking-[0.12em] text-[11px] [font-family:'Helvetica_Neue','Helvetica',sans-serif] mt-0">
+                <AlertDialogCancel className="flex-1 border-border text-foreground py-3 uppercase font-normal tracking-[0.12em] text-[11px] font-helvetica mt-0">
                   Cancel
                 </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleSendInvite}
-                  className="flex-1 bg-primary text-primary-foreground py-3 uppercase font-normal tracking-[0.12em] text-[11px] [font-family:'Helvetica_Neue','Helvetica',sans-serif]"
+                  className="flex-1 bg-primary text-primary-foreground py-3 uppercase font-normal tracking-[0.12em] text-[11px] font-helvetica"
                 >
                   Send Invite
                 </AlertDialogAction>

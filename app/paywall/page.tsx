@@ -57,14 +57,7 @@ const Paywall = () => {
                   Limited to the first 100
                 </p>
               </div>
-              <span
-                className="text-base text-foreground uppercase"
-                style={{
-                  fontFamily: "'EB Garamond', serif",
-                  fontWeight: 400,
-                  letterSpacing: '0.01em',
-                }}
-              >
+              <span className="font-garamond font-normal text-base text-foreground uppercase tracking-[0.01em]">
                 €199
               </span>
             </div>
