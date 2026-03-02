@@ -2,12 +2,13 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import AddDrawer from '@/components/AddDrawer';
+import { routes } from '@/lib/routes';
 
 const navItems = [
-  { key: 'vault', label: 'Vault', path: '/vault' },
+  { key: 'vault', label: 'Vault', path: routes.vault },
   { key: 'add', label: '+Add', path: null },
-  { key: 'share', label: 'Share', path: '/share' },
-  { key: 'profile', label: 'Profile', path: '/my-blackbook' },
+  { key: 'share', label: 'Share', path: routes.share },
+  { key: 'profile', label: 'Profile', path: routes.myBlackbook },
 ];
 
 const BottomNavAlt = () => {
@@ -16,10 +17,10 @@ const BottomNavAlt = () => {
 
   const getActiveKey = () => {
     const path = pathname;
-    if (path === '/vault' || path.startsWith('/contact/')) return 'vault';
+    if (path === routes.vault || path.startsWith('/contact/')) return 'vault';
     if (path === '/quick-add' || path === '/scan-qr' || path === '/scan-card') return 'add';
-    if (path === '/share') return 'share';
-    if (path === '/my-blackbook' || path === '/profile') return 'profile';
+    if (path === routes.share) return 'share';
+    if (path === routes.myBlackbook || path === '/profile') return 'profile';
     return '';
   };
 
@@ -29,8 +30,7 @@ const BottomNavAlt = () => {
     <nav className="fixed bottom-0 left-0 right-0 z-40">
       <div className="max-w-md mx-auto">
         <div
-          className="flex items-stretch relative overflow-hidden grain-overlay"
-          style={{ backgroundColor: '#1A1A1A' }}
+          className="flex items-stretch relative overflow-hidden grain-overlay bg-bb-nav"
         >
           {navItems.map((item) => {
             const isActive = activeKey === item.key;
@@ -39,14 +39,7 @@ const BottomNavAlt = () => {
               return (
                 <AddDrawer key={item.key}>
                   <button className="flex-1 py-4 transition-colors">
-                    <span
-                      className="text-[14px] tracking-[0.02em] uppercase"
-                      style={{
-                        fontFamily: "'GT Super Display', 'Canela Deck', serif",
-                        fontWeight: 300,
-                        color: 'rgba(255,255,255,0.4)',
-                      }}
-                    >
+                    <span className="font-display font-light text-[14px] tracking-[0.02em] uppercase text-white/40">
                       {item.label}
                     </span>
                   </button>
@@ -61,12 +54,7 @@ const BottomNavAlt = () => {
                 className="flex-1 py-4 transition-all"
               >
                 <span
-                  className="text-[14px] tracking-[0.02em] uppercase"
-                  style={{
-                    fontFamily: "'GT Super Display', 'Canela Deck', serif",
-                    fontWeight: 300,
-                    color: isActive ? '#F5F4F0' : 'rgba(255,255,255,0.4)',
-                  }}
+                  className={`font-display font-light text-[14px] tracking-[0.02em] uppercase ${isActive ? 'text-bb-cream' : 'text-white/40'}`}
                 >
                   {item.label}
                 </span>

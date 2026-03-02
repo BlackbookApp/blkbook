@@ -29,8 +29,7 @@ const BottomNav = () => {
     <nav className="fixed bottom-0 left-0 right-0 z-40">
       <div className="max-w-md mx-auto">
         <div
-          className="flex items-stretch border-t border-border"
-          style={{ backgroundColor: '#F5F4F0' }}
+          className="flex items-stretch border-t border-border bg-bb-cream"
         >
           {navItems.map((item) => {
             const isActive = activeKey === item.key;
@@ -40,8 +39,7 @@ const BottomNav = () => {
                 <AddDrawer key={item.key}>
                   <button className="flex-1 py-4 transition-colors border-r border-border last:border-r-0">
                     <span
-                      className="text-[13px] tracking-[0.01em] uppercase"
-                      style={{ color: '#9A9691', fontWeight: 500 }}
+                      className="text-[13px] tracking-[0.01em] uppercase text-bb-muted font-medium"
                     >
                       {item.label}
                     </span>
@@ -59,11 +57,7 @@ const BottomNav = () => {
                 }`}
               >
                 <span
-                  className="text-[13px] tracking-[0.01em] uppercase"
-                  style={{
-                    color: isActive ? '#0E0E0E' : '#9A9691',
-                    fontWeight: 500,
-                  }}
+                  className={`text-[13px] tracking-[0.01em] uppercase font-medium ${isActive ? 'text-bb-dark' : 'text-bb-muted'}`}
                 >
                   {item.label}
                 </span>

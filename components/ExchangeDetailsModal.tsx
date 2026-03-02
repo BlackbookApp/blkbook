@@ -75,8 +75,8 @@ const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModal
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.5 }}
-                  className="text-[15px] tracking-[0.01em] uppercase"
-                  style={{ color: '#F5F4F0', fontFamily: font, fontWeight: 400 }}
+                  className="text-bb-cream font-normal text-[15px] tracking-[0.01em] uppercase"
+                  style={{ fontFamily: font }}
                 >
                   Details sent
                 </motion.h2>
@@ -84,8 +84,8 @@ const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModal
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7, duration: 0.5 }}
-                  className="text-[13px] tracking-[0.01em] mt-1 italic"
-                  style={{ color: 'rgba(255,255,255,0.45)', fontFamily: font, fontWeight: 400 }}
+                  className="text-white/45 font-normal text-[13px] tracking-[0.01em] mt-1 italic"
+                  style={{ fontFamily: font }}
                 >
                   {firstName} will remember you
                 </motion.p>
@@ -106,11 +106,7 @@ const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModal
               <button
                 type="button"
                 onClick={handleCancel}
-                className="text-[11px] uppercase tracking-[0.12em] hover:text-foreground transition-colors"
-                style={{
-                  fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif",
-                  color: '#9A9691',
-                }}
+                className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-bb-muted hover:text-foreground transition-colors"
               >
                 Cancel
               </button>
@@ -121,8 +117,8 @@ const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModal
 
             {/* Subtitle */}
             <p
-              className="text-[10px] uppercase tracking-[0.25em] text-center mb-10"
-              style={{ fontFamily: font, color: '#9A9691' }}
+              className="text-bb-muted text-[10px] uppercase tracking-[0.25em] text-center mb-10"
+              style={{ fontFamily: font }}
             >
               Send {firstName} your details
             </p>
@@ -132,8 +128,8 @@ const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModal
               {/* Name */}
               <div className="mb-8">
                 <p
-                  className="text-[11px] uppercase mb-3 tracking-[0.2em]"
-                  style={{ fontFamily: font, color: '#9A9691', fontWeight: 500 }}
+                  className="text-bb-muted font-medium text-[11px] uppercase mb-3 tracking-[0.2em]"
+                  style={{ fontFamily: font }}
                 >
                   Your Name *
                 </p>
@@ -143,16 +139,16 @@ const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModal
                   onChange={set('name')}
                   placeholder="Full name"
                   autoFocus
-                  className="w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] tracking-[0.01em] placeholder:text-muted-foreground/25"
-                  style={{ fontFamily: font, fontWeight: 400, color: '#0E0E0E' }}
+                  className="text-bb-dark font-normal w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] tracking-[0.01em] placeholder:text-muted-foreground/25"
+                  style={{ fontFamily: font }}
                 />
               </div>
 
               {/* Email or Phone */}
               <div className="mb-8">
                 <p
-                  className="text-[11px] uppercase mb-3 tracking-[0.2em]"
-                  style={{ fontFamily: font, color: '#9A9691', fontWeight: 500 }}
+                  className="text-bb-muted font-medium text-[11px] uppercase mb-3 tracking-[0.2em]"
+                  style={{ fontFamily: font }}
                 >
                   Email or Phone *
                 </p>
@@ -161,16 +157,16 @@ const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModal
                   value={form.emailOrPhone}
                   onChange={set('emailOrPhone')}
                   placeholder="How to reach you"
-                  className="w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] italic tracking-[0.01em] placeholder:text-muted-foreground/25"
-                  style={{ fontFamily: font, fontWeight: 400, color: '#0E0E0E' }}
+                  className="text-bb-dark font-normal w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] italic tracking-[0.01em] placeholder:text-muted-foreground/25"
+                  style={{ fontFamily: font }}
                 />
               </div>
 
               {/* Note */}
               <div className="mb-10">
                 <p
-                  className="text-[11px] uppercase mb-3 tracking-[0.2em]"
-                  style={{ fontFamily: font, color: '#9A9691', fontWeight: 500 }}
+                  className="text-bb-muted font-medium text-[11px] uppercase mb-3 tracking-[0.2em]"
+                  style={{ fontFamily: font }}
                 >
                   Note
                 </p>
@@ -179,8 +175,8 @@ const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModal
                   onChange={set('note')}
                   placeholder="Anything worth remembering..."
                   rows={3}
-                  className="w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] italic leading-relaxed resize-none placeholder:text-muted-foreground/25"
-                  style={{ fontFamily: font, fontWeight: 400, color: '#0E0E0E' }}
+                  className="text-bb-dark font-normal w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] italic leading-relaxed resize-none placeholder:text-muted-foreground/25"
+                  style={{ fontFamily: font }}
                 />
               </div>
 
@@ -189,14 +185,7 @@ const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModal
                 type="button"
                 onClick={handleSend}
                 disabled={!canSend}
-                className="w-full py-5 uppercase tracking-[0.12em] text-[11px] transition-colors relative overflow-hidden grain-overlay"
-                style={{
-                  fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif",
-                  fontWeight: 400,
-                  backgroundColor: canSend ? '#0E0E0E' : 'rgba(14,14,14,0.15)',
-                  color: '#F5F4F0',
-                  cursor: canSend ? 'pointer' : 'not-allowed',
-                }}
+                className={`font-helvetica font-normal ${canSend ? 'bg-bb-dark cursor-pointer' : 'bg-bb-dark/15 cursor-not-allowed'} text-bb-cream w-full py-5 uppercase tracking-[0.12em] text-[11px] transition-colors relative overflow-hidden grain-overlay`}
               >
                 Send My Details
               </button>

@@ -76,8 +76,7 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
             onSearchChange?.(e.target.value);
           }}
           onFocus={() => setIsFocused(true)}
-          className="w-full bg-transparent outline-none pr-5 text-[11px] uppercase tracking-[0.15em]"
-          style={{ fontFamily: "'Engravers Gothic', 'Helvetica Neue', sans-serif" }}
+          className="font-engravers w-full bg-transparent outline-none pr-5 text-[11px] uppercase tracking-[0.15em]"
           placeholder=""
         />
 
@@ -90,8 +89,7 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
-                className="whitespace-nowrap text-[11px] uppercase tracking-[0.15em] text-foreground/40"
-                style={{ fontFamily: "'Engravers Gothic', 'Helvetica Neue', sans-serif" }}
+                className="font-engravers whitespace-nowrap text-[11px] uppercase tracking-[0.15em] text-foreground/40"
               >
                 {placeholders[placeholderIndex]}
               </motion.span>
@@ -113,12 +111,7 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="absolute left-0 right-0 top-full z-50 mt-1 border border-border/50 overflow-hidden"
-            style={{
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              background: 'rgba(245, 244, 240, 0.85)',
-            }}
+            className="absolute left-0 right-0 top-full z-50 mt-1 border border-border/50 overflow-hidden bb-dropdown-panel"
           >
             {/* Recent Searches */}
             <div className="px-4 pt-4 pb-2">

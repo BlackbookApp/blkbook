@@ -26,12 +26,7 @@ interface VaultAltSearchBarProps {
   onSearchChange?: (value: string) => void;
 }
 
-const searchFont: React.CSSProperties = {
-  fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif",
-  fontSize: '13px',
-  fontWeight: 300,
-  letterSpacing: '0.01em',
-};
+const searchFontClass = 'font-helvetica text-[13px] font-light tracking-[0.01em]';
 
 const VaultAltSearchBar = ({ onSearchChange }: VaultAltSearchBarProps) => {
   const [search, setSearch] = useState('');
@@ -80,12 +75,7 @@ const VaultAltSearchBar = ({ onSearchChange }: VaultAltSearchBarProps) => {
             onSearchChange?.(e.target.value);
           }}
           onFocus={() => setIsFocused(true)}
-          className="w-full bg-transparent outline-none pr-5 text-[14px]"
-          style={{
-            ...searchFont,
-            fontStyle: search ? 'normal' : 'italic',
-            color: '#0E0E0E',
-          }}
+          className={`w-full bg-transparent outline-none pr-5 text-[14px] text-bb-dark ${searchFontClass} ${search ? 'not-italic' : 'italic'}`}
           placeholder=""
         />
 
@@ -98,8 +88,7 @@ const VaultAltSearchBar = ({ onSearchChange }: VaultAltSearchBarProps) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
-                className="whitespace-nowrap"
-                style={{ ...searchFont, color: '#9A9691' }}
+                className={`whitespace-nowrap text-bb-muted ${searchFontClass}`}
               >
                 {placeholders[placeholderIndex]}
               </motion.span>
@@ -120,12 +109,7 @@ const VaultAltSearchBar = ({ onSearchChange }: VaultAltSearchBarProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="absolute left-0 right-0 top-full z-50 mt-1 border border-border/50 overflow-hidden"
-            style={{
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              background: 'rgba(245, 244, 240, 0.85)',
-            }}
+            className="absolute left-0 right-0 top-full z-50 mt-1 border border-border/50 overflow-hidden bb-dropdown-panel"
           >
             <div className="px-4 pt-4 pb-2">
               <p className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground/60 mb-2">

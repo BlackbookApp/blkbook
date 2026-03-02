@@ -53,14 +53,12 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
     <Drawer>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent
-        className="border-none rounded-none max-h-[85vh] backdrop-blur-[20px]"
-        style={{ background: 'rgba(255, 255, 255, 0.92)' }}
+        className="border-none rounded-none max-h-[85vh] backdrop-blur-[20px] bb-drawer-panel"
       >
         <div className="px-6 pt-2 pb-6">
           {/* Header */}
           <p
-            className="text-center mb-4 text-[11px] uppercase tracking-[0.12em] font-normal"
-            style={{ fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif" }}
+            className="font-helvetica text-center mb-4 text-[11px] uppercase tracking-[0.12em] font-normal"
           >
             Add Connection
           </p>
@@ -84,17 +82,12 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3
-                        className="text-[11px] uppercase tracking-[0.12em] font-normal group-hover:opacity-70 transition-opacity"
-                        style={{ fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif" }}
+                        className="font-helvetica text-[11px] uppercase tracking-[0.12em] font-normal group-hover:opacity-70 transition-opacity"
                       >
                         {option.label}
                       </h3>
                       <p
-                        className="text-[10px] font-light"
-                        style={{
-                          fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif",
-                          color: '#9A9691',
-                        }}
+                        className="font-helvetica text-[10px] font-light text-bb-muted"
                       >
                         {option.description}
                       </p>
