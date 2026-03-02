@@ -1,0 +1,211 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const font = "'EB Garamond', serif";
+
+interface ExchangeDetailsModalProps {
+  open: boolean;
+  onClose: () => void;
+  firstName: string;
+}
+
+const ExchangeDetailsModal = ({ open, onClose, firstName }: ExchangeDetailsModalProps) => {
+  const [form, setForm] = useState({
+    name: '',
+    emailOrPhone: '',
+    note: '',
+  });
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+
+  const canSend = form.name.trim().length > 0 && form.emailOrPhone.trim().length > 0;
+
+  const handleCancel = () => {
+    if (Object.values(form).some(Boolean)) {
+      if (window.confirm('Discard your details?')) {
+        setForm({ name: '', emailOrPhone: '', note: '' });
+        onClose();
+      }
+    } else {
+      onClose();
+    }
+  };
+
+  const handleSend = () => {
+    if (!canSend) return;
+    if (navigator.vibrate) navigator.vibrate(10);
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+      setForm({ name: '', emailOrPhone: '', note: '' });
+      onClose();
+    }, 2500);
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 flex flex-col bg-background"
+        >
+          {/* Success overlay */}
+          <AnimatePresence>
+            {showSuccess && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[60] flex flex-col items-center justify-center"
+                style={{ backgroundColor: '#0E0E0E' }}
+              >
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="w-16 h-px mb-8 bg-white/30"
+                  style={{ transformOrigin: 'center' }}
+                />
+                <motion.h2
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                  className="text-[15px] tracking-[0.01em] uppercase"
+                  style={{ color: '#F5F4F0', fontFamily: font, fontWeight: 400 }}
+                >
+                  Details sent
+                </motion.h2>
+                <motion.p
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7, duration: 0.5 }}
+                  className="text-[13px] tracking-[0.01em] mt-1 italic"
+                  style={{ color: 'rgba(255,255,255,0.45)', fontFamily: font, fontWeight: 400 }}
+                >
+                  {firstName} will remember you
+                </motion.p>
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 1.0, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="w-16 h-px mt-8 bg-white/30"
+                  style={{ transformOrigin: 'center' }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="flex-1 overflow-y-auto px-6">
+            {/* Header */}
+            <div className="flex items-center justify-between mt-8 mb-6">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="text-[11px] uppercase tracking-[0.12em] hover:text-foreground transition-colors"
+                style={{
+                  fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif",
+                  color: '#9A9691',
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="h-px bg-border/60 mb-10" />
+
+            {/* Subtitle */}
+            <p
+              className="text-[10px] uppercase tracking-[0.25em] text-center mb-10"
+              style={{ fontFamily: font, color: '#9A9691' }}
+            >
+              Send {firstName} your details
+            </p>
+
+            {/* Form */}
+            <div className="max-w-[400px] mx-auto">
+              {/* Name */}
+              <div className="mb-8">
+                <p
+                  className="text-[11px] uppercase mb-3 tracking-[0.2em]"
+                  style={{ fontFamily: font, color: '#9A9691', fontWeight: 500 }}
+                >
+                  Your Name *
+                </p>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={set('name')}
+                  placeholder="Full name"
+                  autoFocus
+                  className="w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] tracking-[0.01em] placeholder:text-muted-foreground/25"
+                  style={{ fontFamily: font, fontWeight: 400, color: '#0E0E0E' }}
+                />
+              </div>
+
+              {/* Email or Phone */}
+              <div className="mb-8">
+                <p
+                  className="text-[11px] uppercase mb-3 tracking-[0.2em]"
+                  style={{ fontFamily: font, color: '#9A9691', fontWeight: 500 }}
+                >
+                  Email or Phone *
+                </p>
+                <input
+                  type="text"
+                  value={form.emailOrPhone}
+                  onChange={set('emailOrPhone')}
+                  placeholder="How to reach you"
+                  className="w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] italic tracking-[0.01em] placeholder:text-muted-foreground/25"
+                  style={{ fontFamily: font, fontWeight: 400, color: '#0E0E0E' }}
+                />
+              </div>
+
+              {/* Note */}
+              <div className="mb-10">
+                <p
+                  className="text-[11px] uppercase mb-3 tracking-[0.2em]"
+                  style={{ fontFamily: font, color: '#9A9691', fontWeight: 500 }}
+                >
+                  Note
+                </p>
+                <textarea
+                  value={form.note}
+                  onChange={set('note')}
+                  placeholder="Anything worth remembering..."
+                  rows={3}
+                  className="w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] italic leading-relaxed resize-none placeholder:text-muted-foreground/25"
+                  style={{ fontFamily: font, fontWeight: 400, color: '#0E0E0E' }}
+                />
+              </div>
+
+              {/* Send button */}
+              <button
+                type="button"
+                onClick={handleSend}
+                disabled={!canSend}
+                className="w-full py-5 uppercase tracking-[0.12em] text-[11px] transition-colors relative overflow-hidden grain-overlay"
+                style={{
+                  fontFamily: "'Helvetica Neue', 'Helvetica', sans-serif",
+                  fontWeight: 400,
+                  backgroundColor: canSend ? '#0E0E0E' : 'rgba(14,14,14,0.15)',
+                  color: '#F5F4F0',
+                  cursor: canSend ? 'pointer' : 'not-allowed',
+                }}
+              >
+                Send My Details
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default ExchangeDetailsModal;

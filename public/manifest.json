@@ -6,6 +6,19 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "390x844",
+      "type": "image/png"
+    },
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
