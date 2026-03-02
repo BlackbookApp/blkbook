@@ -1,0 +1,191 @@
+'use client';
+
+import { useRef } from 'react';
+import { motion } from 'framer-motion';
+import { Plus, X, Image as ImageIcon } from 'lucide-react';
+import type { WorkData } from './types';
+
+interface StepWorkProps {
+  work: WorkData;
+  setWork: (w: WorkData) => void;
+  onFinish: () => void;
+}
+
+export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
+  const portfolioInputRef = useRef<HTMLInputElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePortfolioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    const urls = Array.from(files).map((f) => URL.createObjectURL(f));
+    setWork({ ...work, portfolioImages: [...work.portfolioImages, ...urls] });
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setWork({ ...work, logo: URL.createObjectURL(file) });
+  };
+
+  const removePortfolioImage = (idx: number) => {
+    setWork({ ...work, portfolioImages: work.portfolioImages.filter((_, i) => i !== idx) });
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 40 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -40 }}
+      transition={{ duration: 0.4 }}
+      className="flex-1 flex flex-col px-6 pt-10 pb-8 overflow-y-auto"
+    >
+      <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-6">
+        Show Your Work
+      </p>
+
+      <h1 className="text-xl tracking-tight text-foreground mb-2 uppercase">
+        Let your work speak.
+      </h1>
+      <p className="text-[11px] text-muted-foreground mb-8 leading-relaxed">
+        Add anything that gives people a sense of what you do. Nothing is mandatory.
+      </p>
+
+      {/* Portfolio Images */}
+      <div className="mb-6">
+        <input
+          ref={portfolioInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={handlePortfolioUpload}
+        />
+        <button
+          onClick={() => portfolioInputRef.current?.click()}
+          className="w-full py-6 border border-border text-center hover:bg-secondary/50 transition-colors"
+        >
+          <ImageIcon className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
+          <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+            Portfolio images
+          </span>
+        </button>
+        {work.portfolioImages.length > 0 && (
+          <div className="flex gap-2 mt-3 flex-wrap">
+            {work.portfolioImages.map((img, i) => (
+              <div key={i} className="relative w-16 h-16">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img} alt="" className="w-full h-full object-cover border border-border" />
+                <button
+                  onClick={() => removePortfolioImage(i)}
+                  className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-foreground text-background flex items-center justify-center"
+                >
+                  <X className="w-2.5 h-2.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="text-right mt-1">
+          <button className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground/50 transition-colors">
+            Skip
+          </button>
+        </div>
+      </div>
+
+      {/* Logo */}
+      <div className="mb-6">
+        <input
+          ref={logoInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleLogoUpload}
+        />
+        <button
+          onClick={() => logoInputRef.current?.click()}
+          className="w-full py-6 border border-border text-center hover:bg-secondary/50 transition-colors"
+        >
+          {work.logo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={work.logo} alt="Logo" className="h-10 mx-auto object-contain" />
+          ) : (
+            <>
+              <Plus className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
+              <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+                Logo or brand mark
+              </span>
+            </>
+          )}
+        </button>
+        <div className="text-right mt-1">
+          <button className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground/50 transition-colors">
+            Skip
+          </button>
+        </div>
+      </div>
+
+      {/* Testimonial */}
+      <div className="mb-6">
+        <div className="border border-border p-4">
+          <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-3">
+            A line from someone who knows your work
+          </p>
+          <textarea
+            value={work.testimonialQuote}
+            onChange={(e) => setWork({ ...work, testimonialQuote: e.target.value })}
+            placeholder="What they said about you..."
+            rows={2}
+            className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none mb-2"
+          />
+          <div className="flex gap-3">
+            <input
+              value={work.testimonialName}
+              onChange={(e) => setWork({ ...work, testimonialName: e.target.value })}
+              placeholder="Name"
+              className="flex-1 bg-transparent border-b border-border py-2 text-[11px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
+            />
+            <input
+              value={work.testimonialTitle}
+              onChange={(e) => setWork({ ...work, testimonialTitle: e.target.value })}
+              placeholder="Title"
+              className="flex-1 bg-transparent border-b border-border py-2 text-[11px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
+            />
+          </div>
+        </div>
+        <div className="text-right mt-1">
+          <button className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground/50 transition-colors">
+            Skip
+          </button>
+        </div>
+      </div>
+
+      {/* Brand Statement */}
+      <div className="mb-8">
+        <div className="border border-border p-4">
+          <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-3">
+            Your brand statement or values
+          </p>
+          <textarea
+            value={work.brandStatement}
+            onChange={(e) => setWork({ ...work, brandStatement: e.target.value })}
+            placeholder="What you stand for. What you build. What you believe."
+            rows={3}
+            className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none"
+          />
+        </div>
+        <div className="text-right mt-1">
+          <button className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground/50 transition-colors">
+            Skip
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-auto">
+        <button onClick={onFinish} className="bb-btn-primary">
+          Finish my profile
+        </button>
+      </div>
+    </motion.div>
+  );
+};
