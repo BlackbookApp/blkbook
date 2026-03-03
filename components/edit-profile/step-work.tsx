@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Plus, X, Image as ImageIcon } from 'lucide-react';
 import type { WorkData } from './types';
 
@@ -51,7 +52,6 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
         Add anything that gives people a sense of what you do. Nothing is mandatory.
       </p>
 
-      {/* Portfolio Images */}
       <div className="mb-6">
         <input
           ref={portfolioInputRef}
@@ -74,8 +74,14 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
           <div className="flex gap-2 mt-3 flex-wrap">
             {work.portfolioImages.map((img, i) => (
               <div key={i} className="relative w-16 h-16">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img} alt="" className="w-full h-full object-cover border border-border" />
+                <Image
+                  src={img}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover border border-border"
+                  unoptimized
+                />
                 <button
                   onClick={() => removePortfolioImage(i)}
                   className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-foreground text-background flex items-center justify-center"
@@ -93,7 +99,6 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
         </div>
       </div>
 
-      {/* Logo */}
       <div className="mb-6">
         <input
           ref={logoInputRef}
@@ -107,8 +112,14 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
           className="w-full py-6 border border-border text-center hover:bg-secondary/50 transition-colors"
         >
           {work.logo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={work.logo} alt="Logo" className="h-10 mx-auto object-contain" />
+            <Image
+              src={work.logo}
+              alt="Logo"
+              width={40}
+              height={40}
+              className="h-10 mx-auto object-contain w-auto"
+              unoptimized
+            />
           ) : (
             <>
               <Plus className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
@@ -125,7 +136,6 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
         </div>
       </div>
 
-      {/* Testimonial */}
       <div className="mb-6">
         <div className="border border-border p-4">
           <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-3">
@@ -160,7 +170,6 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
         </div>
       </div>
 
-      {/* Brand Statement */}
       <div className="mb-8">
         <div className="border border-border p-4">
           <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-3">
