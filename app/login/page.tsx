@@ -1,20 +1,18 @@
 'use client';
 
-import { Suspense, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Logo from '@/components/Logo';
-import LineInput from '@/components/LineInput';
-import { signUpAction } from '@/app/actions/auth';
+import { loginAction } from '@/app/actions/auth';
 import { routes } from '@/lib/routes';
 
-const SignUpContent = () => {
+const LoginContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const inviteCode = searchParams.get('ref') ?? '';
-
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(searchParams.get('error') ?? null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,11 +20,12 @@ const SignUpContent = () => {
     setError(null);
 
     startTransition(async () => {
-      const result = await signUpAction(formData);
+      const result = await loginAction(formData);
       if ('error' in result) {
         setError(result.error);
       } else {
-        router.push(routes.createProfile);
+        router.push(routes.myBlackbook);
+        router.refresh();
       }
     });
   };
@@ -45,9 +44,7 @@ const SignUpContent = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-center mb-10"
           >
-            <h1 className="text-xl tracking-tight text-foreground mb-3 uppercase">
-              Create your profile
-            </h1>
+            <h1 className="text-xl tracking-tight text-foreground mb-3 uppercase">Sign in</h1>
           </motion.div>
 
           <motion.form
@@ -55,69 +52,36 @@ const SignUpContent = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
             onSubmit={handleSubmit}
-            className="space-y-6 font-normal"
+            className="space-y-6"
           >
-            <input type="hidden" name="invite_code" value={inviteCode} />
-
-            <LineInput
-              type="text"
-              name="full_name"
-              placeholder="Full name"
-              required
-              autoComplete="name"
-            />
-            <LineInput
+            <input
               type="email"
               name="email"
               placeholder="Email"
+              className="w-full bg-transparent border-b border-border py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground transition-colors"
               required
               autoComplete="email"
             />
-            <LineInput
+            <input
               type="password"
               name="password"
               placeholder="Password"
+              className="w-full bg-transparent border-b border-border py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground transition-colors"
               required
-              minLength={8}
-              autoComplete="new-password"
+              autoComplete="current-password"
             />
 
             {error && <p className="text-[11px] text-red-500 leading-relaxed">{error}</p>}
 
-            <p className="text-[11px] text-muted-foreground/60 leading-relaxed mt-5">
-              Your privacy is not just a feature, it&apos;s a foundation for us. We will never sell
-              or share for any reason. Our{' '}
-              <a
-                href="/terms"
-                className="underline underline-offset-2 hover:text-foreground transition-colors"
-              >
-                Terms
-              </a>{' '}
-              and{' '}
-              <a
-                href="/privacy"
-                className="underline underline-offset-2 hover:text-foreground transition-colors"
-              >
-                Privacy Policy
-              </a>{' '}
-              are available here.
-            </p>
-
             <div className="pt-6">
               <button
                 type="submit"
-                disabled={isPending || !inviteCode}
+                disabled={isPending}
                 className="font-helvetica font-normal text-[11px] w-full bg-foreground text-background py-4 uppercase tracking-[0.12em] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay disabled:opacity-50"
               >
-                {isPending ? 'Creating account…' : 'Enter'}
+                {isPending ? 'Signing in…' : 'Enter'}
               </button>
             </div>
-
-            {!inviteCode && (
-              <p className="text-[11px] text-muted-foreground/60 text-center">
-                You need a valid invitation link to sign up.
-              </p>
-            )}
           </motion.form>
 
           <motion.div
@@ -128,10 +92,10 @@ const SignUpContent = () => {
           >
             <button
               type="button"
-              onClick={() => router.push(routes.login)}
+              onClick={() => router.push(routes.signup)}
               className="text-[10px] text-muted-foreground hover:text-foreground/60 transition-colors tracking-wide"
             >
-              Already a member? Sign in
+              Don&apos;t have an account? Get invited
             </button>
           </motion.div>
         </div>
@@ -142,10 +106,10 @@ const SignUpContent = () => {
   );
 };
 
-const SignUp = () => (
+const LoginPage = () => (
   <Suspense>
-    <SignUpContent />
+    <LoginContent />
   </Suspense>
 );
 
-export default SignUp;
+export default LoginPage;
