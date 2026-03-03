@@ -1,17 +1,15 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/lib/routes';
 import { demoProfile } from '@/lib/demo-data/profiles';
-import { Pencil, ExternalLink, Eye, Mail, Share2 } from 'lucide-react';
+import { Pencil, ExternalLink, Eye, UserPlus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Logo from '@/components/Logo';
 import BottomNav from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { toast } from '@/hooks/use-toast';
+import { InviteSheet } from '@/components/invite-sheet';
 
 // Profile data (would come from user context in real app)
 import juliaPortrait from '@/assets/julia-reyes-portrait.jpg';
@@ -21,45 +19,8 @@ import portfolio3 from '@/assets/portfolio-3.jpg';
 
 const MyBlackbook = () => {
   const router = useRouter();
-  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const profile = { ...demoProfile, portfolioImages: [portfolio1, portfolio2, portfolio3] };
-
-  const handleShareLink = async () => {
-    // Generate unique referral link (mock for now)
-    const referralLink = `https://blkbook.me/join/${profile.handle}-${Date.now().toString(36)}`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Join me on Blackbook',
-          text: "You've been invited to Blackbook — a private network for creative professionals.",
-          url: referralLink,
-        });
-        setIsInviteModalOpen(false);
-      } catch {
-        // User cancelled or share failed
-        console.log('Share cancelled');
-      }
-    } else {
-      // Fallback: copy to clipboard
-      await navigator.clipboard.writeText(referralLink);
-      toast({
-        title: 'Link copied',
-        description: 'Invite link copied to clipboard',
-      });
-      setIsInviteModalOpen(false);
-    }
-  };
-
-  const handleSendEmail = () => {
-    // Would trigger backend email in real app
-    toast({
-      title: 'Invite sent',
-      description: 'An invitation email has been sent',
-    });
-    setIsInviteModalOpen(false);
-  };
 
   return (
     <div className="blackbook-container bg-background">
@@ -164,6 +125,21 @@ const MyBlackbook = () => {
           </p>
         </motion.div>
 
+        {/* Invite CTA */}
+        <motion.div
+          className="mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <InviteSheet>
+            <Button variant="blackbook-secondary" className="w-full">
+              <UserPlus className="w-4 h-4 mr-2" />
+              Invite Someone
+            </Button>
+          </InviteSheet>
+        </motion.div>
+
         {/* Bottom Tagline */}
         <motion.p
           className="text-center blackbook-label text-bb-muted mt-12"
@@ -176,40 +152,6 @@ const MyBlackbook = () => {
       </div>
 
       <BottomNav />
-
-      {/* Invite Modal */}
-      <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
-        <DialogContent className="max-w-sm mx-auto bg-background border-border">
-          <DialogHeader>
-            <DialogTitle className="blackbook-heading text-[13px] text-center">
-              Invite to Blackbook
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="py-4 space-y-4">
-            <p className="blackbook-label text-bb-muted text-center leading-relaxed">
-              Share a golden ticket invite. Your guest will skip the application queue and join
-              Blackbook directly.
-            </p>
-
-            <p className="blackbook-label text-bb-muted text-center">Link expires in 7 days</p>
-
-            <div className="space-y-3 pt-2">
-              {/* Share Link Button */}
-              <Button variant="blackbook" onClick={handleShareLink} className="w-full">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share Link
-              </Button>
-
-              {/* Send Email Button */}
-              <Button variant="blackbook-secondary" onClick={handleSendEmail} className="w-full">
-                <Mail className="w-4 h-4 mr-2" />
-                Send Invite Email
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
