@@ -1,5 +1,12 @@
 export const routes = {
   home: '/',
+  login: '/login',
+  signup: '/signup',
+  invite: '/invite',
+  createProfile: '/create-profile',
+  profilePreview: '/profile-preview',
+  paywall: '/paywall',
+  authCallback: '/auth/callback',
   vault: '/vault',
   myBlackbook: '/my-blackbook',
   editProfile: '/edit-profile',

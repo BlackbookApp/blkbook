@@ -10,7 +10,20 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      // Local Supabase Storage
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '54321',
+        pathname: '/storage/v1/object/public/**',
+      },
+      // Production Supabase Storage
+      { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/**' },
+    ],
+    unoptimized: process.env.NODE_ENV === 'development',
+  },
 };
 
 export default withPWA(nextConfig);
