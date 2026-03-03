@@ -16,7 +16,7 @@ const PublicProfile = () => {
       <div className="blackbook-page animate-fade-in">
         <Logo />
 
-        <div className="relative w-full aspect-3/4 mb-8 border border-foreground/20">
+        <div className="relative w-full aspect-[3/4] mb-8 border border-foreground/20">
           <Image src={profilePhoto} alt={profile.name} fill className="object-cover" priority />
         </div>
 

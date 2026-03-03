@@ -84,7 +84,7 @@ const Paywall = () => {
 
             <button
               onClick={handleJoinMember}
-              className="w-full h-[54px] bg-foreground text-background uppercase tracking-[0.12em] text-[11px] font-normal [font-family:'Helvetica_Neue','Helvetica',sans-serif] shadow-[0_2px_8px_-2px_hsl(var(--foreground)/0.25)] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay"
+              className="bb-btn-primary shadow-[0_2px_8px_-2px_hsl(var(--foreground)/0.25)]"
             >
               Become a Founding Member
             </button>

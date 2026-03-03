@@ -309,7 +309,7 @@ const Walkthrough = () => {
 
             <button
               onClick={handleNext}
-              className="w-full h-[52px] bg-foreground text-background uppercase tracking-[0.12em] text-[11px] font-normal [font-family:'Helvetica_Neue','Helvetica',sans-serif] shadow-[0_2px_8px_-2px_hsl(var(--foreground)/0.25)] hover:opacity-90 active:scale-[0.99] transition-all mb-3 relative overflow-hidden grain-overlay"
+              className="bb-btn-primary shadow-[0_2px_8px_-2px_hsl(var(--foreground)/0.25)] mb-3"
             >
               {isLast ? 'Enter Blackbook' : 'Next'}
             </button>

@@ -8,7 +8,7 @@ import { Pencil, ExternalLink, Eye, Mail, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Logo from '@/components/Logo';
-import BottomNavAlt from '@/components/BottomNavAlt';
+import BottomNav from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
@@ -175,7 +175,7 @@ const MyBlackbook = () => {
         </motion.p>
       </div>
 
-      <BottomNavAlt />
+      <BottomNav />
 
       {/* Invite Modal */}
       <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>

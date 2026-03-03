@@ -1,22 +1,22 @@
 'use client';
 
 import Logo from '@/components/Logo';
-import BottomNavAlt from '@/components/BottomNavAlt';
+import BottomNav from '@/components/BottomNav';
 import VaultEmptyState from '@/components/VaultEmptyState';
-import VaultAltSearchBar from '@/components/VaultAltSearchBar';
+import VaultSearchBar from '@/components/VaultSearchBar';
 const VaultEmpty = () => {
   return (
     <div className="blackbook-container bg-background">
       <div className="blackbook-page !py-6">
         <Logo />
 
-        <VaultAltSearchBar />
+        <VaultSearchBar />
 
         {/* Empty State */}
         <VaultEmptyState />
       </div>
 
-      <BottomNavAlt />
+      <BottomNav />
     </div>
   );
 };

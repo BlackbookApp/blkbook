@@ -105,9 +105,7 @@ const ProfilePreview = () => {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="mb-6"
           >
-            <button className="w-full py-4 uppercase tracking-[0.12em] text-[11px] font-normal [font-family:'Helvetica_Neue','Helvetica',sans-serif] mb-3 bg-foreground text-background relative overflow-hidden grain-overlay hover:opacity-90 active:scale-[0.99] transition-all">
-              Save Contact
-            </button>
+            <button className="bb-btn-primary mb-3">Save Contact</button>
             <div className="grid grid-cols-3 gap-2">
               {['WhatsApp', 'Enquire', 'Website'].map((label) => (
                 <button
@@ -170,9 +168,7 @@ const ProfilePreview = () => {
                 readOnly
                 className="w-full bg-transparent px-3 py-2.5 text-xs tracking-wide border border-border text-foreground focus:outline-none"
               />
-              <button className="w-full py-4 uppercase tracking-[0.12em] text-[11px] font-normal [font-family:'Helvetica_Neue','Helvetica',sans-serif] bg-foreground text-background relative overflow-hidden grain-overlay hover:opacity-90 active:scale-[0.99] transition-all">
-                Send
-              </button>
+              <button className="bb-btn-primary">Send</button>
             </div>
           </motion.div>
         </div>
@@ -190,10 +186,7 @@ const ProfilePreview = () => {
             <p className="text-[10px] tracking-wide text-muted-foreground/60">
               This is your first impression.
             </p>
-            <button
-              onClick={() => router.push('/paywall')}
-              className="w-full py-4 uppercase tracking-[0.12em] text-[11px] font-normal [font-family:'Helvetica_Neue','Helvetica',sans-serif] bg-foreground text-background relative overflow-hidden grain-overlay hover:opacity-90 active:scale-[0.99] transition-all"
-            >
+            <button onClick={() => router.push('/paywall')} className="bb-btn-primary">
               Activate My Blackbook
             </button>
           </div>

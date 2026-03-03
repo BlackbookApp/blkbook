@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { TabType } from '@/types/blackbook';
-import BottomNavAlt from '@/components/BottomNavAlt';
+import BottomNav from '@/components/BottomNav';
 import Logo from '@/components/Logo';
-import VaultAltSearchBar from '@/components/VaultAltSearchBar';
+import VaultSearchBar from '@/components/VaultSearchBar';
 import { demoContacts, groupContactsByLetter, filterContacts } from '@/lib/demo-data/contacts';
 import { routes } from '@/lib/routes';
 const VaultAlt = () => {
@@ -25,7 +25,7 @@ const VaultAlt = () => {
           <Logo />
         </div>
 
-        <VaultAltSearchBar onSearchChange={setSearch} />
+        <VaultSearchBar onSearchChange={setSearch} />
 
         {/* Directory List */}
         <div className="flex-1 overflow-y-auto pb-28">
@@ -79,7 +79,7 @@ const VaultAlt = () => {
         </div>
       </div>
 
-      <BottomNavAlt />
+      <BottomNav />
     </div>
   );
 };

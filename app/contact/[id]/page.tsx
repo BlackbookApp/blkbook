@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Instagram } from 'lucide-react';
 import Image from 'next/image';
 import Logo from '@/components/Logo';
-import BottomNavAlt from '@/components/BottomNavAlt';
+import BottomNav from '@/components/BottomNav';
 import contactPhoto from '@/assets/contact-photo.jpg';
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -326,7 +326,7 @@ const ContactDetail = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <BottomNavAlt />
+      <BottomNav />
     </div>
   );
 };
