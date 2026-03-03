@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -24,15 +26,17 @@ const recentlyAdded = [
 
 interface VaultSearchBarProps {
   onSearchChange?: (value: string) => void;
+  /** 'helvetica' (default): italic, Helvetica Neue, light weight
+   *  'engravers': uppercase, Engravers Gothic, tight tracking */
+  variant?: 'helvetica' | 'engravers';
 }
 
-const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
+const VaultSearchBar = ({ onSearchChange, variant = 'helvetica' }: VaultSearchBarProps) => {
   const [search, setSearch] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Rotate placeholders every 4 seconds
   useEffect(() => {
     if (isFocused) return;
     const interval = setInterval(() => {
@@ -41,7 +45,6 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
     return () => clearInterval(interval);
   }, [isFocused]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -64,9 +67,18 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
     );
   };
 
+  const isEngravers = variant === 'engravers';
+
+  const inputClass = isEngravers
+    ? 'font-engravers text-[11px] uppercase tracking-[0.15em]'
+    : `font-helvetica text-[13px] font-light tracking-[0.01em] ${search ? 'not-italic' : 'italic'}`;
+
+  const placeholderClass = isEngravers
+    ? 'font-engravers text-[11px] uppercase tracking-[0.15em] text-foreground/40'
+    : 'font-helvetica text-[13px] font-light tracking-[0.01em] text-bb-muted';
+
   return (
     <div ref={containerRef} className="relative mt-3 mb-3">
-      {/* Search field with border */}
       <div className="relative border border-border bg-transparent h-9 flex items-center px-2.5">
         <input
           type="text"
@@ -76,7 +88,7 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
             onSearchChange?.(e.target.value);
           }}
           onFocus={() => setIsFocused(true)}
-          className="font-engravers w-full bg-transparent outline-none pr-5 text-[11px] uppercase tracking-[0.15em]"
+          className={`w-full bg-transparent outline-none pr-5 ${inputClass}`}
           placeholder=""
         />
 
@@ -89,7 +101,7 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
-                className="font-engravers whitespace-nowrap text-[11px] uppercase tracking-[0.15em] text-foreground/40"
+                className={`whitespace-nowrap ${placeholderClass}`}
               >
                 {placeholders[placeholderIndex]}
               </motion.span>
@@ -103,7 +115,6 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
         />
       </div>
 
-      {/* Frosted glass dropdown */}
       <AnimatePresence>
         {isFocused && !search && (
           <motion.div
@@ -113,7 +124,6 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="absolute left-0 right-0 top-full z-50 mt-1 border border-border/50 overflow-hidden bb-dropdown-panel"
           >
-            {/* Recent Searches */}
             <div className="px-4 pt-4 pb-2">
               <p className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground/60 mb-2">
                 Recent searches
@@ -137,7 +147,6 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
 
             <div className="h-px bg-border/50 mx-4" />
 
-            {/* Recently Added */}
             <div className="px-4 pt-2 pb-4">
               <p className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground/60 mb-2">
                 Recently added

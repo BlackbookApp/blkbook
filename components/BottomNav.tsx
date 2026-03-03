@@ -2,47 +2,71 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import AddDrawer from '@/components/AddDrawer';
+import { routes } from '@/lib/routes';
 
 const navItems = [
-  { key: 'vault', label: 'Vault', path: '/vault' },
+  { key: 'vault', label: 'Vault', path: routes.vault },
   { key: 'add', label: '+Add', path: null },
-  { key: 'share', label: 'Share', path: '/share' },
-  { key: 'profile', label: 'Profile', path: '/my-blackbook' },
+  { key: 'share', label: 'Share', path: routes.share },
+  { key: 'profile', label: 'Profile', path: routes.myBlackbook },
 ];
 
-const BottomNav = () => {
+interface BottomNavProps {
+  /** 'dark' (default): dark bg-bb-nav with grain, display font
+   *  'cream': light bg-bb-cream with borders, helvetica font */
+  theme?: 'dark' | 'cream';
+}
+
+const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
   const pathname = usePathname();
   const router = useRouter();
 
   const getActiveKey = () => {
-    const path = pathname;
-    if (path === '/vault' || path === '/vault-empty' || path.startsWith('/contact/'))
+    if (
+      pathname === routes.vault ||
+      pathname === '/vault-empty' ||
+      pathname.startsWith('/contact/')
+    )
       return 'vault';
-    if (path === '/share') return 'share';
-    if (path === '/my-blackbook' || path === '/profile') return 'profile';
+    if (pathname === '/quick-add' || pathname === '/scan-qr' || pathname === '/scan-card')
+      return 'add';
+    if (pathname === routes.share) return 'share';
+    if (pathname === routes.myBlackbook || pathname === '/profile') return 'profile';
     return '';
   };
 
   const activeKey = getActiveKey();
+  const isDark = theme === 'dark';
+
+  const containerClass = isDark
+    ? 'flex items-stretch relative overflow-hidden grain-overlay bg-bb-nav'
+    : 'flex items-stretch border-t border-border bg-bb-cream';
+
+  const itemClass = isDark
+    ? 'flex-1 py-4 transition-all'
+    : 'flex-1 py-4 transition-all border-r border-border last:border-r-0';
+
+  const getTextClass = (isActive: boolean) =>
+    isDark
+      ? `font-display font-light text-[14px] tracking-[0.02em] uppercase ${isActive ? 'text-bb-cream' : 'text-white/40'}`
+      : `text-[13px] tracking-[0.01em] uppercase font-medium ${isActive ? 'text-bb-dark' : 'text-bb-muted'}`;
+
+  const addTextClass = isDark
+    ? 'font-display font-light text-[14px] tracking-[0.02em] uppercase text-white/40'
+    : 'text-[13px] tracking-[0.01em] uppercase font-medium text-bb-muted';
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40">
       <div className="max-w-md mx-auto">
-        <div
-          className="flex items-stretch border-t border-border bg-bb-cream"
-        >
+        <div className={containerClass}>
           {navItems.map((item) => {
             const isActive = activeKey === item.key;
 
             if (item.key === 'add') {
               return (
                 <AddDrawer key={item.key}>
-                  <button className="flex-1 py-4 transition-colors border-r border-border last:border-r-0">
-                    <span
-                      className="text-[13px] tracking-[0.01em] uppercase text-bb-muted font-medium"
-                    >
-                      {item.label}
-                    </span>
+                  <button className={itemClass}>
+                    <span className={addTextClass}>{item.label}</span>
                   </button>
                 </AddDrawer>
               );
@@ -52,15 +76,9 @@ const BottomNav = () => {
               <button
                 key={item.key}
                 onClick={() => item.path && router.push(item.path)}
-                className={`flex-1 py-4 transition-all border-r border-border last:border-r-0 ${
-                  item.key !== navItems[navItems.length - 1].key ? '' : ''
-                }`}
+                className={itemClass}
               >
-                <span
-                  className={`text-[13px] tracking-[0.01em] uppercase font-medium ${isActive ? 'text-bb-dark' : 'text-bb-muted'}`}
-                >
-                  {item.label}
-                </span>
+                <span className={getTextClass(isActive)}>{item.label}</span>
               </button>
             );
           })}
