@@ -147,11 +147,7 @@ const PublicProfile = ({
 
         <div className="my-8" />
 
-        {portfolio.length === 0 ? (
-          <p className="text-center text-[11px] uppercase tracking-wide text-[var(--pg-muted-fg)] py-16 px-4">
-            Your portfolio and contact details will appear here once you add them.
-          </p>
-        ) : (
+        {portfolio.length > 0 && (
           <>
             {/* Gallery */}
             <div className="mb-10">
@@ -225,19 +221,25 @@ const PublicProfile = ({
                 </div>
               </div>
             )}
-
-            {/* Social links */}
-            <SocialBlock socials={buildSocials(profile.socialLinks ?? {})} />
-
-            {/* CTAs */}
-            <ContactBlock
-              methods={buildContactMethods(profile.socialLinks ?? {}, {
-                onSaveContact: () => {},
-                onExchangeDetails: () => setShowExchange(true),
-              })}
-            />
           </>
         )}
+
+        {portfolio.length === 0 && (
+          <p className="text-center text-[11px] uppercase tracking-wide text-[var(--pg-muted-fg)] py-16 px-4">
+            Your portfolio and contact details will appear here once you add them.
+          </p>
+        )}
+
+        {/* Social links */}
+        <SocialBlock socials={buildSocials(profile.socialLinks ?? {})} />
+
+        {/* CTAs */}
+        <ContactBlock
+          methods={buildContactMethods(profile.socialLinks ?? {}, {
+            onSaveContact: () => {},
+            onExchangeDetails: () => setShowExchange(true),
+          })}
+        />
 
         {/* Footer */}
         <motion.div
