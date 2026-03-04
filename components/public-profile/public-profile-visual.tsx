@@ -113,7 +113,7 @@ interface PhotographerProfileProps {
   profile: ProfileData;
   portfolio: PortfolioItem[];
   testimonials?: Testimonial[];
-  profileStyle: 'visual' | 'editoral';
+  profileStyle: 'visual' | 'editorial';
 }
 
 const PublicProfile = ({

@@ -69,17 +69,65 @@ export async function getMyProfile(): Promise<Profile | null> {
   } as Profile;
 }
 
+async function generateUsername(fullName: string): Promise<string> {
+  const admin = createAdminClient();
+  const base = fullName
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+
+  let candidate = base;
+  let suffix = 2;
+  while (true) {
+    const { data } = await admin
+      .from('profiles')
+      .select('id')
+      .eq('username', candidate)
+      .maybeSingle();
+    if (!data) return candidate;
+    candidate = `${base}-${suffix++}`;
+  }
+}
+
 export async function createProfile(
   userId: string,
   fullName: string | null,
   invitedBy: string | null
 ): Promise<void> {
   const admin = createAdminClient();
+  const username = fullName ? await generateUsername(fullName) : null;
   await admin.from('profiles').insert({
     id: userId,
     full_name: fullName,
     invited_by: invitedBy,
+    username,
   });
+}
+
+export async function getProfileByUsername(username: string): Promise<Profile | null> {
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from('profiles')
+    .select('*, portfolio_images(id, url, position)')
+    .eq('username', username)
+    .eq('is_published', true)
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  const { portfolio_images, ...rest } = data as typeof data & {
+    portfolio_images: PortfolioImage[];
+  };
+
+  return {
+    ...rest,
+    social_links: (rest.social_links as SocialLinks) ?? {},
+    portfolio_images: (portfolio_images ?? []).sort(
+      (a: PortfolioImage, b: PortfolioImage) => a.position - b.position
+    ),
+  } as Profile;
 }
 
 export async function publishProfile(): Promise<{ error: string | null }> {

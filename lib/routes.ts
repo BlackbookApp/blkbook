@@ -11,6 +11,7 @@ export const routes = {
   myBlackbook: '/my-blackbook',
   editProfile: '/edit-profile',
   contact: (id: string) => `/contact/${id}`,
+  publicProfile: (username: string) => `/p/${username}`,
   share: '/share',
   creativeDirector: '/creative-director',
   photographerBeige: '/photographer-beige',

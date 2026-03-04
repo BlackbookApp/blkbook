@@ -69,7 +69,7 @@ const ProfilePreview = () => {
       {/* Fixed bottom CTA */}
       <div className="fixed bottom-0 left-0 right-0 z-50" data-pg-theme={theme}>
         <div className="max-w-md mx-auto px-6 pt-12 pb-8 flex flex-col items-center gap-3 bg-gradient-to-t from-[var(--pg-bg)] via-[var(--pg-bg)/80] to-transparent">
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             {THEMES.map((t) => (
               <button
                 key={t}
@@ -82,7 +82,7 @@ const ProfilePreview = () => {
                 {t}
               </button>
             ))}
-          </div>
+          </div> */}
           <p className="text-[10px] tracking-wide text-muted-foreground/60">
             This is your first impression.
           </p>
