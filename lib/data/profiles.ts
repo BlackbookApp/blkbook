@@ -3,6 +3,21 @@
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
+export interface SocialLinks {
+  instagram?: string;
+  linkedin?: string;
+  twitter?: string;
+  website?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface PortfolioImage {
+  id: string;
+  url: string;
+  position: number;
+}
+
 export interface Profile {
   id: string;
   full_name: string | null;
@@ -10,20 +25,18 @@ export interface Profile {
   location: string | null;
   bio: string | null;
   avatar_url: string | null;
-  website: string | null;
-  instagram: string | null;
-  linkedin: string | null;
-  phone: string | null;
-  style: string | null;
-  palette: string | null;
+  social_links: SocialLinks;
+  style: 'visual' | 'editorial' | null;
+  palette: 'blanc' | 'noir' | null;
   brand_statement: string | null;
-  portfolio_images: string[];
-  membership_type: 'guest' | 'member';
+  portfolio_images: PortfolioImage[];
+  membership_type: 'guest' | 'member' | null;
   profile_complete: boolean;
   is_published: boolean;
   invited_by: string | null;
   invite_code: string;
   invites_remaining: number;
+  username: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -35,10 +48,25 @@ export async function getMyProfile(): Promise<Profile | null> {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*, portfolio_images(id, url, position)')
+    .eq('id', user.id)
+    .single();
 
   if (error) return null;
-  return data as Profile;
+
+  const { portfolio_images, ...rest } = data as typeof data & {
+    portfolio_images: PortfolioImage[];
+  };
+
+  return {
+    ...rest,
+    social_links: (rest.social_links as SocialLinks) ?? {},
+    portfolio_images: (portfolio_images ?? []).sort(
+      (a: PortfolioImage, b: PortfolioImage) => a.position - b.position
+    ),
+  } as Profile;
 }
 
 export async function createProfile(
@@ -58,9 +86,11 @@ export async function publishProfile(): Promise<{ error: string | null }> {
   return updateProfile({ is_published: true });
 }
 
-export async function updateProfile(
-  updates: Partial<Omit<Profile, 'id' | 'created_at' | 'updated_at'>>
-): Promise<{ error: string | null }> {
+export type ProfileUpdate = Partial<
+  Omit<Profile, 'id' | 'created_at' | 'updated_at' | 'portfolio_images'>
+>;
+
+export async function updateProfile(updates: ProfileUpdate): Promise<{ error: string | null }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -72,5 +102,28 @@ export async function updateProfile(
     .update({ ...updates, updated_at: new Date().toISOString() })
     .eq('id', user.id);
 
+  return { error: error?.message ?? null };
+}
+
+export async function addPortfolioImage(
+  url: string,
+  position: number
+): Promise<{ error: string | null }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const { error } = await supabase
+    .from('portfolio_images')
+    .insert({ profile_id: user.id, url, position });
+
+  return { error: error?.message ?? null };
+}
+
+export async function removePortfolioImage(id: string): Promise<{ error: string | null }> {
+  const supabase = await createClient();
+  const { error } = await supabase.from('portfolio_images').delete().eq('id', id);
   return { error: error?.message ?? null };
 }

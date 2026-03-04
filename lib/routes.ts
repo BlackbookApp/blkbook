@@ -16,4 +16,6 @@ export const routes = {
   photographerBeige: '/photographer-beige',
   ecommerceSpecialist: '/ecommerce-specialist',
   saveConfirmation: '/save-confirmation',
+  previewTemplateVisual: '/preview-template/visual',
+  previewTemplateEditorial: '/preview-template/editorial',
 } as const;

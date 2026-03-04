@@ -9,6 +9,7 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
+    "db:types": "supabase gen types typescript --project-id oserrqxbweonwbhkirxu > types/database.ts",
     "prepare": "husky"
   },
   "lint-staged": {
