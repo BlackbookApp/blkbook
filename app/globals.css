@@ -223,13 +223,6 @@
   }
 
   html {
-    font-family:
-      'Helvetica Neue',
-      'Helvetica',
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.01em;
@@ -452,6 +445,60 @@
   .bb-drawer-panel {
     background: rgba(255, 255, 255, 0.92);
   }
+}
+
+/* ── Photographer profile themes ──────────────────────── */
+[data-pg-theme='blanc'] {
+  --pg-bg: hsl(45 20% 97%);
+  --pg-fg: hsl(0 0% 5%);
+  --pg-muted-fg: hsl(0 0% 40%);
+  --pg-border-image: hsl(40 30% 88%);
+  --pg-separator: hsl(45 10% 85%);
+  --pg-btn-bg: hsl(0 0% 5%);
+  --pg-btn-fg: hsl(45 20% 97%);
+  --pg-btn-sec-border: hsl(45 10% 85%);
+  --pg-btn-sec-fg: hsl(0 0% 5%);
+}
+
+[data-pg-theme='beige'] {
+  --pg-bg: hsl(35 30% 91%);
+  --pg-fg: hsl(0 0% 5%);
+  --pg-muted-fg: hsl(30 10% 40%);
+  --pg-border-image: hsl(35 20% 82%);
+  --pg-separator: hsl(35 20% 80%);
+  --pg-btn-bg: hsl(0 0% 5%);
+  --pg-btn-fg: hsl(40 25% 92%);
+  --pg-btn-sec-border: hsl(35 20% 75%);
+  --pg-btn-sec-fg: hsl(0 0% 5%);
+}
+
+[data-pg-theme='noir'] {
+  --pg-bg: hsl(0 0% 5%);
+  --pg-fg: hsl(45 20% 95%);
+  --pg-muted-fg: hsl(45 10% 55%);
+  --pg-border-image: hsl(0 0% 18%);
+  --pg-separator: hsl(0 0% 18%);
+  --pg-btn-bg: hsl(45 20% 95%);
+  --pg-btn-fg: hsl(0 0% 5%);
+  --pg-btn-sec-border: hsl(0 0% 25%);
+  --pg-btn-sec-fg: hsl(45 20% 95%);
+}
+
+[data-pg-theme] {
+  background-color: var(--pg-bg);
+  color: var(--pg-fg);
+}
+
+.pg-btn-primary {
+  @apply w-full py-4 text-xs tracking-wide uppercase font-normal transition-all hover:opacity-90;
+  background-color: var(--pg-btn-bg);
+  color: var(--pg-btn-fg);
+}
+
+.pg-btn-secondary {
+  @apply border bg-transparent text-xs tracking-wide uppercase font-normal transition-all hover:opacity-80;
+  border-color: var(--pg-btn-sec-border);
+  color: var(--pg-btn-sec-fg);
 }
 
 /* ── Animations ────────────────────────────────────────── */

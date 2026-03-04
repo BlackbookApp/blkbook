@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Plus, X, Image as ImageIcon } from 'lucide-react';
 import type { WorkData } from './types';
+import { Input } from '@/components/ui/input';
 
 interface StepWorkProps {
   work: WorkData;
@@ -149,17 +150,17 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
             className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none mb-2"
           />
           <div className="flex gap-3">
-            <input
+            <Input
               value={work.testimonialName}
               onChange={(e) => setWork({ ...work, testimonialName: e.target.value })}
               placeholder="Name"
-              className="flex-1 bg-transparent border-b border-border py-2 text-[11px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
+              className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
             />
-            <input
+            <Input
               value={work.testimonialTitle}
               onChange={(e) => setWork({ ...work, testimonialTitle: e.target.value })}
               placeholder="Title"
-              className="flex-1 bg-transparent border-b border-border py-2 text-[11px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
+              className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
             />
           </div>
         </div>

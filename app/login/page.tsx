@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import Logo from '@/components/Logo';
 import { loginAction } from '@/app/actions/auth';
 import { routes } from '@/lib/routes';
+import { Input } from '@/components/ui/input';
 
 const LoginContent = () => {
   const router = useRouter();
@@ -54,19 +55,11 @@ const LoginContent = () => {
             onSubmit={handleSubmit}
             className="space-y-6"
           >
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className="w-full bg-transparent border-b border-border py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground transition-colors"
-              required
-              autoComplete="email"
-            />
-            <input
+            <Input type="email" name="email" placeholder="Email" required autoComplete="email" />
+            <Input
               type="password"
               name="password"
               placeholder="Password"
-              className="w-full bg-transparent border-b border-border py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground transition-colors"
               required
               autoComplete="current-password"
             />

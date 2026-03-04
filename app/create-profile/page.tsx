@@ -8,6 +8,7 @@ import Logo from '@/components/Logo';
 import { updateProfile } from '@/lib/data/profiles';
 import { createClient } from '@/lib/supabase/client';
 import { routes } from '@/lib/routes';
+import { Input } from '@/components/ui/input';
 
 const TOTAL_STEPS = 2;
 type Step = 1 | 2;
@@ -148,21 +149,21 @@ const CreateProfile = () => {
               </p>
               <div className="h-px bg-border mb-4" />
 
-              <h1 className="font-display font-light text-xl tracking-tight uppercase text-foreground mb-2">
+              <h1 className="font-canela text-xl tracking-tight uppercase text-foreground mb-2">
                 Describe yourself in one line.
               </h1>
-              <p className="text-xs font-light leading-relaxed text-muted-foreground mb-5">
+              <p className="text-xs font-normal leading-relaxed text-muted-foreground mb-5 font-helvetica">
                 A short bio or tagline — your role, your mission, whatever feels right.
               </p>
 
               <div className="space-y-4">
                 <div className="relative">
-                  <input
+                  <Input
                     ref={bioInputRef}
                     type="text"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="blackbook-input"
+                    className=""
                   />
                   {!bio && (
                     <div
@@ -185,12 +186,12 @@ const CreateProfile = () => {
                   )}
                 </div>
 
-                <input
+                <Input
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="Where are you based? (e.g. London, Worldwide)"
-                  className="w-full bg-transparent border-b border-border py-3 text-sm placeholder:text-muted-foreground/40 focus:outline-none focus:border-foreground transition-colors"
+                  className="placeholder:text-muted-foreground/40"
                 />
               </div>
             </motion.div>
@@ -211,10 +212,8 @@ const CreateProfile = () => {
               </p>
               <div className="h-px bg-border mb-4" />
 
-              <h1 className="font-display font-light text-xl tracking-tight uppercase text-foreground mb-2">
-                First impressions happen in a second.
-              </h1>
-              <p className="text-xs font-light leading-relaxed text-muted-foreground mb-5">
+              <h1 className="blackbook-title">First impressions happen in a second.</h1>
+              <p className="text-xs font-normal leading-relaxed text-muted-foreground mb-5">
                 Add a photo that feels like you. This is what someone sees the moment they tap your
                 card.
               </p>

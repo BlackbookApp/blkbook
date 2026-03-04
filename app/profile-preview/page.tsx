@@ -9,6 +9,7 @@ import { useProfile } from '@/hooks/use-profile';
 import { publishProfile } from '@/lib/data/profiles';
 import { routes } from '@/lib/routes';
 import Image from 'next/image';
+import { Input } from '@/components/ui/input';
 
 const ProfilePreview = () => {
   const router = useRouter();
@@ -155,18 +156,8 @@ const ProfilePreview = () => {
               Let&apos;s stay in touch. Send your details
             </p>
             <div className="space-y-3">
-              <input
-                type="text"
-                placeholder="Your name"
-                readOnly
-                className="w-full bg-transparent px-3 py-2.5 text-xs tracking-wide border border-border text-foreground focus:outline-none"
-              />
-              <input
-                type="email"
-                placeholder="Email or phone"
-                readOnly
-                className="w-full bg-transparent px-3 py-2.5 text-xs tracking-wide border border-border text-foreground focus:outline-none"
-              />
+              <Input variant="secondary" type="text" placeholder="Your name" readOnly />
+              <Input variant="secondary" type="email" placeholder="Email or phone" readOnly />
               <button className="bb-btn-primary">Send</button>
             </div>
           </motion.div>

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Globe, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
 import type { SocialFields } from './types';
+import { Input } from '@/components/ui/input';
 
 interface StepProfileProps {
   name: string;
@@ -92,11 +93,10 @@ export const StepProfile = ({
             <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
               {f.label}
             </label>
-            <input
+            <Input
               value={f.value}
               onChange={(e) => f.set(e.target.value)}
               placeholder={f.placeholder}
-              className="w-full bg-transparent border-b border-border py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground transition-colors"
             />
           </div>
         ))}
@@ -106,11 +106,10 @@ export const StepProfile = ({
         {socialFields.map((sf) => (
           <div key={sf.key} className="flex items-center gap-3">
             <div className="flex-1">
-              <input
+              <Input
                 value={socials[sf.key]}
                 onChange={(e) => updateSocial(sf.key, e.target.value)}
                 placeholder={sf.placeholder}
-                className="w-full bg-transparent border-b border-border py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground transition-colors"
               />
             </div>
             <span className="text-muted-foreground">{sf.icon}</span>
