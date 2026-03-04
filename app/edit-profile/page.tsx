@@ -94,7 +94,9 @@ const EditProfile = () => {
             setPalette={setPalette}
             onContinue={() => setStep(2)}
             onPreview={(type) =>
-              router.push(type === 'visual' ? routes.photographerBeige : routes.ecommerceSpecialist)
+              router.push(
+                type === 'visual' ? routes.previewTemplateVisual : routes.previewTemplateEditorial
+              )
             }
           />
         )}
