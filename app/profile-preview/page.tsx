@@ -2,18 +2,20 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ChevronLeft } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useProfile } from '@/hooks/use-profile';
 import { publishProfile } from '@/lib/data/profiles';
 import { routes } from '@/lib/routes';
-import Image from 'next/image';
-import { Input } from '@/components/ui/input';
+import PublicProfile from '@/components/public-profile/public-profile-visual';
+import type { ProfileTheme } from '@/components/public-profile/public-profile-visual';
+
+const THEMES: ProfileTheme[] = ['blanc', 'beige', 'noir'];
 
 const ProfilePreview = () => {
   const router = useRouter();
   const { data: profile, isLoading } = useProfile();
+  const [theme, setTheme] = useState<ProfileTheme>('blanc');
   const [isPending, setIsPending] = useState(false);
 
   const handlePublish = async () => {
@@ -30,158 +32,67 @@ const ProfilePreview = () => {
     );
   }
 
+  const profileData = {
+    name: profile.full_name ?? '',
+    bio: profile.bio,
+    role: profile.role,
+    location: profile.location,
+    portraitSrc: profile.avatar_url,
+    socialLinks: profile.social_links,
+  };
+
+  const portfolio = profile.portfolio_images.map((img) => ({ imageSrc: img.url }));
+  console.log(profileData, portfolio);
+
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 pt-8">
-        <Logo />
-        <button
-          onClick={() => router.push(routes.createProfile)}
-          className="flex items-center text-muted-foreground/50 hover:text-foreground transition-colors"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-      </div>
+    <div className="relative">
+      <PublicProfile
+        theme={theme}
+        profile={profileData}
+        portfolio={portfolio}
+        profileStyle={'visual'}
+      />
 
-      <div className="max-w-md mx-auto pb-40">
-        <div className="px-6 pt-4">
-          {/* Name & Bio */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-4"
+      {/* Floating header */}
+      <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+        <div className="max-w-md mx-auto px-6 pt-8 flex items-center justify-between pointer-events-auto">
+          <Logo />
+          <button
+            onClick={() => router.push(routes.createProfile)}
+            className="text-muted-foreground/50 hover:text-foreground transition-colors"
           >
-            <h1 className="text-base font-normal tracking-tight uppercase text-foreground font-canela-deck">
-              {profile.full_name ?? 'Your Name'}
-            </h1>
-            <p className="text-xs tracking-wide uppercase text-muted-foreground font-sans">
-              {profile.bio ?? ''}
-            </p>
-            <p className="text-xs font-medium tracking-wide uppercase text-foreground font-sans">
-              {profile.location ?? ''}
-            </p>
-          </motion.div>
-
-          {/* Hero Portrait */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="mb-4"
-          >
-            <div className="w-full aspect-[3/4] overflow-hidden border-2 border-foreground relative bg-muted">
-              {profile.avatar_url ? (
-                <Image
-                  src={profile.avatar_url}
-                  fill
-                  alt={profile.full_name ?? 'Profile photo'}
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center gap-2">
-                  <Plus className="w-6 h-6 text-muted-foreground/30" />
-                  <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/30">
-                    No photo yet
-                  </span>
-                </div>
-              )}
-            </div>
-            <div className="flex justify-between items-center mt-3">
-              <span className="text-xs tracking-wide uppercase text-muted-foreground">
-                {profile.instagram || '@instagram'}
-              </span>
-              <span className="text-xs tracking-wide text-muted-foreground">5.5k followers</span>
-            </div>
-            <p className="text-[11px] leading-relaxed text-muted-foreground mt-3">
-              You control what the world sees. Nothing more.
-            </p>
-          </motion.div>
-
-          <div className="my-6 h-px bg-border" />
-
-          {/* Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="mb-6"
-          >
-            <button className="bb-btn-primary mb-3">Save Contact</button>
-            <div className="grid grid-cols-3 gap-2">
-              {['WhatsApp', 'Enquire', 'Website'].map((label) => (
-                <button
-                  key={label}
-                  className="py-2 text-xs tracking-wide uppercase font-medium border border-border text-foreground bg-transparent"
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-
-          <div className="my-6 h-px bg-border" />
-
-          {/* Portfolio — placeholder tiles */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="space-y-6 mb-8"
-          >
-            {[0, 1, 2].map((i) => (
-              <div key={i} className={i % 2 === 0 ? 'w-3/5' : 'w-1/2 ml-auto'}>
-                <div className="overflow-hidden aspect-[3/4] mb-2 border border-dashed border-border relative bg-muted flex items-center justify-center">
-                  <Plus className="w-5 h-5 text-muted-foreground/20" />
-                </div>
-                <div className="flex justify-between items-start">
-                  <h3 className="text-xs font-medium tracking-tight text-foreground">{'Title'}</h3>
-                  <span className="text-[10px] text-muted-foreground">{'Year'}</span>
-                </div>
-                <p className="text-[10px] tracking-wide text-muted-foreground">{'sub title'}</p>
-              </div>
-            ))}
-          </motion.div>
-
-          <div className="my-6 h-px bg-border" />
-
-          {/* Contact exchange */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="mb-8"
-          >
-            <p className="text-xs tracking-wide uppercase text-center mb-4 text-muted-foreground">
-              Let&apos;s stay in touch. Send your details
-            </p>
-            <div className="space-y-3">
-              <Input variant="secondary" type="text" placeholder="Your name" readOnly />
-              <Input variant="secondary" type="email" placeholder="Email or phone" readOnly />
-              <button className="bb-btn-primary">Send</button>
-            </div>
-          </motion.div>
+            <ChevronLeft className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
-      {/* Fixed Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
-        <div
-          className="max-w-md mx-auto"
-          style={{ background: 'linear-gradient(to top, #F5F4F0 60%, transparent)' }}
-        >
-          <div className="px-6 pt-12 pb-8 flex flex-col items-center gap-3">
-            <p className="text-[10px] tracking-wide text-muted-foreground/60">
-              This is your first impression.
-            </p>
-            <button
-              onClick={handlePublish}
-              disabled={isPending}
-              className="bb-btn-primary disabled:opacity-50"
-            >
-              {isPending ? 'Publishing…' : 'Activate My Blackbook'}
-            </button>
+      {/* Fixed bottom CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-50" data-pg-theme={theme}>
+        <div className="max-w-md mx-auto px-6 pt-12 pb-8 flex flex-col items-center gap-3 bg-gradient-to-t from-[var(--pg-bg)] via-[var(--pg-bg)/80] to-transparent">
+          <div className="flex gap-2">
+            {THEMES.map((t) => (
+              <button
+                key={t}
+                data-pg-theme={t}
+                onClick={() => setTheme(t)}
+                className={`px-3 py-1 text-[10px] tracking-widest uppercase border transition-opacity ${
+                  theme === t ? 'opacity-100' : 'opacity-40'
+                }`}
+              >
+                {t}
+              </button>
+            ))}
           </div>
+          <p className="text-[10px] tracking-wide text-muted-foreground/60">
+            This is your first impression.
+          </p>
+          <button
+            onClick={handlePublish}
+            disabled={isPending}
+            className="pg-btn-primary disabled:opacity-50 w-full"
+          >
+            {isPending ? 'Publishing…' : 'Activate My Blackbook'}
+          </button>
         </div>
       </div>
     </div>
