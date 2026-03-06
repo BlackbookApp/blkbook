@@ -10,7 +10,7 @@ import {
   getAllAccessRequests,
   type AccessRequest,
 } from '@/lib/data/access-requests';
-import { sendApprovalEmail } from '@/lib/email';
+import { sendApprovalEmail, sendRequestReceivedEmail } from '@/lib/email';
 
 async function assertAdmin(): Promise<{ userId: string } | { error: string }> {
   const supabase = await createClient();
@@ -51,7 +51,18 @@ export async function submitAccessRequest(formData: FormData): Promise<SubmitReq
     return { error: parsed.error.errors[0].message };
   }
 
-  return insertAccessRequest(parsed.data);
+  const result = await insertAccessRequest(parsed.data);
+
+  if ('id' in result) {
+    try {
+      const firstName = parsed.data.full_name.split(' ')[0];
+      await sendRequestReceivedEmail(parsed.data.email, firstName);
+    } catch (e) {
+      console.error('Failed to send request received email:', e);
+    }
+  }
+
+  return result;
 }
 
 export async function getAccessRequestStatusAction(

@@ -2,20 +2,42 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+export async function sendRequestReceivedEmail(email: string, firstName: string): Promise<void> {
+  const templateId = process.env.RESEND_ACCESS_REQUEST_TEMPLATE_ID;
+  const fromAddress = process.env.EMAIL_FROM_ADDRESS;
+  const to = process.env.NODE_ENV === 'production' ? email : 'delivered+invite@resend.dev';
+  if (!templateId || !fromAddress) return;
+
+  await resend.emails.send({
+    from: fromAddress,
+    to: to,
+    template: {
+      id: templateId,
+      variables: {
+        first_name: firstName,
+      },
+    },
+  });
+}
+
 export async function sendApprovalEmail(
   email: string,
   fullName: string,
   inviteCode: string
 ): Promise<void> {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+  const fromAddress = process.env.EMAIL_FROM_ADDRESS;
+  const to = process.env.NODE_ENV === 'production' ? email : 'delivered+invite@resend.dev';
   const inviteUrl =
     `${appUrl}/signup?ref=${inviteCode}` +
     `&name=${encodeURIComponent(fullName)}` +
     `&email=${encodeURIComponent(email)}`;
 
+  if (!fromAddress) return;
+
   await resend.emails.send({
-    from: 'onboarding@resend.dev',
-    to: 'delivered+invite@resend.dev',
+    from: fromAddress,
+    to: to,
     subject: "You're in — your Blackbook invite is ready",
     html: [
       '<div style="font-family:helvetica,sans-serif;max-width:480px;margin:0 auto;padding:40px 24px;color:#0E0E0E;">',
