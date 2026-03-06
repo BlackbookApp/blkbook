@@ -23,8 +23,7 @@ export default function RequestAccessPage() {
       if ('error' in result) {
         setError(result.error);
       } else {
-        localStorage.setItem('bb_request_id', result.id);
-        router.push(routes.requestAccessPending);
+        router.push(routes.requestAccessStatus(result.id));
       }
     });
   };

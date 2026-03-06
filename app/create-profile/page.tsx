@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Plus, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '@/components/Logo';
-import { updateProfile } from '@/lib/data/profiles';
+import { updateProfileAction } from '@/app/actions/profiles';
 import { createClient } from '@/lib/supabase/client';
 import { routes } from '@/lib/routes';
 import { Input } from '@/components/ui/input';
@@ -82,7 +82,7 @@ const CreateProfile = () => {
       }
     }
 
-    await updateProfile({
+    await updateProfileAction({
       bio,
       location,
       ...(avatarUrl ? { avatar_url: avatarUrl } : {}),

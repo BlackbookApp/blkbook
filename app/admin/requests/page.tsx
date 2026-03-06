@@ -2,8 +2,12 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import { motion } from 'framer-motion';
-import { getAllAccessRequests, type AccessRequest } from '@/lib/data/access-requests';
-import { approveRequest, rejectRequest } from '@/app/actions/access-requests';
+import { type AccessRequest } from '@/lib/data/access-requests';
+import {
+  getAllAccessRequestsAction,
+  approveRequest,
+  rejectRequest,
+} from '@/app/actions/access-requests';
 
 type Filter = 'pending' | 'approved' | 'rejected' | 'all';
 
@@ -17,7 +21,7 @@ export default function AdminRequestsPage() {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const data = await getAllAccessRequests();
+      const data = await getAllAccessRequestsAction();
       setRequests(data);
       setLoading(false);
     })();
@@ -25,7 +29,7 @@ export default function AdminRequestsPage() {
 
   const load = async () => {
     setLoading(true);
-    const data = await getAllAccessRequests();
+    const data = await getAllAccessRequestsAction();
     setRequests(data);
     setLoading(false);
   };

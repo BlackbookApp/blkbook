@@ -114,6 +114,7 @@ interface PhotographerProfileProps {
   portfolio: PortfolioItem[];
   testimonials?: Testimonial[];
   profileStyle: 'visual' | 'editorial';
+  isPreview?: boolean;
 }
 
 const PublicProfile = ({
@@ -121,6 +122,7 @@ const PublicProfile = ({
   profile,
   portfolio,
   testimonials = [],
+  isPreview = false,
 }: PhotographerProfileProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -254,7 +256,7 @@ const PublicProfile = ({
       </div>
 
       <ExchangeDetailsModal
-        open={showExchange}
+        open={isPreview ? false : showExchange}
         onClose={() => setShowExchange(false)}
         firstName={profile.name.split(' ')[0]}
       />

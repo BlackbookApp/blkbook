@@ -1,5 +1,4 @@
-'use server';
-
+import 'server-only';
 import { createClient } from '@/lib/supabase/server';
 import { adminClient } from '@/lib/supabase/admin';
 
@@ -65,18 +64,29 @@ export async function createInvite(
     return { error: 'No invitations remaining' };
   }
 
-  const code = Math.random().toString(36).substring(2, 10).toUpperCase();
+  const { data: updated } = await adminClient
+    .from('profiles')
+    .update({ invites_remaining: profile.invites_remaining - 1 })
+    .eq('id', user.id)
+    .gt('invites_remaining', 0)
+    .select('invites_remaining')
+    .single();
+
+  if (!updated) return { error: 'No invitations remaining' };
+
+  const code = (await import('crypto')).randomBytes(4).toString('hex').toUpperCase();
 
   const { error: insertError } = await supabase
     .from('invitations')
     .insert({ code, inviter_id: user.id, invitee_email: inviteeEmail ?? null });
 
-  if (insertError) return { error: insertError.message };
-
-  await adminClient
-    .from('profiles')
-    .update({ invites_remaining: profile.invites_remaining - 1 })
-    .eq('id', user.id);
+  if (insertError) {
+    await adminClient
+      .from('profiles')
+      .update({ invites_remaining: profile.invites_remaining })
+      .eq('id', user.id);
+    return { error: insertError.message };
+  }
 
   return { code };
 }

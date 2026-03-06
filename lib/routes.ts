@@ -20,6 +20,6 @@ export const routes = {
   previewTemplateVisual: '/preview-template/visual',
   previewTemplateEditorial: '/preview-template/editorial',
   requestAccess: '/request-access',
-  requestAccessPending: '/request-access/pending',
+  requestAccessStatus: (id: string) => `/request-access/status?id=${id}`,
   adminRequests: '/admin/requests',
 } as const;

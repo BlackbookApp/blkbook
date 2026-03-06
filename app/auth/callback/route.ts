@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { getInviteByCode } from '@/lib/data/invitations';
+import { getInviteByCode, markInviteUsed } from '@/lib/data/invitations';
 import { createProfile, getMyProfile } from '@/lib/data/profiles';
-import { markInviteUsed } from '@/lib/data/invitations';
 import { routes } from '@/lib/routes';
 
 export async function GET(request: NextRequest) {

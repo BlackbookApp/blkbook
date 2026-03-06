@@ -1,5 +1,4 @@
-'use server';
-
+import 'server-only';
 import { createClient } from '@/lib/supabase/server';
 import { adminClient } from '@/lib/supabase/admin';
 
@@ -169,6 +168,15 @@ export async function addPortfolioImage(
 
 export async function removePortfolioImage(id: string): Promise<{ error: string | null }> {
   const supabase = await createClient();
-  const { error } = await supabase.from('portfolio_images').delete().eq('id', id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const { error } = await supabase
+    .from('portfolio_images')
+    .delete()
+    .eq('id', id)
+    .eq('profile_id', user.id);
   return { error: error?.message ?? null };
 }

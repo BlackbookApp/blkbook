@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useProfile } from '@/hooks/use-profile';
-import { publishProfile } from '@/lib/data/profiles';
+import { updateProfileAction } from '@/app/actions/profiles';
 import { routes } from '@/lib/routes';
 import PublicProfile from '@/components/public-profile/public-profile-visual';
 import type { ProfileTheme } from '@/components/public-profile/public-profile-visual';
@@ -20,7 +20,7 @@ const ProfilePreview = () => {
 
   const handlePublish = async () => {
     setIsPending(true);
-    await publishProfile();
+    await updateProfileAction({ is_published: true });
     router.push(routes.paywall);
   };
 
@@ -51,6 +51,7 @@ const ProfilePreview = () => {
         profile={profileData}
         portfolio={portfolio}
         profileStyle={'visual'}
+        isPreview={true}
       />
 
       {/* Floating header */}

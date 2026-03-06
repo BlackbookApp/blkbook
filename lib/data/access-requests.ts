@@ -1,5 +1,4 @@
-'use server';
-
+import 'server-only';
 import { adminClient } from '@/lib/supabase/admin';
 
 export interface AccessRequest {
@@ -58,6 +57,8 @@ export async function insertAccessRequest(fields: {
 }): Promise<{ id: string } | { error: string }> {
   const existing = await getAccessRequestByEmail(fields.email);
   if (existing) {
+    if (existing.status === 'approved') return { id: existing.id };
+
     const { error } = await adminClient
       .from('access_requests')
       .update({
