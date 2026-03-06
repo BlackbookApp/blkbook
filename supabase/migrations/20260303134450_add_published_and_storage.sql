@@ -1,5 +1,6 @@
 -- Avatars storage bucket (public read)
-insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true);
+insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true)
+  on conflict do nothing;
 
 create policy "avatars_public_read" on storage.objects
   for select using (bucket_id = 'avatars');
