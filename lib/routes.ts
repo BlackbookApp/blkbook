@@ -19,4 +19,7 @@ export const routes = {
   saveConfirmation: '/save-confirmation',
   previewTemplateVisual: '/preview-template/visual',
   previewTemplateEditorial: '/preview-template/editorial',
+  requestAccess: '/request-access',
+  requestAccessPending: '/request-access/pending',
+  adminRequests: '/admin/requests',
 } as const;

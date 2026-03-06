@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { adminClient } from '@/lib/supabase/admin';
 
 export interface Invitation {
   id: string;
@@ -55,9 +55,7 @@ export async function createInvite(
   } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
-  // Check remaining invites via admin client to bypass RLS
-  const admin = createAdminClient();
-  const { data: profile } = await admin
+  const { data: profile } = await adminClient
     .from('profiles')
     .select('invites_remaining')
     .eq('id', user.id)
@@ -75,15 +73,14 @@ export async function createInvite(
 
   if (insertError) return { error: insertError.message };
 
-  // Decrement invites_remaining
-  await admin
+  await adminClient
     .from('profiles')
     .update({ invites_remaining: profile.invites_remaining - 1 })
     .eq('id', user.id);
 
   return { code };
 }
+
 export async function markInviteUsed(code: string, userId: string): Promise<void> {
-  const admin = createAdminClient();
-  await admin.rpc('mark_invite_used', { p_code: code, p_user_id: userId });
+  await adminClient.rpc('mark_invite_used', { p_code: code, p_user_id: userId });
 }

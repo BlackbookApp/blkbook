@@ -12,6 +12,8 @@ const SignUpContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const inviteCode = searchParams.get('ref') ?? '';
+  const prefillName = searchParams.get('name') ?? '';
+  const prefillEmail = searchParams.get('email') ?? '';
 
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -65,6 +67,7 @@ const SignUpContent = () => {
               placeholder="Full name"
               required
               autoComplete="name"
+              defaultValue={prefillName}
             />
             <LineInput
               type="email"
@@ -72,6 +75,7 @@ const SignUpContent = () => {
               placeholder="Email"
               required
               autoComplete="email"
+              defaultValue={prefillEmail}
             />
             <LineInput
               type="password"

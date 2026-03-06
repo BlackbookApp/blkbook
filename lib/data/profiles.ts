@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { adminClient } from '@/lib/supabase/admin';
 
 export interface SocialLinks {
   instagram?: string;
@@ -70,7 +70,6 @@ export async function getMyProfile(): Promise<Profile | null> {
 }
 
 async function generateUsername(fullName: string): Promise<string> {
-  const admin = createAdminClient();
   const base = fullName
     .toLowerCase()
     .trim()
@@ -81,7 +80,7 @@ async function generateUsername(fullName: string): Promise<string> {
   let candidate = base;
   let suffix = 2;
   while (true) {
-    const { data } = await admin
+    const { data } = await adminClient
       .from('profiles')
       .select('id')
       .eq('username', candidate)
@@ -96,9 +95,8 @@ export async function createProfile(
   fullName: string | null,
   invitedBy: string | null
 ): Promise<void> {
-  const admin = createAdminClient();
   const username = fullName ? await generateUsername(fullName) : null;
-  await admin.from('profiles').insert({
+  await adminClient.from('profiles').insert({
     id: userId,
     full_name: fullName,
     invited_by: invitedBy,
@@ -107,8 +105,7 @@ export async function createProfile(
 }
 
 export async function getProfileByUsername(username: string): Promise<Profile | null> {
-  const admin = createAdminClient();
-  const { data, error } = await admin
+  const { data, error } = await adminClient
     .from('profiles')
     .select('*, portfolio_images(id, url, position)')
     .eq('username', username)

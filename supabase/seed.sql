@@ -48,13 +48,15 @@ insert into public.profiles (
   full_name,
   invite_code,
   invites_remaining,
-  membership_type
+  membership_type,
+  is_admin
 ) values (
   '00000000-0000-0000-0000-000000000001',
   'Seed User',
   'SEEDUSER',
   10,
-  'member'
+  'member',
+  true
 );
 
 -- Invitation from seed user (use this link: /invite?ref=SEED0001)
