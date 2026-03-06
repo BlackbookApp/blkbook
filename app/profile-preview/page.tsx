@@ -6,21 +6,24 @@ import { ChevronLeft } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useProfile } from '@/hooks/use-profile';
 import { updateProfileAction } from '@/app/actions/profiles';
+import { useQueryClient } from '@tanstack/react-query';
 import { routes } from '@/lib/routes';
 import PublicProfile from '@/components/public-profile/public-profile-visual';
 import type { ProfileTheme } from '@/components/public-profile/public-profile-visual';
 
-const THEMES: ProfileTheme[] = ['blanc', 'beige', 'noir'];
+// const THEMES: ProfileTheme[] = ['blanc', 'beige', 'noir'];
 
 const ProfilePreview = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data: profile, isLoading } = useProfile();
-  const [theme, setTheme] = useState<ProfileTheme>('blanc');
+  const [theme] = useState<ProfileTheme>('blanc');
   const [isPending, setIsPending] = useState(false);
 
   const handlePublish = async () => {
     setIsPending(true);
     await updateProfileAction({ is_published: true });
+    queryClient.invalidateQueries({ queryKey: ['profile'] });
     router.push(routes.paywall);
   };
 
