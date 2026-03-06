@@ -1,26 +1,549 @@
-@import "tailwindcss";
+/* ── External font imports ──────────────────────────────── */
+@import url('https://fonts.cdnfonts.com/css/helvetica-neue-55');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+@import url('https://db.onlinewebfonts.com/c/8c6cc8824a468b33768701915664b3e9?family=FreightDisp+Pro+Medium');
+@import url('https://fonts.cdnfonts.com/css/canela-text-trial');
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@import 'tailwindcss';
+
+/* ── Local font faces ───────────────────────────────────── */
+@font-face {
+  font-family: 'Canela Condensed';
+  src: url('/fonts/CanelaCondensed-Thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Condensed';
+  src: url('/fonts/CanelaCondensed-ThinItalic.otf') format('opentype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Condensed';
+  src: url('/fonts/CanelaCondensed-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Condensed';
+  src: url('/fonts/CanelaCondensed-LightItalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela Deck';
+  src: url('/fonts/CanelaDeck-Light-Trial.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GT Super Display';
+  src: url('/fonts/GT-Super-Display-Light-Trial.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GT Super Display';
+  src: url('/fonts/GT-Super-Display-Light-Italic-Trial.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Engravers Gothic';
+  src: url('/fonts/Engravers_Gothic_Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PP Editorial Old';
+  src: url('/fonts/PPEditorialOld-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PP Editorial Old';
+  src: url('/fonts/PPEditorialOld-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PP Editorial Old';
+  src: url('/fonts/PPEditorialOld-Ultralight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PP Editorial Old';
+  src: url('/fonts/PPEditorialOld-UltralightItalic.otf') format('opentype');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
 }
 
+/* ── CSS custom properties ─────────────────────────────── */
+:root {
+  /* Blackbook Design System - Light Luxury */
+  --background: hsl(48, 20%, 95%); /* Warm off-white #F5F4F0 */
+  --foreground: hsl(0, 0%, 5%); /* Near black */
+
+  --card: hsl(45, 20%, 97%);
+  --card-foreground: hsl(0, 0%, 5%);
+
+  --popover: hsl(45, 20%, 97%);
+  --popover-foreground: hsl(0, 0%, 5%);
+
+  --primary: hsl(0, 0%, 10%); /* Charcoal #1A1A1A */
+  --primary-foreground: hsl(45, 20%, 97%); /* Ivory */
+
+  --secondary: hsl(45, 15%, 92%);
+  --secondary-foreground: hsl(0, 0%, 5%);
+
+  --muted: hsl(45, 10%, 90%);
+  --muted-foreground: hsl(0, 0%, 40%);
+
+  --accent: hsl(45, 15%, 92%);
+  --accent-foreground: hsl(0, 0%, 5%);
+
+  --destructive: hsl(0, 72%, 51%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+
+  --border: hsl(45, 10%, 85%);
+  --input: hsl(45, 10%, 85%);
+  --ring: hsl(0, 0%, 5%);
+
+  --radius: 0.25rem;
+}
+
+.dark {
+  --background: hsl(0, 0%, 5%);
+  --foreground: hsl(45, 20%, 97%);
+
+  --card: hsl(0, 0%, 8%);
+  --card-foreground: hsl(45, 20%, 97%);
+
+  --popover: hsl(0, 0%, 8%);
+  --popover-foreground: hsl(45, 20%, 97%);
+
+  --primary: hsl(45, 20%, 97%);
+  --primary-foreground: hsl(0, 0%, 5%);
+
+  --secondary: hsl(0, 0%, 12%);
+  --secondary-foreground: hsl(45, 20%, 97%);
+
+  --muted: hsl(0, 0%, 15%);
+  --muted-foreground: hsl(45, 10%, 65%);
+
+  --accent: hsl(0, 0%, 12%);
+  --accent-foreground: hsl(45, 20%, 97%);
+
+  --destructive: hsl(0, 62%, 30%);
+  --destructive-foreground: hsl(45, 20%, 97%);
+
+  --border: hsl(0, 0%, 18%);
+  --input: hsl(0, 0%, 18%);
+  --ring: hsl(45, 20%, 97%);
+}
+
+/* ── Tailwind v4 theme tokens ──────────────────────────── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Blackbook typefaces */
+  --font-display: 'GT Super Display', 'Canela Deck', serif;
+  --font-helvetica: 'Helvetica Neue', Helvetica, sans-serif;
+  --font-editorial: 'PP Editorial Old', serif;
+  --font-playfair: 'Playfair Display', serif;
+  --font-garamond: 'EB Garamond', serif;
+  --font-engravers: 'Engravers Gothic', 'Helvetica Neue', sans-serif;
+  --font-dancing: 'Dancing Script', cursive;
+  --font-freight: 'FreightDisp Pro Medium', serif;
+  --font-canela: 'Canela Text Trial', serif;
+  --font-canela-condensed: 'Canela Condensed', serif;
+  --font-canela-deck: 'Canela Deck', serif;
+
+  /* Blackbook brand colours */
+  --color-bb-dark: #0e0e0e;
+  --color-bb-muted: #9a9691;
+  --color-bb-nav: #1a1a1a;
+  --color-bb-cream: #f5f4f0;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Base ──────────────────────────────────────────────── */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings:
+      'kern' 1,
+      'liga' 1;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+  }
+
+  button,
+  [role='button'] {
+    font-family:
+      'Helvetica Neue',
+      'Helvetica',
+      -apple-system,
+      sans-serif;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+
+  input,
+  textarea,
+  select {
+    font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji';
+    font-weight: 400;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Canela Deck', 'Canela Condensed', serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Blackbook design system ───────────────────────────── */
+@layer components {
+  .blackbook-container {
+    @apply max-w-md mx-auto min-h-screen;
+  }
+
+  .blackbook-page {
+    @apply px-6 py-8 min-h-screen flex flex-col;
+  }
+
+  .blackbook-title {
+    @apply text-base font-normal tracking-tight uppercase;
+    font-family: 'Canela Deck', 'Canela Condensed', serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  .blackbook-subtitle {
+    @apply text-sm uppercase;
+    letter-spacing: 0.12em;
+    color: #9a9691;
+  }
+
+  .blackbook-body {
+    @apply text-base leading-relaxed;
+    color: color-mix(in srgb, var(--foreground) 80%, transparent);
+  }
+
+  /* Small label text used across pages */
+  .blackbook-label {
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #0e0e0e;
+  }
+
+  .blackbook-heading {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #0e0e0e;
+  }
+
+  .blackbook-nav {
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: #0e0e0e;
+    font-weight: 500;
+  }
+
+  .blackbook-nav-active {
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: #0e0e0e;
+  }
+
+  .blackbook-input {
+    @apply w-full bg-transparent border-b py-3 focus:outline-none transition-colors;
+    border-color: var(--border);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #0e0e0e;
+  }
+
+  .blackbook-input::placeholder {
+    color: var(--muted-foreground);
+  }
+
+  .blackbook-input:focus {
+    border-color: var(--foreground);
+  }
+
+  .blackbook-button-primary {
+    @apply w-full py-4 transition-all hover:opacity-90 active:scale-[0.99] relative overflow-hidden uppercase;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+
+  .blackbook-button-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 128px 128px;
+  }
+
+  .blackbook-button-secondary {
+    @apply w-full border py-4 transition-all hover:opacity-90 active:scale-[0.99];
+    border-color: var(--border);
+    color: var(--foreground);
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .blackbook-link {
+    @apply text-sm underline underline-offset-4 transition-colors;
+    color: var(--muted-foreground);
+  }
+
+  .blackbook-link:hover {
+    color: var(--foreground);
+  }
+
+  .blackbook-divider {
+    @apply w-full h-px my-8;
+    background-color: var(--border);
+  }
+
+  .blackbook-grid {
+    @apply grid grid-cols-3 gap-1;
+  }
+
+  .blackbook-avatar {
+    @apply w-24 h-24 rounded-full object-cover;
+  }
+
+  .blackbook-card {
+    @apply p-4 border;
+    border-color: var(--border);
+    background-color: var(--card);
+  }
+
+  /* Common CTA button: full-width, uppercase, Helvetica */
+  .bb-btn-primary {
+    @apply w-full h-[52px] uppercase tracking-[0.12em] text-[11px] font-normal hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden;
+    background-color: var(--foreground);
+    color: var(--background);
+    font-family: var(--font-helvetica);
+  }
+
+  .bb-btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* Frosted-glass search dropdown */
+  .bb-dropdown-panel {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(245, 244, 240, 0.85);
+  }
+
+  /* Frosted-glass drawer/sheet */
+  .bb-drawer-panel {
+    background: rgba(255, 255, 255, 0.92);
+  }
+}
+
+/* ── Photographer profile themes ──────────────────────── */
+[data-pg-theme='blanc'] {
+  --pg-bg: hsl(45 20% 97%);
+  --pg-fg: hsl(0 0% 5%);
+  --pg-muted-fg: hsl(0 0% 40%);
+  --pg-border-image: hsl(40 30% 88%);
+  --pg-separator: hsl(45 10% 85%);
+  --pg-btn-bg: hsl(0 0% 5%);
+  --pg-btn-fg: hsl(45 20% 97%);
+  --pg-btn-sec-border: hsl(45 10% 85%);
+  --pg-btn-sec-fg: hsl(0 0% 5%);
+}
+
+[data-pg-theme='beige'] {
+  --pg-bg: hsl(35 30% 91%);
+  --pg-fg: hsl(0 0% 5%);
+  --pg-muted-fg: hsl(30 10% 40%);
+  --pg-border-image: hsl(35 20% 82%);
+  --pg-separator: hsl(35 20% 80%);
+  --pg-btn-bg: hsl(0 0% 5%);
+  --pg-btn-fg: hsl(40 25% 92%);
+  --pg-btn-sec-border: hsl(35 20% 75%);
+  --pg-btn-sec-fg: hsl(0 0% 5%);
+}
+
+[data-pg-theme='noir'] {
+  --pg-bg: hsl(0 0% 5%);
+  --pg-fg: hsl(45 20% 95%);
+  --pg-muted-fg: hsl(45 10% 55%);
+  --pg-border-image: hsl(0 0% 18%);
+  --pg-separator: hsl(0 0% 18%);
+  --pg-btn-bg: hsl(45 20% 95%);
+  --pg-btn-fg: hsl(0 0% 5%);
+  --pg-btn-sec-border: hsl(0 0% 25%);
+  --pg-btn-sec-fg: hsl(45 20% 95%);
+}
+
+[data-pg-theme] {
+  background-color: var(--pg-bg);
+  color: var(--pg-fg);
+}
+
+.pg-btn-primary {
+  @apply w-full py-4 text-xs tracking-wide uppercase font-normal transition-all hover:opacity-90;
+  background-color: var(--pg-btn-bg);
+  color: var(--pg-btn-fg);
+}
+
+.pg-btn-secondary {
+  @apply border bg-transparent text-xs tracking-wide uppercase font-normal transition-all hover:opacity-80;
+  border-color: var(--pg-btn-sec-border);
+  color: var(--pg-btn-sec-fg);
+}
+
+/* ── Animations ────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Charcoal grain overlay — add to any relative overflow-hidden container */
+  .grain-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 128px 128px;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
