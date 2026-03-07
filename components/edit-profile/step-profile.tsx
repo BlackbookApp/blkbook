@@ -2,8 +2,9 @@
 
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Globe, Instagram, Linkedin, Mail, Phone, Twitter, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import type { SocialFields } from './types';
+import { SOCIAL_FIELD_CONFIGS } from './social-config';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 
@@ -54,50 +55,6 @@ export const StepProfile = ({
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };
-
-  const socialFields: {
-    key: keyof SocialFields;
-    label: string;
-    placeholder: string;
-    icon: React.ReactNode;
-  }[] = [
-    {
-      key: 'website',
-      label: 'Website',
-      placeholder: 'yoursite.com',
-      icon: <Globe className="w-4 h-4" />,
-    },
-    {
-      key: 'instagram',
-      label: 'Instagram',
-      placeholder: '@yourhandle',
-      icon: <Instagram className="w-4 h-4" />,
-    },
-    {
-      key: 'linkedin',
-      label: 'LinkedIn',
-      placeholder: 'linkedin.com/in/you',
-      icon: <Linkedin className="w-4 h-4" />,
-    },
-    {
-      key: 'twitter',
-      label: 'X / Twitter',
-      placeholder: '@yourhandle',
-      icon: <Twitter className="w-4 h-4" />,
-    },
-    {
-      key: 'email',
-      label: 'Email',
-      placeholder: 'hello@you.com',
-      icon: <Mail className="w-4 h-4" />,
-    },
-    {
-      key: 'phone',
-      label: 'Phone',
-      placeholder: '+44 7700 000000',
-      icon: <Phone className="w-4 h-4" />,
-    },
-  ];
 
   return (
     <motion.div
@@ -171,16 +128,21 @@ export const StepProfile = ({
       </div>
 
       <div className="space-y-4 mb-6">
-        {socialFields.map((sf) => (
-          <div key={sf.key} className="flex items-center gap-3">
-            <div className="flex-1">
-              <Input
-                value={socials[sf.key]}
-                onChange={(e) => updateSocial(sf.key, e.target.value)}
-                placeholder={sf.placeholder}
-              />
+        {SOCIAL_FIELD_CONFIGS.map((sf) => (
+          <div key={sf.key}>
+            <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
+              {sf.label}
+            </label>
+            <div className="flex items-center gap-3">
+              <span className="text-muted-foreground">{sf.icon}</span>
+              <div className="flex-1">
+                <Input
+                  value={socials[sf.key]}
+                  onChange={(e) => updateSocial(sf.key, e.target.value)}
+                  placeholder={sf.placeholder}
+                />
+              </div>
             </div>
-            <span className="text-muted-foreground">{sf.icon}</span>
           </div>
         ))}
       </div>

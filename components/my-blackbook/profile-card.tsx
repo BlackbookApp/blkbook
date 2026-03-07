@@ -56,7 +56,6 @@ export function ProfileCard({ profile }: ProfileCardProps) {
           </div>
         </div>
 
-        {/* Edit Button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -69,7 +68,6 @@ export function ProfileCard({ profile }: ProfileCardProps) {
         </button>
       </div>
 
-      {/* Profile Info */}
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div>
@@ -85,11 +83,11 @@ export function ProfileCard({ profile }: ProfileCardProps) {
 
         {/* Mini Portfolio Strip */}
         {profile.portfolio_images.length > 0 && (
-          <div className="flex gap-2 mb-4">
+          <div className="grid grid-cols-3 gap-2 mb-4">
             {profile.portfolio_images.map((img, i) => (
               <div
                 key={img.id}
-                className="relative flex-1 aspect-square overflow-hidden border border-border"
+                className="relative aspect-square overflow-hidden border border-border"
               >
                 <Image src={img.url} alt={`Work ${i + 1}`} fill className="object-cover" />
               </div>

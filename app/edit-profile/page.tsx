@@ -37,7 +37,6 @@ const EditProfile = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
-  const [isPublishing, setIsPublishing] = useState(false);
 
   const [style, setStyle] = useState<ProfileStyle>(null);
   const [palette, setPalette] = useState<ProfilePalette>(null);
@@ -52,10 +51,12 @@ const EditProfile = () => {
   const [socials, setSocials] = useState<SocialFields>({
     website: '',
     instagram: '',
+    tiktok: '',
     linkedin: '',
     twitter: '',
     email: '',
     phone: '',
+    whatsapp: '',
   });
 
   const [work, setWork] = useState<WorkData>({
@@ -81,10 +82,12 @@ const EditProfile = () => {
     setSocials({
       website: profile.social_links.website ?? '',
       instagram: profile.social_links.instagram ?? '',
+      tiktok: profile.social_links.tiktok ?? '',
       linkedin: profile.social_links.linkedin ?? '',
       twitter: profile.social_links.twitter ?? '',
       email: profile.social_links.email ?? '',
       phone: profile.social_links.phone ?? '',
+      whatsapp: profile.social_links.whatsapp ?? '',
     });
     setWork({
       portfolioImages: profile.portfolio_images.map((img) => ({ id: img.id, url: img.url })),
@@ -186,10 +189,12 @@ const EditProfile = () => {
         Object.entries({
           website: socials.website,
           instagram: socials.instagram,
+          tiktok: socials.tiktok,
           linkedin: socials.linkedin,
           twitter: socials.twitter,
           email: socials.email,
           phone: socials.phone,
+          whatsapp: socials.whatsapp,
         }).filter(([, v]) => v !== '')
       );
 
@@ -210,19 +215,12 @@ const EditProfile = () => {
       });
 
       queryClient.invalidateQueries({ queryKey: ['profile'] });
-      setShowPreview(true);
+      router.push(routes.myBlackbook);
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const handlePublish = async () => {
-    setIsPublishing(true);
-    await updateProfileAction({ is_published: true });
-    queryClient.invalidateQueries({ queryKey: ['profile'] });
-    router.push(routes.paywall);
   };
 
   if (isLoading) {
@@ -291,15 +289,12 @@ const EditProfile = () => {
         {/* Fixed bottom CTA */}
         <div className="fixed bottom-0 left-0 right-0 z-50" data-pg-theme={profileTheme}>
           <div className="max-w-md mx-auto px-6 pt-12 pb-8 flex flex-col items-center gap-3 bg-gradient-to-t from-[var(--pg-bg)] via-[var(--pg-bg)/80] to-transparent">
-            <p className="text-[10px] tracking-wide text-muted-foreground/60">
-              This is your first impression.
-            </p>
             <button
-              onClick={handlePublish}
-              disabled={isPublishing}
+              onClick={handleSave}
+              disabled={isSaving}
               className="pg-btn-primary disabled:opacity-50 w-full"
             >
-              {isPublishing ? 'Publishing…' : 'Activate My Blackbook'}
+              {isSaving ? 'Saving…' : 'Save profile'}
             </button>
           </div>
         </div>
@@ -382,7 +377,7 @@ const EditProfile = () => {
             setRemovedPortfolioIds={setRemovedPortfolioIds}
             logoFile={logoFile}
             setLogoFile={setLogoFile}
-            onFinish={handleSave}
+            onFinish={() => setShowPreview(true)}
           />
         )}
       </AnimatePresence>

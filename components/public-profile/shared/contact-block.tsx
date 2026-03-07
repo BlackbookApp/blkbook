@@ -86,7 +86,10 @@ export const ContactBlock = ({ methods }: ContactBlockProps) => {
           <MethodElement
             key={m.label}
             method={m}
-            className={btnClass(m.variant, m.variant === 'primary' ? '' : 'w-full py-4')}
+            className={btnClass(
+              m.variant,
+              m.variant === 'primary' ? '' : 'w-full py-4 flex justify-center items-center'
+            )}
           />
         );
       })}

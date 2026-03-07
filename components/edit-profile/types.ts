@@ -4,10 +4,12 @@ export type ProfilePalette = 'blanc' | 'noir' | null;
 export interface SocialFields {
   website: string;
   instagram: string;
+  tiktok: string;
   linkedin: string;
   twitter: string;
   email: string;
   phone: string;
+  whatsapp: string;
 }
 
 export interface PortfolioEntry {

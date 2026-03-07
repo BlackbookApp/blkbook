@@ -152,9 +152,8 @@ const PublicProfile = ({
 
         {portfolio.length > 0 && (
           <>
-            {/* Gallery */}
             <div className="mb-10">
-              <div className="space-y-4 py-2">
+              <div className="flex flex-col gap-16 py-2">
                 {Array.from({ length: Math.ceil(portfolio.length / 4) }, (_, blockIndex) => {
                   const block = portfolio.slice(blockIndex * 4, blockIndex * 4 + 4);
                   const testimonial0 = testimonials[blockIndex * 2];

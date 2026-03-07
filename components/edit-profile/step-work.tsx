@@ -250,7 +250,7 @@ export const StepWork = ({
 
       <div className="mt-auto">
         <button onClick={onFinish} className="bb-btn-primary">
-          Finish my profile
+          Preview profile
         </button>
       </div>
     </motion.div>
