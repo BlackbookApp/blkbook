@@ -157,37 +157,75 @@ export const StepWork = ({
       </div>
 
       <div className="mb-6">
-        <div className="border border-border p-4">
-          <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-3">
-            A line from someone who knows your work
-          </p>
-          <textarea
-            value={work.testimonialQuote}
-            onChange={(e) => setWork({ ...work, testimonialQuote: e.target.value })}
-            placeholder="What they said about you..."
-            rows={2}
-            className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none mb-2"
-          />
-          <div className="flex gap-3">
-            <Input
-              value={work.testimonialName}
-              onChange={(e) => setWork({ ...work, testimonialName: e.target.value })}
-              placeholder="Name"
-              className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
-            />
-            <Input
-              value={work.testimonialTitle}
-              onChange={(e) => setWork({ ...work, testimonialTitle: e.target.value })}
-              placeholder="Title"
-              className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
-            />
-          </div>
+        <div className="space-y-3">
+          {work.testimonials.map((t, i) => (
+            <div key={i} className="border border-border p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+                  {i === 0 ? 'A line from someone who knows your work' : `Testimonial ${i + 1}`}
+                </p>
+                {work.testimonials.length > 1 && (
+                  <button
+                    onClick={() =>
+                      setWork({
+                        ...work,
+                        testimonials: work.testimonials.filter((_, idx) => idx !== i),
+                      })
+                    }
+                    className="text-muted-foreground/40 hover:text-foreground transition-colors ml-2"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+              <textarea
+                value={t.quote}
+                onChange={(e) => {
+                  const updated = [...work.testimonials];
+                  updated[i] = { ...updated[i], quote: e.target.value };
+                  setWork({ ...work, testimonials: updated });
+                }}
+                placeholder="What they said about you..."
+                rows={2}
+                className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none mb-2"
+              />
+              <div className="flex gap-3">
+                <Input
+                  value={t.author}
+                  onChange={(e) => {
+                    const updated = [...work.testimonials];
+                    updated[i] = { ...updated[i], author: e.target.value };
+                    setWork({ ...work, testimonials: updated });
+                  }}
+                  placeholder="Name"
+                  className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
+                />
+                <Input
+                  value={t.title}
+                  onChange={(e) => {
+                    const updated = [...work.testimonials];
+                    updated[i] = { ...updated[i], title: e.target.value };
+                    setWork({ ...work, testimonials: updated });
+                  }}
+                  placeholder="Title"
+                  className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
+                />
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="text-right mt-1">
-          <button className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground/50 transition-colors">
-            Skip
-          </button>
-        </div>
+        <button
+          onClick={() =>
+            setWork({
+              ...work,
+              testimonials: [...work.testimonials, { quote: '', author: '', title: '' }],
+            })
+          }
+          className="mt-2 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Plus className="w-3 h-3" />
+          Add another
+        </button>
       </div>
 
       <div className="mb-8">

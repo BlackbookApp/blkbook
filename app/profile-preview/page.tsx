@@ -47,16 +47,10 @@ const ProfilePreview = () => {
 
   const portfolio = profile.portfolio_images.map((img) => ({ imageSrc: img.url }));
 
-  const testimonials = profile.testimonial_quote
-    ? [
-        {
-          quote: profile.testimonial_quote,
-          author: profile.testimonial_author
-            ? `${profile.testimonial_author}${profile.testimonial_title ? `, ${profile.testimonial_title}` : ''}`
-            : undefined,
-        },
-      ]
-    : [];
+  const testimonials = profile.testimonials.map((t) => ({
+    quote: t.quote,
+    author: t.author ? `${t.author}${t.title ? `, ${t.title}` : ''}` : undefined,
+  }));
 
   const isEditorial = profile.style === 'editorial';
   const profileTheme: ProfileTheme = profile.palette === 'noir' ? 'noir' : 'blanc';

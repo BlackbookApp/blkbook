@@ -16,11 +16,15 @@ export interface PortfolioEntry {
   file?: File;
 }
 
+export interface TestimonialDraft {
+  quote: string;
+  author: string;
+  title: string;
+}
+
 export interface WorkData {
   portfolioImages: PortfolioEntry[];
   logo: string | null;
-  testimonialQuote: string;
-  testimonialName: string;
-  testimonialTitle: string;
+  testimonials: TestimonialDraft[];
   brandStatement: string;
 }

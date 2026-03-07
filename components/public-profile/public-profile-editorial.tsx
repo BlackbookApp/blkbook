@@ -143,19 +143,34 @@ const PublicProfileEditorial = ({
 
         <div className="my-10 h-px bg-border" />
 
-        {/* Testimonial or brand statement */}
-        {(testimonials[0] || profile.brandStatement) && (
+        {/* Brand statement */}
+        {profile.brandStatement && (
           <motion.section
-            className="py-14 text-center"
+            className="py-10 text-center"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
             viewport={{ once: true, margin: '-60px' }}
           >
             <p className="text-xs font-medium tracking-tight uppercase leading-relaxed max-w-xs mx-auto">
-              {testimonials[0]?.quote ?? profile.brandStatement}
+              {profile.brandStatement}
             </p>
-            {testimonials[0]?.author && (
+          </motion.section>
+        )}
+
+        {/* Testimonials */}
+        {testimonials[0] && (
+          <motion.section
+            className="py-10 text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+            viewport={{ once: true, margin: '-60px' }}
+          >
+            <p className="text-xs font-medium tracking-tight uppercase leading-relaxed max-w-xs mx-auto">
+              {testimonials[0].quote}
+            </p>
+            {testimonials[0].author && (
               <p className="text-[10px] text-muted-foreground/50 mt-3 uppercase tracking-[0.2em]">
                 — {testimonials[0].author}
               </p>

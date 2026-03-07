@@ -61,9 +61,7 @@ const EditProfile = () => {
   const [work, setWork] = useState<WorkData>({
     portfolioImages: [],
     logo: null,
-    testimonialQuote: '',
-    testimonialName: '',
-    testimonialTitle: '',
+    testimonials: [{ quote: '', author: '', title: '' }],
     brandStatement: '',
   });
 
@@ -91,9 +89,14 @@ const EditProfile = () => {
     setWork({
       portfolioImages: profile.portfolio_images.map((img) => ({ id: img.id, url: img.url })),
       logo: profile.logo_url ?? null,
-      testimonialQuote: profile.testimonial_quote ?? '',
-      testimonialName: profile.testimonial_author ?? '',
-      testimonialTitle: profile.testimonial_title ?? '',
+      testimonials:
+        profile.testimonials.length > 0
+          ? profile.testimonials.map((t) => ({
+              quote: t.quote,
+              author: t.author ?? '',
+              title: t.title ?? '',
+            }))
+          : [{ quote: '', author: '', title: '' }],
       brandStatement: profile.brand_statement ?? '',
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -201,9 +204,9 @@ const EditProfile = () => {
         palette: palette ?? undefined,
         brand_statement: work.brandStatement || null,
         logo_url: logoUrl ?? (work.logo && !work.logo.startsWith('blob:') ? work.logo : null),
-        testimonial_quote: work.testimonialQuote || null,
-        testimonial_author: work.testimonialName || null,
-        testimonial_title: work.testimonialTitle || null,
+        testimonials: work.testimonials
+          .filter((t) => t.quote.trim())
+          .map((t) => ({ quote: t.quote, author: t.author || null, title: t.title || null })),
       });
 
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -243,16 +246,12 @@ const EditProfile = () => {
       brandStatement: work.brandStatement,
     };
     const previewPortfolio = work.portfolioImages.map((img) => ({ imageSrc: img.url }));
-    const previewTestimonials = work.testimonialQuote
-      ? [
-          {
-            quote: work.testimonialQuote,
-            author: work.testimonialName
-              ? `${work.testimonialName}${work.testimonialTitle ? `, ${work.testimonialTitle}` : ''}`
-              : undefined,
-          },
-        ]
-      : [];
+    const previewTestimonials = work.testimonials
+      .filter((t) => t.quote.trim())
+      .map((t) => ({
+        quote: t.quote,
+        author: t.author ? `${t.author}${t.title ? `, ${t.title}` : ''}` : undefined,
+      }));
 
     return (
       <div className="relative">

@@ -17,6 +17,12 @@ export interface PortfolioImage {
   position: number;
 }
 
+export interface TestimonialEntry {
+  quote: string;
+  author?: string | null;
+  title?: string | null;
+}
+
 export interface Profile {
   id: string;
   full_name: string | null;
@@ -29,9 +35,7 @@ export interface Profile {
   palette: 'blanc' | 'noir' | null;
   brand_statement: string | null;
   logo_url: string | null;
-  testimonial_quote: string | null;
-  testimonial_author: string | null;
-  testimonial_title: string | null;
+  testimonials: TestimonialEntry[];
   portfolio_images: PortfolioImage[];
   membership_type: 'guest' | 'member' | null;
   profile_complete: boolean;
@@ -66,6 +70,7 @@ export async function getMyProfile(): Promise<Profile | null> {
   return {
     ...rest,
     social_links: (rest.social_links as SocialLinks) ?? {},
+    testimonials: (rest.testimonials as TestimonialEntry[]) ?? [],
     portfolio_images: (portfolio_images ?? []).sort(
       (a: PortfolioImage, b: PortfolioImage) => a.position - b.position
     ),
@@ -124,6 +129,7 @@ export async function getProfileByUsername(username: string): Promise<Profile | 
   return {
     ...rest,
     social_links: (rest.social_links as SocialLinks) ?? {},
+    testimonials: (rest.testimonials as TestimonialEntry[]) ?? [],
     portfolio_images: (portfolio_images ?? []).sort(
       (a: PortfolioImage, b: PortfolioImage) => a.position - b.position
     ),

@@ -185,6 +185,7 @@ export type Database = {
           role: string | null;
           social_links: Json;
           style: Database['public']['Enums']['profile_style'] | null;
+          testimonials: Json;
           updated_at: string | null;
           username: string | null;
         };
@@ -207,6 +208,7 @@ export type Database = {
           role?: string | null;
           social_links?: Json;
           style?: Database['public']['Enums']['profile_style'] | null;
+          testimonials?: Json;
           updated_at?: string | null;
           username?: string | null;
         };
@@ -229,6 +231,7 @@ export type Database = {
           role?: string | null;
           social_links?: Json;
           style?: Database['public']['Enums']['profile_style'] | null;
+          testimonials?: Json;
           updated_at?: string | null;
           username?: string | null;
         };
