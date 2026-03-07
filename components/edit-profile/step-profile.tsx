@@ -1,9 +1,13 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Globe, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import type { SocialFields } from './types';
+import { SOCIAL_FIELD_CONFIGS } from './social-config';
+import { validateProfileStep, type ProfileStepErrors } from './validation';
 import { Input } from '@/components/ui/input';
+import Image from 'next/image';
 
 interface StepProfileProps {
   name: string;
@@ -12,6 +16,12 @@ interface StepProfileProps {
   setRole: (v: string) => void;
   location: string;
   setLocation: (v: string) => void;
+  bio: string;
+  setBio: (v: string) => void;
+  avatarFile: File | null;
+  setAvatarFile: (f: File | null) => void;
+  avatarPreview: string | null;
+  setAvatarPreview: (p: string | null) => void;
   socials: SocialFields;
   setSocials: (s: SocialFields) => void;
   onContinue: () => void;
@@ -25,51 +35,52 @@ export const StepProfile = ({
   setRole,
   location,
   setLocation,
+  bio,
+  setBio,
+  avatarFile: _avatarFile,
+  setAvatarFile,
+  avatarPreview,
+  setAvatarPreview,
   socials,
   setSocials,
   onContinue,
   onSkip,
 }: StepProfileProps) => {
-  const updateSocial = (key: keyof SocialFields, value: string) =>
-    setSocials({ ...socials, [key]: value });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [errors, setErrors] = useState<ProfileStepErrors>({});
 
-  const socialFields: {
-    key: keyof SocialFields;
-    label: string;
-    placeholder: string;
-    icon: React.ReactNode;
-  }[] = [
-    {
-      key: 'website',
-      label: 'Website',
-      placeholder: 'yoursite.com',
-      icon: <Globe className="w-4 h-4" />,
-    },
-    {
-      key: 'instagram',
-      label: 'Instagram',
-      placeholder: '@yourhandle',
-      icon: <Instagram className="w-4 h-4" />,
-    },
-    {
-      key: 'linkedin',
-      label: 'LinkedIn',
-      placeholder: 'linkedin.com/in/you',
-      icon: <Linkedin className="w-4 h-4" />,
-    },
-    {
-      key: 'email',
-      label: 'Email',
-      placeholder: 'hello@you.com',
-      icon: <Mail className="w-4 h-4" />,
-    },
-    {
-      key: 'phone',
-      label: 'Phone',
-      placeholder: '+44 7700 000000',
-      icon: <Phone className="w-4 h-4" />,
-    },
-  ];
+  const updateSocial = (key: keyof SocialFields, value: string) => {
+    setSocials({ ...socials, [key]: value });
+    if (errors.socials?.[key]) {
+      setErrors((prev) => ({ ...prev, socials: { ...prev.socials, [key]: undefined } }));
+    }
+  };
+
+  const clearError = (field: keyof ProfileStepErrors) => {
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
+
+  const handleContinue = () => {
+    const { valid, errors: nextErrors } = validateProfileStep({
+      name,
+      role,
+      location,
+      bio,
+      socials,
+    });
+    if (!valid) {
+      setErrors(nextErrors);
+      return;
+    }
+    onContinue();
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
 
   return (
     <motion.div
@@ -83,11 +94,60 @@ export const StepProfile = ({
         Your Profile
       </p>
 
-      <div className="space-y-5 mb-8">
+      {/* Avatar upload */}
+      <div className="flex justify-center mb-6">
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="w-full aspect-auto border border-dashed border-border hover:border-muted-foreground/40 transition-colors flex items-center justify-center overflow-hidden"
+        >
+          {avatarPreview ? (
+            <Image
+              src={avatarPreview}
+              alt="Avatar"
+              className="w-full h-full object-cover"
+              width={100}
+              height={200}
+            />
+          ) : (
+            <Plus className="w-5 h-5 text-muted-foreground/30" />
+          )}
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleAvatarChange}
+          className="hidden"
+        />
+      </div>
+
+      <div className="space-y-5 mb-6">
         {[
-          { label: 'Name', value: name, set: setName, placeholder: 'Full name' },
-          { label: 'Role', value: role, set: setRole, placeholder: 'What you do' },
-          { label: 'Location', value: location, set: setLocation, placeholder: 'City, Country' },
+          {
+            label: 'Name',
+            value: name,
+            set: setName,
+            placeholder: 'Full name',
+            error: errors.name,
+            field: 'name' as const,
+          },
+          {
+            label: 'Role',
+            value: role,
+            set: setRole,
+            placeholder: 'What you do',
+            error: errors.role,
+            field: 'role' as const,
+          },
+          {
+            label: 'Location',
+            value: location,
+            set: setLocation,
+            placeholder: 'City, Country',
+            error: errors.location,
+            field: 'location' as const,
+          },
         ].map((f) => (
           <div key={f.label}>
             <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
@@ -95,24 +155,55 @@ export const StepProfile = ({
             </label>
             <Input
               value={f.value}
-              onChange={(e) => f.set(e.target.value)}
+              onChange={(e) => {
+                f.set(e.target.value);
+                clearError(f.field);
+              }}
               placeholder={f.placeholder}
+              aria-invalid={!!f.error}
             />
+            {f.error && <p className="mt-1 text-[10px] text-destructive">{f.error}</p>}
           </div>
         ))}
+
+        <div>
+          <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
+            Bio
+          </label>
+          <Input
+            variant="primary"
+            value={bio}
+            onChange={(e) => {
+              setBio(e.target.value);
+              clearError('bio');
+            }}
+            placeholder="A short bio or tagline"
+            aria-invalid={!!errors.bio}
+          />
+          {errors.bio && <p className="mt-1 text-[10px] text-destructive">{errors.bio}</p>}
+        </div>
       </div>
 
       <div className="space-y-4 mb-6">
-        {socialFields.map((sf) => (
-          <div key={sf.key} className="flex items-center gap-3">
-            <div className="flex-1">
-              <Input
-                value={socials[sf.key]}
-                onChange={(e) => updateSocial(sf.key, e.target.value)}
-                placeholder={sf.placeholder}
-              />
+        {SOCIAL_FIELD_CONFIGS.map((sf) => (
+          <div key={sf.key}>
+            <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
+              {sf.label}
+            </label>
+            <div className="flex items-center gap-3">
+              <div className="flex-1">
+                <Input
+                  value={socials[sf.key]}
+                  onChange={(e) => updateSocial(sf.key, e.target.value)}
+                  placeholder={sf.placeholder}
+                  aria-invalid={!!errors.socials?.[sf.key]}
+                />
+                {errors.socials?.[sf.key] && (
+                  <p className="mt-1 text-[10px] text-destructive">{errors.socials[sf.key]}</p>
+                )}
+              </div>
+              <span className="text-muted-foreground">{sf.icon}</span>
             </div>
-            <span className="text-muted-foreground">{sf.icon}</span>
           </div>
         ))}
       </div>
@@ -122,7 +213,7 @@ export const StepProfile = ({
       </p>
 
       <div className="mt-auto space-y-3">
-        <button onClick={onContinue} className="bb-btn-primary">
+        <button onClick={handleContinue} className="bb-btn-primary">
           Continue
         </button>
         <button

@@ -22,6 +22,7 @@ export interface ProfileData {
   logoSrc?: string | null;
   portraitSrc?: string | null;
   socialLinks?: SocialLinks;
+  brandStatement?: string | null;
 }
 
 export interface PortfolioItem {
@@ -151,65 +152,85 @@ const PublicProfile = ({
 
         {portfolio.length > 0 && (
           <>
-            {/* Gallery */}
             <div className="mb-10">
-              <div className="space-y-4 py-2">
-                <div>
-                  <ParallaxPortfolio
-                    src={portfolio[0].imageSrc}
-                    alt={portfolio[0].title ?? undefined}
-                    index={0}
-                  />
-                  {testimonials[0] && (
-                    <ParallaxTestimonial
-                      quote={testimonials[0].quote}
-                      author={testimonials[0].author || undefined}
-                    />
-                  )}
-                </div>
+              <div className="flex flex-col gap-16 py-2">
+                {Array.from({ length: Math.ceil(portfolio.length / 4) }, (_, blockIndex) => {
+                  const block = portfolio.slice(blockIndex * 4, blockIndex * 4 + 4);
+                  const testimonial0 = testimonials[blockIndex * 2];
+                  const testimonial1 = testimonials[blockIndex * 2 + 1];
 
-                <motion.div
-                  className="flex gap-4 items-start"
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-                  viewport={{ once: true, margin: '-80px' }}
-                >
-                  <div className="w-2/5">
-                    <PortfolioFrame
-                      src={portfolio[2]?.imageSrc}
-                      alt={portfolio[2]?.title ?? undefined}
-                    />
-                  </div>
-                  <div className="w-2/5 ml-auto mt-12">
-                    <PortfolioFrame
-                      src={portfolio[1]?.imageSrc}
-                      alt={portfolio[1]?.title ?? undefined}
-                    />
-                  </div>
-                </motion.div>
+                  return (
+                    <div key={blockIndex} className="space-y-4">
+                      {/* Image 0: full-width parallax */}
+                      <div>
+                        <ParallaxPortfolio
+                          src={block[0].imageSrc}
+                          alt={block[0].title ?? undefined}
+                          index={blockIndex * 4}
+                        />
+                        {testimonial0 && (
+                          <ParallaxTestimonial
+                            quote={testimonial0.quote}
+                            author={testimonial0.author || undefined}
+                          />
+                        )}
+                      </div>
 
-                {testimonials[1] && (
-                  <ParallaxTestimonial
-                    quote={testimonials[1].quote}
-                    author={testimonials[1].author || undefined}
-                  />
-                )}
+                      {/* Images 1 & 2: staggered pair */}
+                      {(block[1] || block[2]) && (
+                        <motion.div
+                          className="flex gap-4 items-start"
+                          initial={{ opacity: 0, y: 50 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
+                          viewport={{ once: true, margin: '-80px' }}
+                        >
+                          {block[2] && (
+                            <div className="w-2/5">
+                              <PortfolioFrame
+                                src={block[2].imageSrc}
+                                alt={block[2].title ?? undefined}
+                              />
+                            </div>
+                          )}
+                          {block[1] && (
+                            <div className={`w-2/5 ml-auto${block[2] ? ' mt-12' : ''}`}>
+                              <PortfolioFrame
+                                src={block[1].imageSrc}
+                                alt={block[1].title ?? undefined}
+                              />
+                            </div>
+                          )}
+                        </motion.div>
+                      )}
 
-                <motion.div
-                  className="flex justify-center"
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-                  viewport={{ once: true, margin: '-80px' }}
-                >
-                  <div className="w-3/5">
-                    <PortfolioFrame
-                      src={portfolio[3]?.imageSrc}
-                      alt={portfolio[3]?.title ?? undefined}
-                    />
-                  </div>
-                </motion.div>
+                      {testimonial1 && (
+                        <ParallaxTestimonial
+                          quote={testimonial1.quote}
+                          author={testimonial1.author || undefined}
+                        />
+                      )}
+
+                      {/* Image 3: centered */}
+                      {block[3] && (
+                        <motion.div
+                          className="flex justify-center"
+                          initial={{ opacity: 0, y: 50 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
+                          viewport={{ once: true, margin: '-80px' }}
+                        >
+                          <div className="w-3/5">
+                            <PortfolioFrame
+                              src={block[3].imageSrc}
+                              alt={block[3].title ?? undefined}
+                            />
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -218,7 +239,7 @@ const PublicProfile = ({
             {/* Logo */}
             {profile.logoSrc && (
               <div className="flex justify-center mb-6">
-                <div className="relative h-3 w-24">
+                <div className="relative h-12 w-full aspect-[4/1]">
                   <Image src={profile.logoSrc} alt={profile.name} fill className="object-contain" />
                 </div>
               </div>

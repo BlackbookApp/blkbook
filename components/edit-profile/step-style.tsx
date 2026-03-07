@@ -76,7 +76,7 @@ export const StepStyle = ({
           </button>
         </div>
 
-        <div
+        {/* <div
           className={`flex-1 text-center transition-all border overflow-hidden ${
             style === 'editorial' ? 'border-foreground' : 'border-border'
           }`}
@@ -108,7 +108,7 @@ export const StepStyle = ({
               Minimal. Refined. Word-led.
             </span>
           </button>
-        </div>
+        </div> */}
       </div>
 
       <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-4">

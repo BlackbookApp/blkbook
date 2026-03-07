@@ -1,9 +1,9 @@
 import type { SocialLinks } from '@/lib/data/profiles';
 import {
   InstagramIcon,
+  TikTokIcon,
   LinkedInIcon,
   TwitterIcon,
-  GlobeIcon,
   MailIcon,
   PhoneIcon,
 } from './social-icons';
@@ -19,9 +19,16 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
   if (links.instagram) {
     socials.push({
       icon: <InstagramIcon className={iconClass} />,
-      href: `https://instagram.com/${links.instagram}`,
+      href: `https://instagram.com/${links.instagram.replace(/^@/, '')}`,
       label: `@${links.instagram}`,
-      count: '5k',
+    });
+  }
+
+  if (links.tiktok) {
+    socials.push({
+      icon: <TikTokIcon className={iconClass} />,
+      href: `https://tiktok.com/@${links.tiktok.replace(/^@/, '')}`,
+      label: `@${links.tiktok}`,
     });
   }
 
@@ -32,7 +39,6 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
         ? links.linkedin
         : `https://linkedin.com/in/${links.linkedin}`,
       label: 'LinkedIn',
-      count: '5k',
     });
   }
 
@@ -41,16 +47,6 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
       icon: <TwitterIcon className={iconClass} />,
       href: `https://x.com/${links.twitter}`,
       label: `@${links.twitter}`,
-      count: '5k',
-    });
-  }
-
-  if (links.website) {
-    socials.push({
-      icon: <GlobeIcon className={iconClass} />,
-      href: links.website.startsWith('http') ? links.website : `https://${links.website}`,
-      label: links.website,
-      count: '5k',
     });
   }
 
@@ -59,7 +55,6 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
       icon: <MailIcon className={iconClass} />,
       href: `mailto:${links.email}`,
       label: links.email,
-      count: '5k',
     });
   }
 
@@ -68,7 +63,6 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
       icon: <PhoneIcon className={iconClass} />,
       href: `tel:${links.phone}`,
       label: links.phone,
-      count: '5k',
     });
   }
 
@@ -89,10 +83,10 @@ export function buildContactMethods(
 
   const halfItems: ContactMethod[] = [];
 
-  if (links.phone) {
+  if (links.whatsapp) {
     halfItems.push({
       label: 'WhatsApp',
-      href: `https://wa.me/${links.phone.replace(/\D/g, '')}`,
+      href: `https://wa.me/${links.whatsapp.replace(/\D/g, '')}`,
       variant: 'secondary',
       layout: 'half',
     });
@@ -107,7 +101,6 @@ export function buildContactMethods(
     });
   }
 
-  // If odd number of half items, last one becomes full-width
   methods.push(...halfItems);
 
   methods.push({

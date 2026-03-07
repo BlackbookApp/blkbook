@@ -1,36 +1,69 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Plus, X, Image as ImageIcon } from 'lucide-react';
-import type { WorkData } from './types';
+import type { WorkData, PortfolioEntry } from './types';
+import { validateWorkStep, type WorkStepErrors } from './validation';
 import { Input } from '@/components/ui/input';
 
 interface StepWorkProps {
   work: WorkData;
   setWork: (w: WorkData) => void;
+  removedPortfolioIds: string[];
+  setRemovedPortfolioIds: (ids: string[]) => void;
+  logoFile: File | null;
+  setLogoFile: (f: File | null) => void;
   onFinish: () => void;
 }
 
-export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
+export const StepWork = ({
+  work,
+  setWork,
+  removedPortfolioIds,
+  setRemovedPortfolioIds,
+  setLogoFile,
+  onFinish,
+}: StepWorkProps) => {
   const portfolioInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const [errors, setErrors] = useState<WorkStepErrors>({});
+
+  const handleFinish = () => {
+    const { valid, errors: nextErrors } = validateWorkStep({
+      brandStatement: work.brandStatement,
+      testimonials: work.testimonials,
+    });
+    if (!valid) {
+      setErrors(nextErrors);
+      return;
+    }
+    onFinish();
+  };
 
   const handlePortfolioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-    const urls = Array.from(files).map((f) => URL.createObjectURL(f));
-    setWork({ ...work, portfolioImages: [...work.portfolioImages, ...urls] });
+    const newEntries: PortfolioEntry[] = Array.from(files).map((f) => ({
+      url: URL.createObjectURL(f),
+      file: f,
+    }));
+    setWork({ ...work, portfolioImages: [...work.portfolioImages, ...newEntries] });
   };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setLogoFile(file);
     setWork({ ...work, logo: URL.createObjectURL(file) });
   };
 
   const removePortfolioImage = (idx: number) => {
+    const entry = work.portfolioImages[idx];
+    if (entry.id) {
+      setRemovedPortfolioIds([...removedPortfolioIds, entry.id]);
+    }
     setWork({ ...work, portfolioImages: work.portfolioImages.filter((_, i) => i !== idx) });
   };
 
@@ -73,10 +106,10 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
         </button>
         {work.portfolioImages.length > 0 && (
           <div className="flex gap-2 mt-3 flex-wrap">
-            {work.portfolioImages.map((img, i) => (
-              <div key={i} className="relative w-16 h-16">
+            {work.portfolioImages.map((entry, i) => (
+              <div key={entry.id ?? entry.url} className="relative w-16 h-16">
                 <Image
-                  src={img}
+                  src={entry.url}
                   alt=""
                   width={64}
                   height={64}
@@ -138,37 +171,107 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
       </div>
 
       <div className="mb-6">
-        <div className="border border-border p-4">
-          <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-3">
-            A line from someone who knows your work
-          </p>
-          <textarea
-            value={work.testimonialQuote}
-            onChange={(e) => setWork({ ...work, testimonialQuote: e.target.value })}
-            placeholder="What they said about you..."
-            rows={2}
-            className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none mb-2"
-          />
-          <div className="flex gap-3">
-            <Input
-              value={work.testimonialName}
-              onChange={(e) => setWork({ ...work, testimonialName: e.target.value })}
-              placeholder="Name"
-              className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
-            />
-            <Input
-              value={work.testimonialTitle}
-              onChange={(e) => setWork({ ...work, testimonialTitle: e.target.value })}
-              placeholder="Title"
-              className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
-            />
-          </div>
+        <div className="space-y-3">
+          {work.testimonials.map((t, i) => (
+            <div key={i} className="border border-border p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+                  {i === 0 ? 'A line from someone who knows your work' : `Testimonial ${i + 1}`}
+                </p>
+                {work.testimonials.length > 1 && (
+                  <button
+                    onClick={() =>
+                      setWork({
+                        ...work,
+                        testimonials: work.testimonials.filter((_, idx) => idx !== i),
+                      })
+                    }
+                    className="text-muted-foreground/40 hover:text-foreground transition-colors ml-2"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+              <textarea
+                value={t.quote}
+                onChange={(e) => {
+                  const updated = [...work.testimonials];
+                  updated[i] = { ...updated[i], quote: e.target.value };
+                  setWork({ ...work, testimonials: updated });
+                  if (errors.testimonials?.[i]?.quote) {
+                    const t = [...(errors.testimonials ?? [])];
+                    t[i] = { ...t[i], quote: undefined };
+                    setErrors((prev) => ({ ...prev, testimonials: t }));
+                  }
+                }}
+                placeholder="What they said about you..."
+                rows={2}
+                className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none mb-2"
+              />
+              {errors.testimonials?.[i]?.quote && (
+                <p className="mb-2 text-[10px] text-destructive">{errors.testimonials[i]?.quote}</p>
+              )}
+              <div className="flex gap-3">
+                <div className="flex-1">
+                  <Input
+                    value={t.author}
+                    onChange={(e) => {
+                      const updated = [...work.testimonials];
+                      updated[i] = { ...updated[i], author: e.target.value };
+                      setWork({ ...work, testimonials: updated });
+                      if (errors.testimonials?.[i]?.author) {
+                        const t = [...(errors.testimonials ?? [])];
+                        t[i] = { ...t[i], author: undefined };
+                        setErrors((prev) => ({ ...prev, testimonials: t }));
+                      }
+                    }}
+                    placeholder="Name"
+                    className="py-2 text-[11px] placeholder:text-muted-foreground/40"
+                  />
+                  {errors.testimonials?.[i]?.author && (
+                    <p className="mt-1 text-[10px] text-destructive">
+                      {errors.testimonials[i]?.author}
+                    </p>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <Input
+                    value={t.title}
+                    onChange={(e) => {
+                      const updated = [...work.testimonials];
+                      updated[i] = { ...updated[i], title: e.target.value };
+                      setWork({ ...work, testimonials: updated });
+                      if (errors.testimonials?.[i]?.title) {
+                        const t = [...(errors.testimonials ?? [])];
+                        t[i] = { ...t[i], title: undefined };
+                        setErrors((prev) => ({ ...prev, testimonials: t }));
+                      }
+                    }}
+                    placeholder="Title"
+                    className="py-2 text-[11px] placeholder:text-muted-foreground/40"
+                  />
+                  {errors.testimonials?.[i]?.title && (
+                    <p className="mt-1 text-[10px] text-destructive">
+                      {errors.testimonials[i]?.title}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="text-right mt-1">
-          <button className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground/50 transition-colors">
-            Skip
-          </button>
-        </div>
+        <button
+          onClick={() =>
+            setWork({
+              ...work,
+              testimonials: [...work.testimonials, { quote: '', author: '', title: '' }],
+            })
+          }
+          className="mt-2 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Plus className="w-3 h-3" />
+          Add another
+        </button>
       </div>
 
       <div className="mb-8">
@@ -178,12 +281,19 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
           </p>
           <textarea
             value={work.brandStatement}
-            onChange={(e) => setWork({ ...work, brandStatement: e.target.value })}
+            onChange={(e) => {
+              setWork({ ...work, brandStatement: e.target.value });
+              if (errors.brandStatement)
+                setErrors((prev) => ({ ...prev, brandStatement: undefined }));
+            }}
             placeholder="What you stand for. What you build. What you believe."
             rows={3}
             className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none"
           />
         </div>
+        {errors.brandStatement && (
+          <p className="mt-1 text-[10px] text-destructive">{errors.brandStatement}</p>
+        )}
         <div className="text-right mt-1">
           <button className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground/50 transition-colors">
             Skip
@@ -192,8 +302,8 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
       </div>
 
       <div className="mt-auto">
-        <button onClick={onFinish} className="bb-btn-primary">
-          Finish my profile
+        <button onClick={handleFinish} className="bb-btn-primary">
+          Preview profile
         </button>
       </div>
     </motion.div>

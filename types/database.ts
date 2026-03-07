@@ -1,13 +1,90 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: '14.1';
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
   };
   public: {
     Tables: {
+      access_requests: {
+        Row: {
+          attempt_count: number;
+          brand_link: string | null;
+          created_at: string | null;
+          email: string;
+          full_name: string;
+          id: string;
+          invite_code: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          social_handle: string | null;
+          status: Database['public']['Enums']['access_request_status'];
+        };
+        Insert: {
+          attempt_count?: number;
+          brand_link?: string | null;
+          created_at?: string | null;
+          email: string;
+          full_name: string;
+          id?: string;
+          invite_code?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          social_handle?: string | null;
+          status?: Database['public']['Enums']['access_request_status'];
+        };
+        Update: {
+          attempt_count?: number;
+          brand_link?: string | null;
+          created_at?: string | null;
+          email?: string;
+          full_name?: string;
+          id?: string;
+          invite_code?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          social_handle?: string | null;
+          status?: Database['public']['Enums']['access_request_status'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'access_requests_invite_code_fkey';
+            columns: ['invite_code'];
+            isOneToOne: false;
+            referencedRelation: 'invitations';
+            referencedColumns: ['code'];
+          },
+          {
+            foreignKeyName: 'access_requests_reviewed_by_fkey';
+            columns: ['reviewed_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       invitations: {
         Row: {
           code: string;
@@ -56,6 +133,38 @@ export type Database = {
           },
         ];
       };
+      portfolio_images: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          position: number;
+          profile_id: string;
+          url: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          position?: number;
+          profile_id: string;
+          url: string;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          position?: number;
+          profile_id?: string;
+          url?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'portfolio_images_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       profiles: {
         Row: {
           avatar_url: string | null;
@@ -64,22 +173,21 @@ export type Database = {
           created_at: string | null;
           full_name: string | null;
           id: string;
-          instagram: string | null;
           invite_code: string;
           invited_by: string | null;
-          invites_remaining: number | null;
+          invites_remaining: number;
+          is_admin: boolean;
           is_published: boolean | null;
-          linkedin: string | null;
           location: string | null;
-          membership_type: string | null;
-          palette: string | null;
-          phone: string | null;
-          portfolio_images: string[] | null;
+          membership_type: Database['public']['Enums']['membership_type'] | null;
+          palette: Database['public']['Enums']['profile_palette'] | null;
           profile_complete: boolean | null;
           role: string | null;
-          style: string | null;
+          social_links: Json;
+          style: Database['public']['Enums']['profile_style'] | null;
+          testimonials: Json;
           updated_at: string | null;
-          website: string | null;
+          username: string | null;
         };
         Insert: {
           avatar_url?: string | null;
@@ -88,22 +196,21 @@ export type Database = {
           created_at?: string | null;
           full_name?: string | null;
           id: string;
-          instagram?: string | null;
           invite_code?: string;
           invited_by?: string | null;
-          invites_remaining?: number | null;
+          invites_remaining?: number;
+          is_admin?: boolean;
           is_published?: boolean | null;
-          linkedin?: string | null;
           location?: string | null;
-          membership_type?: string | null;
-          palette?: string | null;
-          phone?: string | null;
-          portfolio_images?: string[] | null;
+          membership_type?: Database['public']['Enums']['membership_type'] | null;
+          palette?: Database['public']['Enums']['profile_palette'] | null;
           profile_complete?: boolean | null;
           role?: string | null;
-          style?: string | null;
+          social_links?: Json;
+          style?: Database['public']['Enums']['profile_style'] | null;
+          testimonials?: Json;
           updated_at?: string | null;
-          website?: string | null;
+          username?: string | null;
         };
         Update: {
           avatar_url?: string | null;
@@ -112,22 +219,21 @@ export type Database = {
           created_at?: string | null;
           full_name?: string | null;
           id?: string;
-          instagram?: string | null;
           invite_code?: string;
           invited_by?: string | null;
-          invites_remaining?: number | null;
+          invites_remaining?: number;
+          is_admin?: boolean;
           is_published?: boolean | null;
-          linkedin?: string | null;
           location?: string | null;
-          membership_type?: string | null;
-          palette?: string | null;
-          phone?: string | null;
-          portfolio_images?: string[] | null;
+          membership_type?: Database['public']['Enums']['membership_type'] | null;
+          palette?: Database['public']['Enums']['profile_palette'] | null;
           profile_complete?: boolean | null;
           role?: string | null;
-          style?: string | null;
+          social_links?: Json;
+          style?: Database['public']['Enums']['profile_style'] | null;
+          testimonials?: Json;
           updated_at?: string | null;
-          website?: string | null;
+          username?: string | null;
         };
         Relationships: [
           {
@@ -150,7 +256,10 @@ export type Database = {
       };
     };
     Enums: {
-      [_ in never]: never;
+      access_request_status: 'pending' | 'approved' | 'rejected';
+      membership_type: 'guest' | 'member';
+      profile_palette: 'blanc' | 'noir';
+      profile_style: 'visual' | 'editorial';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -274,7 +383,15 @@ export type CompositeTypes<
     : never;
 
 export const Constants = {
-  public: {
+  graphql_public: {
     Enums: {},
+  },
+  public: {
+    Enums: {
+      access_request_status: ['pending', 'approved', 'rejected'],
+      membership_type: ['guest', 'member'],
+      profile_palette: ['blanc', 'noir'],
+      profile_style: ['visual', 'editorial'],
+    },
   },
 } as const;
