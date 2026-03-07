@@ -1,10 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import type { SocialFields } from './types';
 import { SOCIAL_FIELD_CONFIGS } from './social-config';
+import { validateProfileStep, type ProfileStepErrors } from './validation';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 
@@ -46,8 +47,33 @@ export const StepProfile = ({
   onSkip,
 }: StepProfileProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const updateSocial = (key: keyof SocialFields, value: string) =>
+  const [errors, setErrors] = useState<ProfileStepErrors>({});
+
+  const updateSocial = (key: keyof SocialFields, value: string) => {
     setSocials({ ...socials, [key]: value });
+    if (errors.socials?.[key]) {
+      setErrors((prev) => ({ ...prev, socials: { ...prev.socials, [key]: undefined } }));
+    }
+  };
+
+  const clearError = (field: keyof ProfileStepErrors) => {
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
+
+  const handleContinue = () => {
+    const { valid, errors: nextErrors } = validateProfileStep({
+      name,
+      role,
+      location,
+      bio,
+      socials,
+    });
+    if (!valid) {
+      setErrors(nextErrors);
+      return;
+    }
+    onContinue();
+  };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -98,9 +124,30 @@ export const StepProfile = ({
 
       <div className="space-y-5 mb-6">
         {[
-          { label: 'Name', value: name, set: setName, placeholder: 'Full name' },
-          { label: 'Role', value: role, set: setRole, placeholder: 'What you do' },
-          { label: 'Location', value: location, set: setLocation, placeholder: 'City, Country' },
+          {
+            label: 'Name',
+            value: name,
+            set: setName,
+            placeholder: 'Full name',
+            error: errors.name,
+            field: 'name' as const,
+          },
+          {
+            label: 'Role',
+            value: role,
+            set: setRole,
+            placeholder: 'What you do',
+            error: errors.role,
+            field: 'role' as const,
+          },
+          {
+            label: 'Location',
+            value: location,
+            set: setLocation,
+            placeholder: 'City, Country',
+            error: errors.location,
+            field: 'location' as const,
+          },
         ].map((f) => (
           <div key={f.label}>
             <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
@@ -108,9 +155,14 @@ export const StepProfile = ({
             </label>
             <Input
               value={f.value}
-              onChange={(e) => f.set(e.target.value)}
+              onChange={(e) => {
+                f.set(e.target.value);
+                clearError(f.field);
+              }}
               placeholder={f.placeholder}
+              aria-invalid={!!f.error}
             />
+            {f.error && <p className="mt-1 text-[10px] text-destructive">{f.error}</p>}
           </div>
         ))}
 
@@ -121,9 +173,14 @@ export const StepProfile = ({
           <Input
             variant="primary"
             value={bio}
-            onChange={(e) => setBio(e.target.value)}
+            onChange={(e) => {
+              setBio(e.target.value);
+              clearError('bio');
+            }}
             placeholder="A short bio or tagline"
+            aria-invalid={!!errors.bio}
           />
+          {errors.bio && <p className="mt-1 text-[10px] text-destructive">{errors.bio}</p>}
         </div>
       </div>
 
@@ -139,7 +196,11 @@ export const StepProfile = ({
                   value={socials[sf.key]}
                   onChange={(e) => updateSocial(sf.key, e.target.value)}
                   placeholder={sf.placeholder}
+                  aria-invalid={!!errors.socials?.[sf.key]}
                 />
+                {errors.socials?.[sf.key] && (
+                  <p className="mt-1 text-[10px] text-destructive">{errors.socials[sf.key]}</p>
+                )}
               </div>
               <span className="text-muted-foreground">{sf.icon}</span>
             </div>
@@ -152,7 +213,7 @@ export const StepProfile = ({
       </p>
 
       <div className="mt-auto space-y-3">
-        <button onClick={onContinue} className="bb-btn-primary">
+        <button onClick={handleContinue} className="bb-btn-primary">
           Continue
         </button>
         <button

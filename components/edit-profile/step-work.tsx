@@ -1,10 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Plus, X, Image as ImageIcon } from 'lucide-react';
 import type { WorkData, PortfolioEntry } from './types';
+import { validateWorkStep, type WorkStepErrors } from './validation';
 import { Input } from '@/components/ui/input';
 
 interface StepWorkProps {
@@ -27,6 +28,19 @@ export const StepWork = ({
 }: StepWorkProps) => {
   const portfolioInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const [errors, setErrors] = useState<WorkStepErrors>({});
+
+  const handleFinish = () => {
+    const { valid, errors: nextErrors } = validateWorkStep({
+      brandStatement: work.brandStatement,
+      testimonials: work.testimonials,
+    });
+    if (!valid) {
+      setErrors(nextErrors);
+      return;
+    }
+    onFinish();
+  };
 
   const handlePortfolioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -184,32 +198,64 @@ export const StepWork = ({
                   const updated = [...work.testimonials];
                   updated[i] = { ...updated[i], quote: e.target.value };
                   setWork({ ...work, testimonials: updated });
+                  if (errors.testimonials?.[i]?.quote) {
+                    const t = [...(errors.testimonials ?? [])];
+                    t[i] = { ...t[i], quote: undefined };
+                    setErrors((prev) => ({ ...prev, testimonials: t }));
+                  }
                 }}
                 placeholder="What they said about you..."
                 rows={2}
                 className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none mb-2"
               />
+              {errors.testimonials?.[i]?.quote && (
+                <p className="mb-2 text-[10px] text-destructive">{errors.testimonials[i]?.quote}</p>
+              )}
               <div className="flex gap-3">
-                <Input
-                  value={t.author}
-                  onChange={(e) => {
-                    const updated = [...work.testimonials];
-                    updated[i] = { ...updated[i], author: e.target.value };
-                    setWork({ ...work, testimonials: updated });
-                  }}
-                  placeholder="Name"
-                  className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
-                />
-                <Input
-                  value={t.title}
-                  onChange={(e) => {
-                    const updated = [...work.testimonials];
-                    updated[i] = { ...updated[i], title: e.target.value };
-                    setWork({ ...work, testimonials: updated });
-                  }}
-                  placeholder="Title"
-                  className="flex-1 py-2 text-[11px] placeholder:text-muted-foreground/40"
-                />
+                <div className="flex-1">
+                  <Input
+                    value={t.author}
+                    onChange={(e) => {
+                      const updated = [...work.testimonials];
+                      updated[i] = { ...updated[i], author: e.target.value };
+                      setWork({ ...work, testimonials: updated });
+                      if (errors.testimonials?.[i]?.author) {
+                        const t = [...(errors.testimonials ?? [])];
+                        t[i] = { ...t[i], author: undefined };
+                        setErrors((prev) => ({ ...prev, testimonials: t }));
+                      }
+                    }}
+                    placeholder="Name"
+                    className="py-2 text-[11px] placeholder:text-muted-foreground/40"
+                  />
+                  {errors.testimonials?.[i]?.author && (
+                    <p className="mt-1 text-[10px] text-destructive">
+                      {errors.testimonials[i]?.author}
+                    </p>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <Input
+                    value={t.title}
+                    onChange={(e) => {
+                      const updated = [...work.testimonials];
+                      updated[i] = { ...updated[i], title: e.target.value };
+                      setWork({ ...work, testimonials: updated });
+                      if (errors.testimonials?.[i]?.title) {
+                        const t = [...(errors.testimonials ?? [])];
+                        t[i] = { ...t[i], title: undefined };
+                        setErrors((prev) => ({ ...prev, testimonials: t }));
+                      }
+                    }}
+                    placeholder="Title"
+                    className="py-2 text-[11px] placeholder:text-muted-foreground/40"
+                  />
+                  {errors.testimonials?.[i]?.title && (
+                    <p className="mt-1 text-[10px] text-destructive">
+                      {errors.testimonials[i]?.title}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -235,12 +281,19 @@ export const StepWork = ({
           </p>
           <textarea
             value={work.brandStatement}
-            onChange={(e) => setWork({ ...work, brandStatement: e.target.value })}
+            onChange={(e) => {
+              setWork({ ...work, brandStatement: e.target.value });
+              if (errors.brandStatement)
+                setErrors((prev) => ({ ...prev, brandStatement: undefined }));
+            }}
             placeholder="What you stand for. What you build. What you believe."
             rows={3}
             className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/40 placeholder:italic focus:outline-none resize-none"
           />
         </div>
+        {errors.brandStatement && (
+          <p className="mt-1 text-[10px] text-destructive">{errors.brandStatement}</p>
+        )}
         <div className="text-right mt-1">
           <button className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground/50 transition-colors">
             Skip
@@ -249,7 +302,7 @@ export const StepWork = ({
       </div>
 
       <div className="mt-auto">
-        <button onClick={onFinish} className="bb-btn-primary">
+        <button onClick={handleFinish} className="bb-btn-primary">
           Preview profile
         </button>
       </div>
