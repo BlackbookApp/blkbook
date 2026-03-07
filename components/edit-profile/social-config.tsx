@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Globe, Instagram, Linkedin, Mail, Phone, Twitter, MessageCircle } from 'lucide-react';
-import { TikTokIcon } from '@/components/public-profile/shared/social-icons';
+import { TikTokIcon, WhatsAppIcon } from '@/components/public-profile/shared/social-icons';
 import type { SocialFields } from './types';
 
 export interface SocialFieldConfig {
@@ -59,6 +59,6 @@ export const SOCIAL_FIELD_CONFIGS: SocialFieldConfig[] = [
     key: 'whatsapp',
     label: 'WhatsApp',
     placeholder: '+44 7700 000000',
-    icon: <MessageCircle className="w-4 h-4" />,
+    icon: <WhatsAppIcon className="w-4 h-4" />,
   },
 ];

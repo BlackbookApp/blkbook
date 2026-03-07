@@ -134,7 +134,6 @@ export const StepProfile = ({
               {sf.label}
             </label>
             <div className="flex items-center gap-3">
-              <span className="text-muted-foreground">{sf.icon}</span>
               <div className="flex-1">
                 <Input
                   value={socials[sf.key]}
@@ -142,6 +141,7 @@ export const StepProfile = ({
                   placeholder={sf.placeholder}
                 />
               </div>
+              <span className="text-muted-foreground">{sf.icon}</span>
             </div>
           </div>
         ))}
