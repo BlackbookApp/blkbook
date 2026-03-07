@@ -28,6 +28,10 @@ export interface Profile {
   style: 'visual' | 'editorial' | null;
   palette: 'blanc' | 'noir' | null;
   brand_statement: string | null;
+  logo_url: string | null;
+  testimonial_quote: string | null;
+  testimonial_author: string | null;
+  testimonial_title: string | null;
   portfolio_images: PortfolioImage[];
   membership_type: 'guest' | 'member' | null;
   profile_complete: boolean;

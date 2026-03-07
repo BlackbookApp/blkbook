@@ -1,9 +1,11 @@
 'use client';
 
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Globe, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
+import { Globe, Instagram, Linkedin, Mail, Phone, Twitter, Plus } from 'lucide-react';
 import type { SocialFields } from './types';
 import { Input } from '@/components/ui/input';
+import Image from 'next/image';
 
 interface StepProfileProps {
   name: string;
@@ -12,6 +14,12 @@ interface StepProfileProps {
   setRole: (v: string) => void;
   location: string;
   setLocation: (v: string) => void;
+  bio: string;
+  setBio: (v: string) => void;
+  avatarFile: File | null;
+  setAvatarFile: (f: File | null) => void;
+  avatarPreview: string | null;
+  setAvatarPreview: (p: string | null) => void;
   socials: SocialFields;
   setSocials: (s: SocialFields) => void;
   onContinue: () => void;
@@ -25,13 +33,27 @@ export const StepProfile = ({
   setRole,
   location,
   setLocation,
+  bio,
+  setBio,
+  avatarFile: _avatarFile,
+  setAvatarFile,
+  avatarPreview,
+  setAvatarPreview,
   socials,
   setSocials,
   onContinue,
   onSkip,
 }: StepProfileProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const updateSocial = (key: keyof SocialFields, value: string) =>
     setSocials({ ...socials, [key]: value });
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
 
   const socialFields: {
     key: keyof SocialFields;
@@ -56,6 +78,12 @@ export const StepProfile = ({
       label: 'LinkedIn',
       placeholder: 'linkedin.com/in/you',
       icon: <Linkedin className="w-4 h-4" />,
+    },
+    {
+      key: 'twitter',
+      label: 'X / Twitter',
+      placeholder: '@yourhandle',
+      icon: <Twitter className="w-4 h-4" />,
     },
     {
       key: 'email',
@@ -83,7 +111,35 @@ export const StepProfile = ({
         Your Profile
       </p>
 
-      <div className="space-y-5 mb-8">
+      {/* Avatar upload */}
+      <div className="flex justify-center mb-6">
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="w-full aspect-auto border border-dashed border-border hover:border-muted-foreground/40 transition-colors flex items-center justify-center overflow-hidden"
+        >
+          {avatarPreview ? (
+            <Image
+              src={avatarPreview}
+              alt="Avatar"
+              className="w-full h-full object-cover"
+              width={100}
+              height={200}
+            />
+          ) : (
+            <Plus className="w-5 h-5 text-muted-foreground/30" />
+          )}
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleAvatarChange}
+          className="hidden"
+        />
+      </div>
+
+      <div className="space-y-5 mb-6">
         {[
           { label: 'Name', value: name, set: setName, placeholder: 'Full name' },
           { label: 'Role', value: role, set: setRole, placeholder: 'What you do' },
@@ -100,6 +156,18 @@ export const StepProfile = ({
             />
           </div>
         ))}
+
+        <div>
+          <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
+            Bio
+          </label>
+          <Input
+            variant="primary"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            placeholder="A short bio or tagline"
+          />
+        </div>
       </div>
 
       <div className="space-y-4 mb-6">

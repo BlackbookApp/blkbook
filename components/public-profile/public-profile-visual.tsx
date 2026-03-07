@@ -22,6 +22,7 @@ export interface ProfileData {
   logoSrc?: string | null;
   portraitSrc?: string | null;
   socialLinks?: SocialLinks;
+  brandStatement?: string | null;
 }
 
 export interface PortfolioItem {
@@ -218,7 +219,7 @@ const PublicProfile = ({
             {/* Logo */}
             {profile.logoSrc && (
               <div className="flex justify-center mb-6">
-                <div className="relative h-3 w-24">
+                <div className="relative h-12 w-full aspect-[4/1]">
                   <Image src={profile.logoSrc} alt={profile.name} fill className="object-contain" />
                 </div>
               </div>

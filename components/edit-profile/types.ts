@@ -5,12 +5,19 @@ export interface SocialFields {
   website: string;
   instagram: string;
   linkedin: string;
+  twitter: string;
   email: string;
   phone: string;
 }
 
+export interface PortfolioEntry {
+  id?: string;
+  url: string;
+  file?: File;
+}
+
 export interface WorkData {
-  portfolioImages: string[];
+  portfolioImages: PortfolioEntry[];
   logo: string | null;
   testimonialQuote: string;
   testimonialName: string;

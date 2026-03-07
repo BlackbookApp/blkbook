@@ -8,10 +8,9 @@ import { useProfile } from '@/hooks/use-profile';
 import { updateProfileAction } from '@/app/actions/profiles';
 import { useQueryClient } from '@tanstack/react-query';
 import { routes } from '@/lib/routes';
-import PublicProfile from '@/components/public-profile/public-profile-visual';
+import PublicProfileVisual from '@/components/public-profile/public-profile-visual';
+import PublicProfileEditorial from '@/components/public-profile/public-profile-editorial';
 import type { ProfileTheme } from '@/components/public-profile/public-profile-visual';
-
-// const THEMES: ProfileTheme[] = ['blanc', 'beige', 'noir'];
 
 const ProfilePreview = () => {
   const router = useRouter();
@@ -41,28 +40,55 @@ const ProfilePreview = () => {
     role: profile.role,
     location: profile.location,
     portraitSrc: profile.avatar_url,
+    logoSrc: profile.logo_url,
     socialLinks: profile.social_links,
+    brandStatement: profile.brand_statement,
   };
 
   const portfolio = profile.portfolio_images.map((img) => ({ imageSrc: img.url }));
-  console.log(profileData, portfolio);
+
+  const testimonials = profile.testimonial_quote
+    ? [
+        {
+          quote: profile.testimonial_quote,
+          author: profile.testimonial_author
+            ? `${profile.testimonial_author}${profile.testimonial_title ? `, ${profile.testimonial_title}` : ''}`
+            : undefined,
+        },
+      ]
+    : [];
+
+  const isEditorial = profile.style === 'editorial';
+  const profileTheme: ProfileTheme = profile.palette === 'noir' ? 'noir' : 'blanc';
 
   return (
     <div className="relative">
-      <PublicProfile
-        theme={theme}
-        profile={profileData}
-        portfolio={portfolio}
-        profileStyle={'visual'}
-        isPreview={true}
-      />
+      {isEditorial ? (
+        <PublicProfileEditorial
+          theme={profileTheme}
+          profile={profileData}
+          portfolio={portfolio}
+          testimonials={testimonials}
+          profileStyle="editorial"
+          isPreview={true}
+        />
+      ) : (
+        <PublicProfileVisual
+          theme={theme}
+          profile={profileData}
+          portfolio={portfolio}
+          testimonials={testimonials}
+          profileStyle="visual"
+          isPreview={true}
+        />
+      )}
 
       {/* Floating header */}
       <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
         <div className="max-w-md mx-auto px-6 pt-8 flex items-center justify-between pointer-events-auto">
           <Logo />
           <button
-            onClick={() => router.push(routes.createProfile)}
+            onClick={() => router.push(routes.editProfile)}
             className="text-muted-foreground/50 hover:text-foreground transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -71,22 +97,8 @@ const ProfilePreview = () => {
       </div>
 
       {/* Fixed bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-50" data-pg-theme={theme}>
+      <div className="fixed bottom-0 left-0 right-0 z-50" data-pg-theme={profileTheme}>
         <div className="max-w-md mx-auto px-6 pt-12 pb-8 flex flex-col items-center gap-3 bg-gradient-to-t from-[var(--pg-bg)] via-[var(--pg-bg)/80] to-transparent">
-          {/* <div className="flex gap-2">
-            {THEMES.map((t) => (
-              <button
-                key={t}
-                data-pg-theme={t}
-                onClick={() => setTheme(t)}
-                className={`px-3 py-1 text-[10px] tracking-widest uppercase border transition-opacity ${
-                  theme === t ? 'opacity-100' : 'opacity-40'
-                }`}
-              >
-                {t}
-              </button>
-            ))}
-          </div> */}
           <p className="text-[10px] tracking-wide text-muted-foreground/60">
             This is your first impression.
           </p>

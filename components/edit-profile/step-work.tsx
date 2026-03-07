@@ -4,33 +4,52 @@ import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Plus, X, Image as ImageIcon } from 'lucide-react';
-import type { WorkData } from './types';
+import type { WorkData, PortfolioEntry } from './types';
 import { Input } from '@/components/ui/input';
 
 interface StepWorkProps {
   work: WorkData;
   setWork: (w: WorkData) => void;
+  removedPortfolioIds: string[];
+  setRemovedPortfolioIds: (ids: string[]) => void;
+  logoFile: File | null;
+  setLogoFile: (f: File | null) => void;
   onFinish: () => void;
 }
 
-export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
+export const StepWork = ({
+  work,
+  setWork,
+  removedPortfolioIds,
+  setRemovedPortfolioIds,
+  setLogoFile,
+  onFinish,
+}: StepWorkProps) => {
   const portfolioInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
 
   const handlePortfolioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-    const urls = Array.from(files).map((f) => URL.createObjectURL(f));
-    setWork({ ...work, portfolioImages: [...work.portfolioImages, ...urls] });
+    const newEntries: PortfolioEntry[] = Array.from(files).map((f) => ({
+      url: URL.createObjectURL(f),
+      file: f,
+    }));
+    setWork({ ...work, portfolioImages: [...work.portfolioImages, ...newEntries] });
   };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setLogoFile(file);
     setWork({ ...work, logo: URL.createObjectURL(file) });
   };
 
   const removePortfolioImage = (idx: number) => {
+    const entry = work.portfolioImages[idx];
+    if (entry.id) {
+      setRemovedPortfolioIds([...removedPortfolioIds, entry.id]);
+    }
     setWork({ ...work, portfolioImages: work.portfolioImages.filter((_, i) => i !== idx) });
   };
 
@@ -73,10 +92,10 @@ export const StepWork = ({ work, setWork, onFinish }: StepWorkProps) => {
         </button>
         {work.portfolioImages.length > 0 && (
           <div className="flex gap-2 mt-3 flex-wrap">
-            {work.portfolioImages.map((img, i) => (
-              <div key={i} className="relative w-16 h-16">
+            {work.portfolioImages.map((entry, i) => (
+              <div key={entry.id ?? entry.url} className="relative w-16 h-16">
                 <Image
-                  src={img}
+                  src={entry.url}
                   alt=""
                   width={64}
                   height={64}
