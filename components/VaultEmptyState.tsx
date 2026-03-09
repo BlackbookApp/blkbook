@@ -1,7 +1,11 @@
 import { Plus } from 'lucide-react';
 import AddDrawer from '@/components/AddDrawer';
 
-const VaultEmptyState = () => {
+interface VaultEmptyStateProps {
+  onQuickAdd?: () => void;
+}
+
+const VaultEmptyState = ({ onQuickAdd }: VaultEmptyStateProps) => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6">
       <div className="max-w-[260px] w-full text-center animate-fade-in space-y-8">
@@ -17,7 +21,7 @@ const VaultEmptyState = () => {
         </div>
 
         {/* Prompt to use Add button */}
-        <AddDrawer>
+        <AddDrawer onQuickAdd={onQuickAdd}>
           <button className="flex items-center justify-center gap-2 mx-auto text-bb-muted">
             <span className="text-[10px] tracking-[0.2em] uppercase">Tap</span>
             <span className="w-6 h-6 border border-foreground/20 flex items-center justify-center">

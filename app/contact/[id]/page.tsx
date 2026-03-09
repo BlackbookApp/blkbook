@@ -3,6 +3,7 @@
 import { useRouter, useParams } from 'next/navigation';
 import { routes } from '@/lib/routes';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/text';
 import { Plus, Instagram } from 'lucide-react';
 import Image from 'next/image';
 import Logo from '@/components/Logo';
@@ -76,18 +77,22 @@ const ContactDetail = () => {
 
         {/* Header */}
         <div className="flex items-center justify-between mt-4 mb-6">
-          <button
+          <Button
+            variant="blackbook-ghost"
+            size="sm"
+            className="text-muted-foreground/50 px-0"
             onClick={() => router.push(routes.vault)}
-            className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-muted-foreground/50 hover:text-foreground transition-colors"
           >
             Back
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="blackbook-ghost"
+            size="sm"
+            className="text-muted-foreground/50 px-0"
             onClick={() => setShowEditDialog(true)}
-            className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-muted-foreground/50 hover:text-foreground transition-colors"
           >
             Edit
-          </button>
+          </Button>
         </div>
 
         {/* Profile Photo or Typographic Banner */}
@@ -97,14 +102,20 @@ const ContactDetail = () => {
               <Image src={contactPhoto} alt={contact.name} fill className="object-cover" />
             </div>
             <div className="text-center mb-4">
-              <h1 className="font-display font-light blackbook-title tracking-[0.01em] mb-1">
+              <Text
+                as="h1"
+                variant="inherit"
+                className="font-display font-light blackbook-title tracking-[0.01em] mb-1"
+              >
                 {contact.name}
-              </h1>
-              <p className="blackbook-subtitle mb-1">{contact.role}</p>
+              </Text>
+              <Text variant="subtitle" className="mb-1">
+                {contact.role}
+              </Text>
               {contact.addedLocation && (
-                <p className="text-xs text-muted-foreground/60 tracking-wide">
+                <Text variant="inherit" className="text-xs text-muted-foreground/60 tracking-wide">
                   {contact.addedLocation}
-                </p>
+                </Text>
               )}
               <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mt-2">
                 <Instagram className="w-3 h-3" />
@@ -119,16 +130,28 @@ const ContactDetail = () => {
             className="w-full -mx-6 px-6 py-8 mb-6 relative overflow-hidden grain-overlay bg-bb-nav"
             style={{ width: 'calc(100% + 3rem)' }}
           >
-            <h1 className="font-display font-light text-2xl tracking-[0.01em] uppercase text-background mb-0.5">
+            <Text
+              as="h1"
+              variant="inherit"
+              className="font-display font-light text-2xl tracking-[0.01em] uppercase text-background mb-0.5"
+            >
               {contact.name}
-            </h1>
-            <p className="font-editorial font-extralight text-[12px] italic normal-case tracking-[0.01em] text-background/60 mb-0">
+            </Text>
+            <Text
+              as="p"
+              variant="inherit"
+              className="font-editorial font-extralight text-[12px] italic normal-case tracking-[0.01em] text-background/60 mb-0"
+            >
               {contact.role}
-            </p>
+            </Text>
             {contact.addedLocation && (
-              <p className="font-display font-light text-[11px] tracking-[0.02em] uppercase text-background/35 mt-0.5">
+              <Text
+                as="p"
+                variant="inherit"
+                className="font-display font-light text-[11px] tracking-[0.02em] uppercase text-background/35 mt-0.5"
+              >
                 {contact.addedLocation}
-              </p>
+              </Text>
             )}
           </div>
         )}
@@ -137,14 +160,18 @@ const ContactDetail = () => {
         <div className="space-y-4 mb-6">
           {contact.email && (
             <a href={`mailto:${contact.email}`} className="block py-3 border-b border-border">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Email</p>
-              <p className="text-sm">{contact.email}</p>
+              <Text variant="label" className="mb-1">
+                Email
+              </Text>
+              <Text variant="body-2">{contact.email}</Text>
             </a>
           )}
           {contact.phone && (
             <a href={`tel:${contact.phone}`} className="block py-3 border-b border-border">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Phone</p>
-              <p className="text-sm">{contact.phone}</p>
+              <Text variant="label" className="mb-1">
+                Phone
+              </Text>
+              <Text variant="body-2">{contact.phone}</Text>
             </a>
           )}
         </div>
@@ -152,13 +179,15 @@ const ContactDetail = () => {
         {/* Notes */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xs text-muted-foreground uppercase tracking-wide">Private Notes</h2>
-            <button
+            <Text variant="label">Private Notes</Text>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-6 h-6 text-muted-foreground hover:text-foreground"
               onClick={() => setShowNoteInput(true)}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <Plus className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
 
           {showNoteInput && (
@@ -172,15 +201,10 @@ const ContactDetail = () => {
                 autoFocus
               />
               <div className="flex gap-2">
-                <Button variant="blackbook" size="sm" onClick={handleAddNote} className="text-xs">
+                <Button variant="blackbook" size="sm" onClick={handleAddNote}>
                   Save
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowNoteInput(false)}
-                  className="text-xs"
-                >
+                <Button variant="ghost" size="sm" onClick={() => setShowNoteInput(false)}>
                   Cancel
                 </Button>
               </div>
@@ -188,20 +212,19 @@ const ContactDetail = () => {
           )}
 
           <div className="py-3 border-b border-border">
-            <p className="text-sm leading-relaxed">
+            <Text variant="body-2" className="leading-relaxed">
               {contact.notes.map((note, i) => (
                 <span key={note.id}>
                   {note.text}
                   {i < contact.notes.length - 1 && '. '}
                 </span>
               ))}
-            </p>
+            </Text>
           </div>
 
-          {/* Date added */}
-          <p className="text-[10px] text-muted-foreground/40 uppercase tracking-widest mt-3">
+          <Text variant="label" className="text-muted-foreground/40 mt-3 block">
             Added {contact.addedDate}, {contact.addedLocation}
-          </p>
+          </Text>
         </div>
       </div>
 
@@ -212,56 +235,26 @@ const ContactDetail = () => {
             <DialogTitle className="text-lg font-medium tracking-tight">Edit Contact</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div>
-              <label className="text-xs text-muted-foreground uppercase tracking-wide mb-2 block">
-                Name
-              </label>
-              <Input
-                value={editForm.name}
-                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                className="blackbook-input"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground uppercase tracking-wide mb-2 block">
-                Role
-              </label>
-              <Input
-                value={editForm.role}
-                onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                className="blackbook-input"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground uppercase tracking-wide mb-2 block">
-                Email
-              </label>
-              <Input
-                value={editForm.email}
-                onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                className="blackbook-input"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground uppercase tracking-wide mb-2 block">
-                Phone
-              </label>
-              <Input
-                value={editForm.phone}
-                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                className="blackbook-input"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground uppercase tracking-wide mb-2 block">
-                Instagram
-              </label>
-              <Input
-                value={editForm.instagram}
-                onChange={(e) => setEditForm({ ...editForm, instagram: e.target.value })}
-                className="blackbook-input"
-              />
-            </div>
+            {(
+              [
+                { key: 'name', label: 'Name' },
+                { key: 'role', label: 'Role' },
+                { key: 'email', label: 'Email' },
+                { key: 'phone', label: 'Phone' },
+                { key: 'instagram', label: 'Instagram' },
+              ] as const
+            ).map(({ key, label }) => (
+              <div key={key}>
+                <Text variant="label" as="label" className="mb-2 block text-muted-foreground">
+                  {label}
+                </Text>
+                <Input
+                  value={editForm[key]}
+                  onChange={(e) => setEditForm({ ...editForm, [key]: e.target.value })}
+                  className="blackbook-input"
+                />
+              </div>
+            ))}
           </div>
           <div className="flex gap-3">
             <Button

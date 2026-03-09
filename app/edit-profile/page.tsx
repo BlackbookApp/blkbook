@@ -215,6 +215,7 @@ const EditProfile = () => {
       });
 
       queryClient.invalidateQueries({ queryKey: ['profile'] });
+
       router.push(routes.myBlackbook);
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
