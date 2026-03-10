@@ -61,6 +61,13 @@ export async function updateVaultContact(
   return data;
 }
 
+export async function getVaultContactById(id: string): Promise<VaultContact | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('vault_contacts').select('*').eq('id', id).single();
+  if (error) return null;
+  return data;
+}
+
 export async function deleteVaultContact(id: string): Promise<void> {
   const supabase = await createClient();
   const {

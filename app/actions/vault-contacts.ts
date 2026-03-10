@@ -2,6 +2,7 @@
 
 import {
   getMyVaultContacts,
+  getVaultContactById,
   createVaultContact,
   updateVaultContact,
   deleteVaultContact,
@@ -10,6 +11,10 @@ import type { VaultContactInsert } from '@/lib/data/vault-contacts';
 
 export async function getMyVaultContactsAction() {
   return getMyVaultContacts();
+}
+
+export async function getVaultContactByIdAction(id: string) {
+  return getVaultContactById(id);
 }
 
 export async function createVaultContactAction(input: VaultContactInsert) {
