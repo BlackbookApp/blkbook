@@ -3,11 +3,15 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { VaultContact, VaultContactInsert } from '@/lib/data/vault-contacts';
 
-type EditFields = Pick<VaultContactInsert, 'name' | 'role' | 'email' | 'phone' | 'instagram'>;
+type EditFields = Pick<
+  VaultContactInsert,
+  'name' | 'role' | 'city' | 'email' | 'phone' | 'instagram'
+>;
 
 const FIELDS: { key: keyof EditFields; label: string }[] = [
   { key: 'name', label: 'Name' },
   { key: 'role', label: 'Role' },
+  { key: 'city', label: 'City' },
   { key: 'email', label: 'Email' },
   { key: 'phone', label: 'Phone' },
   { key: 'instagram', label: 'Instagram' },
@@ -31,6 +35,7 @@ export function EditContactDialog({
   const [form, setForm] = useState<EditFields>({
     name: contact.name ?? '',
     role: contact.role ?? '',
+    city: contact.city ?? '',
     email: contact.email ?? '',
     phone: contact.phone ?? '',
     instagram: contact.instagram ?? '',
