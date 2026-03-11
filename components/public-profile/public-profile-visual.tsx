@@ -4,8 +4,9 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import ExchangeDetailsModal from '@/components/ExchangeDetailsModal';
-import Logo from '../Logo';
 import { SocialBlock } from './shared/social-block';
 import { ContactBlock } from './shared/contact-block';
 import { HeroPortrait } from './shared/hero-portrait';
@@ -37,51 +38,54 @@ export interface Testimonial {
   author?: string | null;
 }
 
-// ── Small reusable pieces ──────────────────────────────────
+// ── Constants ─────────────────────────────────────────────
 
-const PortfolioFrame = ({
-  src,
-  alt,
-  className,
-}: {
-  src?: string;
-  alt?: string;
-  className?: string;
-}) => (
-  <div
-    className={cn(
-      'relative overflow-hidden aspect-[3/4] border-2 border-[var(--pg-border-image)]',
-      className
-    )}
-  >
-    {src && <Image src={src} alt={alt ?? ''} fill className="object-cover" />}
-  </div>
-);
+// Shared button class strings
+const QUICK_CTA_BTN =
+  'rounded-none py-2.5 font-helvetica font-normal text-[10px] tracking-[0.14em] bg-transparent text-[var(--pg-btn-sec-fg)] border-[var(--pg-btn-sec-border)] hover:bg-transparent hover:opacity-70';
+
+// 4-position repeating pattern per block
+const BLOCK_LAYOUTS = [
+  { width: 'w-[70%]', justify: '', aspect: 'aspect-[3/4]' },
+  { width: 'w-[50%]', justify: 'justify-end', aspect: 'aspect-[3/4]' },
+  { width: 'w-[45%]', justify: '', aspect: 'aspect-[4/5]' },
+  { width: 'w-[55%]', justify: 'justify-center', aspect: 'aspect-[3/4]' },
+] as const;
 
 // ── Parallax sub-components ────────────────────────────────
 
-const PARALLAX_LAYOUTS = [
-  { width: 'w-1/2', align: 'justify-start' },
-  { width: 'w-2/5', align: 'justify-end' },
-  { width: 'w-1/2', align: 'justify-center' },
-  { width: 'w-2/5', align: 'justify-start' },
-] as const;
-
-const ParallaxPortfolio = ({ src, alt, index }: { src: string; alt?: string; index: number }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const layout = PARALLAX_LAYOUTS[index % PARALLAX_LAYOUTS.length];
-
+const ParallaxImage = ({
+  src,
+  alt,
+  posInBlock,
+}: {
+  src: string;
+  alt?: string;
+  posInBlock: number;
+}) => {
+  const layout = BLOCK_LAYOUTS[posInBlock];
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
+      className={`flex ${layout.justify}`}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-      viewport={{ once: true, margin: '-80px' }}
-      className={`flex flex-col ${layout.align}`}
+      transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+      viewport={{ once: true, margin: '-60px' }}
     >
-      <div className={layout.width}>
-        <PortfolioFrame src={src} alt={alt} />
+      <div
+        className={cn(
+          layout.width,
+          layout.aspect,
+          'overflow-hidden border border-[var(--pg-separator)]'
+        )}
+      >
+        <motion.img
+          src={src}
+          alt={alt ?? ''}
+          className="w-full h-full object-cover"
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.8 }}
+        />
       </div>
     </motion.div>
   );
@@ -95,11 +99,11 @@ const ParallaxTestimonial = ({ quote, author }: { quote: string; author?: string
 
   return (
     <motion.div ref={ref} style={{ opacity, y }} className="py-16 text-center">
-      <p className="text-[13px] font-normal font-helvetica tracking-tight uppercase leading-snug max-w-xs inline-block text-[var(--pg-fg)]">
+      <p className="font-granjon italic text-[15px] leading-relaxed max-w-[260px] mx-auto text-[var(--pg-fg)]">
         {quote}
       </p>
       {author && (
-        <p className="text-[12px] mt-2 uppercase tracking-[0.01em] font-light font-canela-deck text-[var(--pg-muted-fg)]">
+        <p className="font-granjon font-normal text-[11px] tracking-[0.12em] uppercase mt-3 text-[var(--pg-muted-fg)]">
           — {author}
         </p>
       )}
@@ -137,18 +141,39 @@ const PublicProfile = ({
 
   return (
     <div ref={containerRef} data-pg-theme={theme} className="max-w-md mx-auto min-h-screen">
+      {/* Fixed wordmark */}
+      <div className="fixed top-0 left-0 z-50 pt-6 pl-6">
+        <span className="font-granjon font-normal text-[12px] tracking-[0.15em] uppercase text-[var(--pg-ghost)]">
+          BLKBOOK.
+        </span>
+      </div>
+
       <div className="px-6 pt-28 pb-8 min-h-screen animate-fade-in">
         {/* Hero */}
         <motion.div style={{ opacity: heroOpacity, scale: heroScale }}>
           <HeroPortrait
             name={profile.name}
             portraitSrc={profile.portraitSrc}
-            subtitle={profile.bio}
+            subtitle={profile.role}
             location={profile.location}
           />
         </motion.div>
 
-        <div className="my-8" />
+        {/* Quick CTAs */}
+        <div className="px-2 mt-6 mb-20">
+          <div className="grid grid-cols-2 gap-3">
+            <Button variant="outline" className={QUICK_CTA_BTN}>
+              Save Contact
+            </Button>
+            <Button
+              variant="outline"
+              className={QUICK_CTA_BTN}
+              onClick={() => setShowExchange(true)}
+            >
+              Exchange Details
+            </Button>
+          </div>
+        </div>
 
         {portfolio.length > 0 && (
           <>
@@ -156,85 +181,27 @@ const PublicProfile = ({
               <div className="flex flex-col gap-16 py-2">
                 {Array.from({ length: Math.ceil(portfolio.length / 4) }, (_, blockIndex) => {
                   const block = portfolio.slice(blockIndex * 4, blockIndex * 4 + 4);
-                  const testimonial0 = testimonials[blockIndex * 2];
-                  const testimonial1 = testimonials[blockIndex * 2 + 1];
-
-                  return (
-                    <div key={blockIndex} className="space-y-4">
-                      {/* Image 0: full-width parallax */}
-                      <div>
-                        <ParallaxPortfolio
-                          src={block[0].imageSrc}
-                          alt={block[0].title ?? undefined}
-                          index={blockIndex * 4}
+                  return block.map((item, posInBlock) => {
+                    const testimonial = testimonials[blockIndex * 4 + posInBlock];
+                    return (
+                      <div key={`${blockIndex}-${posInBlock}`}>
+                        <ParallaxImage
+                          src={item.imageSrc}
+                          alt={item.title ?? undefined}
+                          posInBlock={posInBlock}
                         />
-                        {testimonial0 && (
+                        {testimonial && (
                           <ParallaxTestimonial
-                            quote={testimonial0.quote}
-                            author={testimonial0.author || undefined}
+                            quote={testimonial.quote}
+                            author={testimonial.author || undefined}
                           />
                         )}
                       </div>
-
-                      {/* Images 1 & 2: staggered pair */}
-                      {(block[1] || block[2]) && (
-                        <motion.div
-                          className="flex gap-4 items-start"
-                          initial={{ opacity: 0, y: 50 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-                          viewport={{ once: true, margin: '-80px' }}
-                        >
-                          {block[2] && (
-                            <div className="w-2/5">
-                              <PortfolioFrame
-                                src={block[2].imageSrc}
-                                alt={block[2].title ?? undefined}
-                              />
-                            </div>
-                          )}
-                          {block[1] && (
-                            <div className={`w-2/5 ml-auto${block[2] ? ' mt-12' : ''}`}>
-                              <PortfolioFrame
-                                src={block[1].imageSrc}
-                                alt={block[1].title ?? undefined}
-                              />
-                            </div>
-                          )}
-                        </motion.div>
-                      )}
-
-                      {testimonial1 && (
-                        <ParallaxTestimonial
-                          quote={testimonial1.quote}
-                          author={testimonial1.author || undefined}
-                        />
-                      )}
-
-                      {/* Image 3: centered */}
-                      {block[3] && (
-                        <motion.div
-                          className="flex justify-center"
-                          initial={{ opacity: 0, y: 50 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-                          viewport={{ once: true, margin: '-80px' }}
-                        >
-                          <div className="w-3/5">
-                            <PortfolioFrame
-                              src={block[3].imageSrc}
-                              alt={block[3].title ?? undefined}
-                            />
-                          </div>
-                        </motion.div>
-                      )}
-                    </div>
-                  );
+                    );
+                  });
                 })}
               </div>
             </div>
-
-            <div className="my-8 h-px bg-[var(--pg-separator)]" />
 
             {/* Logo */}
             {profile.logoSrc && (
@@ -256,7 +223,7 @@ const PublicProfile = ({
         {/* Social links */}
         <SocialBlock socials={buildSocials(profile.socialLinks ?? {})} />
 
-        {/* CTAs */}
+        {/* Full CTA block */}
         <ContactBlock
           methods={buildContactMethods(profile.socialLinks ?? {}, {
             onSaveContact: () => {},
@@ -264,15 +231,19 @@ const PublicProfile = ({
           })}
         />
 
+        <Separator className="my-14 bg-[var(--pg-separator)]" />
+
         {/* Footer */}
         <motion.div
-          className="text-center mb-8"
+          className="text-center pb-8"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <Logo />
+          <span className="font-granjon font-normal text-[18px] tracking-[0.15em] uppercase text-[var(--pg-fg)]">
+            BLKBOOK.
+          </span>
         </motion.div>
       </div>
 

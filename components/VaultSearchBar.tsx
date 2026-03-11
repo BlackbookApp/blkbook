@@ -1,8 +1,17 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import type React from 'react';
 import { Search } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+
+const searchFont: React.CSSProperties = {
+  fontFamily: "'Granjon LT', 'Granjon LT Std', 'Granjon', Georgia, serif",
+  fontSize: '13px',
+  fontWeight: 400,
+  fontStyle: 'italic',
+  letterSpacing: '0.01em',
+};
 
 const placeholders = [
   'Who did I meet in Milan?',
@@ -29,17 +38,10 @@ function saveRecentSearches(searches: string[]) {
 
 interface VaultSearchBarProps {
   onSearchChange?: (value: string) => void;
-  /** 'helvetica' (default): italic, Helvetica Neue, light weight
-   *  'engravers': uppercase, Engravers Gothic, tight tracking */
-  variant?: 'helvetica' | 'engravers';
   recentContacts?: { name: string; detail: string }[];
 }
 
-const VaultSearchBar = ({
-  onSearchChange,
-  variant = 'helvetica',
-  recentContacts,
-}: VaultSearchBarProps) => {
+const VaultSearchBar = ({ onSearchChange, recentContacts }: VaultSearchBarProps) => {
   const [search, setSearch] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
@@ -64,19 +66,9 @@ const VaultSearchBar = ({
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  const isEngravers = variant === 'engravers';
-
-  const inputClass = isEngravers
-    ? 'font-engravers text-[11px] uppercase tracking-[0.15em]'
-    : `font-helvetica text-[13px] font-light tracking-[0.01em] ${search ? 'not-italic' : 'italic'}`;
-
-  const placeholderClass = isEngravers
-    ? 'font-engravers text-[11px] uppercase tracking-[0.15em] text-foreground/40'
-    : 'font-helvetica text-[13px] font-light tracking-[0.01em] text-bb-muted';
-
   return (
     <div ref={containerRef} className="relative mt-3 mb-3">
-      <div className="relative border border-border bg-transparent h-9 flex items-center px-2.5">
+      <div className="relative border border-border bg-background h-9 flex items-center px-2.5">
         <input
           type="text"
           value={search}
@@ -95,7 +87,8 @@ const VaultSearchBar = ({
               saveRecentSearches(updated);
             }
           }}
-          className={`w-full bg-transparent outline-none pr-5 ${inputClass}`}
+          className="w-full bg-transparent outline-none pr-5"
+          style={{ ...searchFont, fontStyle: search ? 'normal' : 'italic', color: '#0E0E0E' }}
           placeholder=""
         />
 
@@ -108,7 +101,8 @@ const VaultSearchBar = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
-                className={`whitespace-nowrap ${placeholderClass}`}
+                className="whitespace-nowrap"
+                style={{ ...searchFont, color: '#9A9691' }}
               >
                 {placeholders[placeholderIndex]}
               </motion.span>
@@ -129,7 +123,11 @@ const VaultSearchBar = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="absolute left-0 right-0 top-full z-50 mt-1 border border-border/50 overflow-hidden bb-dropdown-panel"
+            className="absolute left-0 right-0 top-full z-50 mt-1 border border-border/50 overflow-hidden bg-background/90"
+            style={{
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+            }}
           >
             {recentSearches.length > 0 && (
               <div className="px-4 pt-4 pb-2">

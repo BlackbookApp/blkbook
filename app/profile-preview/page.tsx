@@ -79,8 +79,7 @@ const ProfilePreview = () => {
 
       {/* Floating header */}
       <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-        <div className="max-w-md mx-auto px-6 pt-8 flex items-center justify-between pointer-events-auto">
-          <Logo />
+        <div className="max-w-md mx-auto px-6 pt-8 flex items-center justify-end pointer-events-auto">
           <button
             onClick={() => router.push(routes.editProfile)}
             className="text-muted-foreground/50 hover:text-foreground transition-colors"
