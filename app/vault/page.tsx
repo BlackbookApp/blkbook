@@ -1,87 +1,50 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import type { TabType } from '@/types/blackbook';
-import BottomNav from '@/components/BottomNav';
+import { useState, useMemo } from 'react';
 import Logo from '@/components/Logo';
+import BottomNav from '@/components/BottomNav';
 import VaultSearchBar from '@/components/VaultSearchBar';
-import { demoContacts, groupContactsByLetter, filterContacts } from '@/lib/demo-data/contacts';
-import { routes } from '@/lib/routes';
-const VaultAlt = () => {
-  const router = useRouter();
-  const [search, setSearch] = useState('');
-  const [activeTab] = useState<TabType>('all');
+import AddContactDrawer from '@/components/AddContactDrawer';
+import { VaultContactList } from '@/components/vault/VaultContactList';
+import { useVaultContacts } from '@/hooks/use-vault-contacts';
+import type { VaultContact } from '@/lib/data/vault-contacts';
 
-  const filteredContacts = filterContacts(demoContacts, search, activeTab);
-  const groupedContacts = groupContactsByLetter(filteredContacts);
-  const letters = Object.keys(groupedContacts).sort();
+function toRecentContacts(contacts: VaultContact[]) {
+  return [...contacts]
+    .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))
+    .slice(0, 3)
+    .map((c) => ({
+      name: c.name,
+      detail: [c.role, c.city].filter(Boolean).join(' — '),
+    }));
+}
+
+export default function VaultPage() {
+  const [search, setSearch] = useState('');
+  const [isAddContactOpen, setIsAddContactOpen] = useState(false);
+  const { data: contacts = [], isLoading } = useVaultContacts();
+
+  const recentContacts = useMemo(() => toRecentContacts(contacts), [contacts]);
 
   return (
     <div className="blackbook-container bg-background">
       <div className="blackbook-page !py-6">
-        {/* Logo */}
         <div className="py-4">
           <Logo />
         </div>
 
-        <VaultSearchBar onSearchChange={setSearch} />
+        <VaultSearchBar onSearchChange={setSearch} recentContacts={recentContacts} />
 
-        {/* Directory List */}
-        <div className="flex-1 overflow-y-auto pb-28">
-          {letters.map((letter) => (
-            <div key={letter} className="mb-7">
-              {/* Letter Separator */}
-              <div className="mb-3 flex items-center gap-3">
-                <span className="font-display font-normal text-[16px] text-bb-dark">{letter}</span>
-                <div className="flex-1 h-px bg-border/60" />
-              </div>
-
-              {/* Contacts */}
-              <div>
-                {groupedContacts[letter].map((contact, index) => (
-                  <button
-                    key={contact.id}
-                    onClick={() => router.push(routes.contact(contact.id))}
-                    className="w-full text-left group"
-                  >
-                    {index > 0 && <div className="h-px bg-border/40 mx-0" />}
-                    <div className="py-3.5">
-                      {/* Name + City row */}
-                      <div>
-                        <h2 className="font-display font-light text-[19px] tracking-[0.01em] text-bb-dark group-hover:opacity-50 transition-opacity uppercase">
-                          {contact.name}
-                        </h2>
-                      </div>
-
-                      {/* Role + City */}
-                      <p className="font-helvetica font-light text-[13px] mt-0.5 normal-case tracking-[0.01em] text-bb-dark">
-                        {contact.role}
-                        {contact.city && (
-                          <>
-                            {'. '}
-                            <span className="uppercase">{contact.city}.</span>
-                          </>
-                        )}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-
-          {letters.length === 0 && (
-            <div className="text-center py-20">
-              <p className="text-sm text-muted-foreground">No contacts found</p>
-            </div>
-          )}
-        </div>
+        <VaultContactList
+          contacts={contacts}
+          search={search}
+          isLoading={isLoading}
+          onQuickAdd={() => setIsAddContactOpen(true)}
+        />
       </div>
 
-      <BottomNav />
+      <BottomNav onQuickAdd={() => setIsAddContactOpen(true)} />
+      <AddContactDrawer open={isAddContactOpen} onOpenChange={setIsAddContactOpen} />
     </div>
   );
-};
-
-export default VaultAlt;
+}

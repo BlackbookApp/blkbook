@@ -179,6 +179,7 @@ export type Database = {
           is_admin: boolean;
           is_published: boolean | null;
           location: string | null;
+          logo_url: string | null;
           membership_type: Database['public']['Enums']['membership_type'] | null;
           palette: Database['public']['Enums']['profile_palette'] | null;
           profile_complete: boolean | null;
@@ -202,6 +203,7 @@ export type Database = {
           is_admin?: boolean;
           is_published?: boolean | null;
           location?: string | null;
+          logo_url?: string | null;
           membership_type?: Database['public']['Enums']['membership_type'] | null;
           palette?: Database['public']['Enums']['profile_palette'] | null;
           profile_complete?: boolean | null;
@@ -225,6 +227,7 @@ export type Database = {
           is_admin?: boolean;
           is_published?: boolean | null;
           location?: string | null;
+          logo_url?: string | null;
           membership_type?: Database['public']['Enums']['membership_type'] | null;
           palette?: Database['public']['Enums']['profile_palette'] | null;
           profile_complete?: boolean | null;
@@ -244,6 +247,54 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      vault_contacts: {
+        Row: {
+          city: string | null;
+          created_at: string | null;
+          email: string | null;
+          id: string;
+          instagram: string | null;
+          name: string;
+          notes: string | null;
+          phone: string | null;
+          photo_url: string | null;
+          role: string | null;
+          updated_at: string | null;
+          user_id: string;
+          website: string | null;
+        };
+        Insert: {
+          city?: string | null;
+          created_at?: string | null;
+          email?: string | null;
+          id?: string;
+          instagram?: string | null;
+          name: string;
+          notes?: string | null;
+          phone?: string | null;
+          photo_url?: string | null;
+          role?: string | null;
+          updated_at?: string | null;
+          user_id: string;
+          website?: string | null;
+        };
+        Update: {
+          city?: string | null;
+          created_at?: string | null;
+          email?: string | null;
+          id?: string;
+          instagram?: string | null;
+          name?: string;
+          notes?: string | null;
+          phone?: string | null;
+          photo_url?: string | null;
+          role?: string | null;
+          updated_at?: string | null;
+          user_id?: string;
+          website?: string | null;
+        };
+        Relationships: [];
       };
     };
     Views: {

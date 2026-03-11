@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { Camera, QrCode, PenLine, Users } from 'lucide-react';
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 
 interface AddDrawerProps {
   children: React.ReactNode;
+  onQuickAdd?: () => void;
 }
 
 const addOptions = [
@@ -39,10 +40,14 @@ const addOptions = [
   },
 ];
 
-const AddDrawer = ({ children }: AddDrawerProps) => {
+const AddDrawer = ({ children, onQuickAdd }: AddDrawerProps) => {
   const router = useRouter();
 
   const handleOptionClick = (option: (typeof addOptions)[0]) => {
+    if (option.id === 'quick-add' && onQuickAdd) {
+      onQuickAdd();
+      return;
+    }
     if (option.path) {
       router.push(option.path);
     }
@@ -54,12 +59,12 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent
         className="border-none rounded-none max-h-[85vh] backdrop-blur-[20px] bb-drawer-panel"
+        aria-describedby={undefined}
       >
+        <DrawerTitle className="sr-only">Add Connection</DrawerTitle>
         <div className="px-6 pt-2 pb-6">
           {/* Header */}
-          <p
-            className="font-helvetica text-center mb-4 text-[11px] uppercase tracking-[0.12em] font-normal"
-          >
+          <p className="font-helvetica text-center mb-4 text-[11px] uppercase tracking-[0.12em] font-normal">
             Add Connection
           </p>
 
@@ -81,14 +86,10 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3
-                        className="font-helvetica text-[11px] uppercase tracking-[0.12em] font-normal group-hover:opacity-70 transition-opacity"
-                      >
+                      <h3 className="font-helvetica text-[11px] uppercase tracking-[0.12em] font-normal group-hover:opacity-70 transition-opacity">
                         {option.label}
                       </h3>
-                      <p
-                        className="font-helvetica text-[10px] font-light text-bb-muted"
-                      >
+                      <p className="font-helvetica text-[10px] font-light text-bb-muted">
                         {option.description}
                       </p>
                     </div>

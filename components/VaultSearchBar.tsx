@@ -12,29 +12,38 @@ const placeholders = [
   'Who introduced me to James?',
 ];
 
-const recentSearches = [
-  { query: 'Milan contacts', highlight: 'Milan' },
-  { query: 'Sarah from London', highlight: 'Sarah' },
-  { query: 'Design Week introductions', highlight: 'Design Week' },
-];
+const STORAGE_KEY = 'bb_recent_searches';
+const MAX_RECENT = 5;
 
-const recentlyAdded = [
-  { name: 'Alessandro Tocchi', detail: 'Event Planner — Milan' },
-  { name: 'Charlotte Kim', detail: 'Fashion Editor — Seoul' },
-  { name: 'Elena Vance', detail: 'Art Director — Paris' },
-];
+function loadRecentSearches(): string[] {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveRecentSearches(searches: string[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(searches));
+}
 
 interface VaultSearchBarProps {
   onSearchChange?: (value: string) => void;
   /** 'helvetica' (default): italic, Helvetica Neue, light weight
    *  'engravers': uppercase, Engravers Gothic, tight tracking */
   variant?: 'helvetica' | 'engravers';
+  recentContacts?: { name: string; detail: string }[];
 }
 
-const VaultSearchBar = ({ onSearchChange, variant = 'helvetica' }: VaultSearchBarProps) => {
+const VaultSearchBar = ({
+  onSearchChange,
+  variant = 'helvetica',
+  recentContacts,
+}: VaultSearchBarProps) => {
   const [search, setSearch] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => loadRecentSearches());
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,18 +63,6 @@ const VaultSearchBar = ({ onSearchChange, variant = 'helvetica' }: VaultSearchBa
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
-
-  const highlightName = (text: string, highlight: string) => {
-    const idx = text.indexOf(highlight);
-    if (idx === -1) return <span>{text}</span>;
-    return (
-      <span>
-        {text.slice(0, idx)}
-        <span className="font-bold text-foreground">{highlight}</span>
-        {text.slice(idx + highlight.length)}
-      </span>
-    );
-  };
 
   const isEngravers = variant === 'engravers';
 
@@ -88,6 +85,16 @@ const VaultSearchBar = ({ onSearchChange, variant = 'helvetica' }: VaultSearchBa
             onSearchChange?.(e.target.value);
           }}
           onFocus={() => setIsFocused(true)}
+          onBlur={() => {
+            if (search.trim()) {
+              const updated = [
+                search.trim(),
+                ...recentSearches.filter((s) => s !== search.trim()),
+              ].slice(0, MAX_RECENT);
+              setRecentSearches(updated);
+              saveRecentSearches(updated);
+            }
+          }}
           className={`w-full bg-transparent outline-none pr-5 ${inputClass}`}
           placeholder=""
         />
@@ -124,44 +131,52 @@ const VaultSearchBar = ({ onSearchChange, variant = 'helvetica' }: VaultSearchBa
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="absolute left-0 right-0 top-full z-50 mt-1 border border-border/50 overflow-hidden bb-dropdown-panel"
           >
-            <div className="px-4 pt-4 pb-2">
-              <p className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground/60 mb-2">
-                Recent searches
-              </p>
-              <div className="space-y-1.5">
-                {recentSearches.map((item, i) => (
-                  <button
-                    key={i}
-                    className="w-full text-left text-[12px] text-muted-foreground hover:text-foreground transition-colors py-1"
-                    onClick={() => {
-                      setSearch(item.query);
-                      onSearchChange?.(item.query);
-                      setIsFocused(false);
-                    }}
-                  >
-                    {highlightName(item.query, item.highlight)}
-                  </button>
-                ))}
+            {recentSearches.length > 0 && (
+              <div className="px-4 pt-4 pb-2">
+                <p className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground/60 mb-2">
+                  Recent searches
+                </p>
+                <div className="space-y-1.5">
+                  {recentSearches.map((query) => (
+                    <button
+                      key={query}
+                      className="w-full text-left text-[12px] text-muted-foreground hover:text-foreground transition-colors py-1"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setSearch(query);
+                        onSearchChange?.(query);
+                        setIsFocused(false);
+                      }}
+                    >
+                      {query}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="h-px bg-border/50 mx-4" />
-
-            <div className="px-4 pt-2 pb-4">
-              <p className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground/60 mb-2">
-                Recently added
-              </p>
-              <div className="space-y-1.5">
-                {recentlyAdded.map((item, i) => (
-                  <div key={i} className="py-1">
-                    <p className="text-[12px] text-foreground">
-                      <span className="font-bold">{item.name}</span>
-                    </p>
-                    <p className="text-[10px] text-muted-foreground/60 font-light">{item.detail}</p>
+            {(recentContacts?.length ?? 0) > 0 && (
+              <>
+                {recentSearches.length > 0 && <div className="h-px bg-border/50 mx-4" />}
+                <div className="px-4 pt-2 pb-4">
+                  <p className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground/60 mb-2">
+                    Recently added
+                  </p>
+                  <div className="space-y-1.5">
+                    {recentContacts?.map((item) => (
+                      <div key={item.name} className="py-1">
+                        <p className="text-[12px] text-foreground">
+                          <span className="font-bold">{item.name}</span>
+                        </p>
+                        <p className="text-[10px] text-muted-foreground/60 font-light">
+                          {item.detail}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

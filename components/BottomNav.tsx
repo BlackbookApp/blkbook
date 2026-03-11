@@ -7,7 +7,7 @@ import { routes } from '@/lib/routes';
 const navItems = [
   { key: 'vault', label: 'Vault', path: routes.vault },
   { key: 'add', label: '+Add', path: null },
-  { key: 'share', label: 'Share', path: routes.share },
+  // { key: 'share', label: 'Share', path: routes.share },
   { key: 'profile', label: 'Profile', path: routes.myBlackbook },
 ];
 
@@ -15,9 +15,10 @@ interface BottomNavProps {
   /** 'dark' (default): dark bg-bb-nav with grain, display font
    *  'cream': light bg-bb-cream with borders, helvetica font */
   theme?: 'dark' | 'cream';
+  onQuickAdd?: () => void;
 }
 
-const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
+const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -64,7 +65,7 @@ const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
 
             if (item.key === 'add') {
               return (
-                <AddDrawer key={item.key}>
+                <AddDrawer key={item.key} onQuickAdd={onQuickAdd}>
                   <button className={itemClass}>
                     <span className={addTextClass}>{item.label}</span>
                   </button>
