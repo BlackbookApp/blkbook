@@ -40,7 +40,7 @@ export function ContactNotes({ notes, addedDate, city, onAddNote }: ContactNotes
             value={newNote}
             onChange={(e) => setNewNote(e.target.value)}
             placeholder="Add a note..."
-            className="font-garamond italic text-[14px] tracking-tight text-bb-dark border-border bg-transparent resize-none mb-3"
+            className="font-garamond italic text-[14px] tracking-tight text-bb-dark border-border bg-transparent resize-none mb-3 focus-visible:ring-0 focus-visible:border-[var(--bb-border)]"
             rows={3}
             autoFocus
           />

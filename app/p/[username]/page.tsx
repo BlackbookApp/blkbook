@@ -22,7 +22,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PublicProfilePage({ params }: Props) {
   const { username } = await params;
   const profile = await getProfileByUsername(username);
-  console.log('Fetched profile for username:', username, profile);
   if (!profile) notFound();
 
   const profileData = {

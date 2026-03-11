@@ -1,7 +1,12 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+
+const PRIMARY_BTN =
+  'h-[48px] border-box rounded-none w-full py-4 font-helvetica font-normal text-[11px] tracking-[0.14em] bg-[var(--pg-btn-bg)] text-[var(--pg-btn-fg)] border-none hover:opacity-80 hover:bg-[var(--pg-btn-bg)]';
+
+const SECONDARY_BTN =
+  ' h-[48px] border-box rounded-none w-full py-3 font-helvetica font-normal text-[11px] tracking-[0.1em] bg-transparent text-[var(--pg-btn-sec-fg)] border-[var(--pg-btn-sec-border)] hover:bg-transparent hover:opacity-70';
 
 export type ContactMethod = {
   label: string;
@@ -45,21 +50,28 @@ function groupMethods(methods: ContactMethod[]): Group[] {
   return groups;
 }
 
-const btnClass = (variant: ContactMethod['variant'], extra = '') =>
-  variant === 'primary' ? `pg-btn-primary ${extra}`.trim() : `pg-btn-secondary ${extra}`.trim();
+const MethodButton = ({ method }: { method: ContactMethod }) => {
+  const isPrimary = method.variant === 'primary';
+  const btnClass = isPrimary ? PRIMARY_BTN : SECONDARY_BTN;
 
-const MethodElement = ({ method, className }: { method: ContactMethod; className: string }) => {
   if (method.href) {
     return (
-      <a href={method.href} target="_blank" rel="noopener noreferrer" className={className}>
-        {method.label}
-      </a>
+      <Button asChild variant={isPrimary ? 'default' : 'outline'} className={btnClass}>
+        <a href={method.href} target="_blank" rel="noopener noreferrer">
+          {method.label}
+        </a>
+      </Button>
     );
   }
+
   return (
-    <button className={className} onClick={method.onClick}>
+    <Button
+      variant={isPrimary ? 'default' : 'outline'}
+      className={btnClass}
+      onClick={method.onClick}
+    >
       {method.label}
-    </button>
+    </Button>
   );
 };
 
@@ -72,26 +84,12 @@ export const ContactBlock = ({ methods }: ContactBlockProps) => {
           return (
             <div key={i} className="grid grid-cols-2 gap-2">
               {group.methods.map((m) => (
-                <MethodElement
-                  key={m.label}
-                  method={m}
-                  className={btnClass(m.variant, 'py-2 flex justify-center items-center')}
-                />
+                <MethodButton key={m.label} method={m} />
               ))}
             </div>
           );
         }
-        const m = group.method;
-        return (
-          <MethodElement
-            key={m.label}
-            method={m}
-            className={btnClass(
-              m.variant,
-              m.variant === 'primary' ? '' : 'w-full py-4 flex justify-center items-center'
-            )}
-          />
-        );
+        return <MethodButton key={group.method.label} method={group.method} />;
       })}
     </div>
   );

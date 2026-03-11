@@ -54,7 +54,7 @@ const MyBlackbook = () => {
         </motion.div>
 
         {/* Analytics Insight */}
-        <motion.div
+        {/* <motion.div
           className="flex items-center justify-between px-1 mb-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -64,7 +64,7 @@ const MyBlackbook = () => {
           <p className="blackbook-label text-bb-muted">
             <span className="text-bb-dark font-bold">47</span> views this week
           </p>
-        </motion.div>
+        </motion.div> */}
 
         {/* Invite CTA */}
         <motion.div

@@ -51,6 +51,20 @@
   font-display: swap;
 }
 @font-face {
+  font-family: 'Granjon LT';
+  src: url('/fonts/Granjon_LT_Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Granjon LT';
+  src: url('/fonts/Granjon_Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
   font-family: 'GT Super Display';
   src: url('/fonts/GT-Super-Display-Light-Trial.otf') format('opentype');
   font-weight: 300;
@@ -209,6 +223,7 @@
   --font-canela: 'Canela Text Trial', serif;
   --font-canela-condensed: 'Canela Condensed', serif;
   --font-canela-deck: 'Canela Deck', serif;
+  --font-granjon: 'Granjon LT', 'Granjon LT Std', Georgia, serif;
 
   /* Blackbook brand colours */
   --color-bb-dark: #0e0e0e;
@@ -472,7 +487,7 @@
 /* ── Photographer profile themes ──────────────────────── */
 [data-pg-theme='blanc'] {
   --pg-bg: hsl(45 20% 97%);
-  --pg-fg: hsl(0 0% 5%);
+  --pg-fg: rgb(10, 10, 10);
   --pg-muted-fg: hsl(0 0% 40%);
   --pg-border-image: hsl(40 30% 88%);
   --pg-separator: hsl(45 10% 85%);
@@ -480,11 +495,16 @@
   --pg-btn-fg: hsl(45 20% 97%);
   --pg-btn-sec-border: hsl(45 10% 85%);
   --pg-btn-sec-fg: hsl(0 0% 5%);
+  --pg-white: #fafaf9;
+  --pg-ink: #0e0e0d;
+  --pg-mid: #7a7672;
+  --pg-ghost: #b8b4ae;
+  --pg-rule: #e4e0da;
 }
 
 [data-pg-theme='beige'] {
   --pg-bg: hsl(35 30% 91%);
-  --pg-fg: hsl(0 0% 5%);
+  --pg-fg: rgb(10, 10, 10);
   --pg-muted-fg: hsl(30 10% 40%);
   --pg-border-image: hsl(35 20% 82%);
   --pg-separator: hsl(35 20% 80%);
@@ -492,6 +512,11 @@
   --pg-btn-fg: hsl(40 25% 92%);
   --pg-btn-sec-border: hsl(35 20% 75%);
   --pg-btn-sec-fg: hsl(0 0% 5%);
+  --pg-white: #f5f0e8;
+  --pg-ink: #0e0e0d;
+  --pg-mid: #7a7672;
+  --pg-ghost: #b8b4ae;
+  --pg-rule: #d8d0c4;
 }
 
 [data-pg-theme='noir'] {
@@ -504,6 +529,11 @@
   --pg-btn-fg: hsl(0 0% 5%);
   --pg-btn-sec-border: hsl(0 0% 25%);
   --pg-btn-sec-fg: hsl(45 20% 95%);
+  --pg-white: #141412;
+  --pg-ink: #f0ece4;
+  --pg-mid: #8a8680;
+  --pg-ghost: #5a5650;
+  --pg-rule: #2a2826;
 }
 
 [data-pg-theme] {
