@@ -9,6 +9,7 @@ import { performExchangeAction } from '@/app/actions/exchanges';
 import { useQueryClient } from '@tanstack/react-query';
 import type { SocialLinks } from '@/lib/data/profiles';
 import type { SharedFields } from '@/lib/data/exchanges';
+import { Text } from '@/components/ui/text';
 
 interface ExchangeAuthModalProps {
   open: boolean;
@@ -198,22 +199,26 @@ export default function ExchangeAuthModal({
                   className="w-16 h-px mb-8 bg-white/30"
                   style={{ transformOrigin: 'center' }}
                 />
-                <motion.h2
+                <Text
+                  as={motion.h2}
+                  variant="h3"
+                  color="cream"
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.5 }}
-                  className="font-garamond text-bb-cream font-normal text-[15px] tracking-[0.01em] uppercase"
                 >
                   Details exchanged
-                </motion.h2>
-                <motion.p
+                </Text>
+                <Text
+                  as={motion.p}
+                  variant="note"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7, duration: 0.5 }}
-                  className="font-garamond text-white/45 font-normal text-[13px] tracking-[0.01em] mt-1 italic"
+                  className="text-white/45 mt-1"
                 >
                   {profileFirstName} will remember you
-                </motion.p>
+                </Text>
                 <motion.div
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
@@ -237,22 +242,22 @@ export default function ExchangeAuthModal({
                 <p className="font-garamond text-foreground text-[18px] text-center mb-2">
                   Discard your note?
                 </p>
-                <p className="font-garamond text-bb-muted text-[13px] italic text-center mb-10">
+                <Text variant="note" className="text-center mb-10">
                   What you&apos;ve written will be lost.
-                </p>
+                </Text>
                 <button
                   type="button"
                   onClick={handleDiscard}
-                  className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-foreground w-full py-4 border border-border/60 mb-3"
+                  className="w-full py-4 border border-border/60 mb-3"
                 >
-                  Discard
+                  <Text variant="label" as="span">
+                    Discard
+                  </Text>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setShowDiscard(false)}
-                  className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-bb-muted"
-                >
-                  Keep editing
+                <button type="button" onClick={() => setShowDiscard(false)}>
+                  <Text variant="label" color="muted" as="span">
+                    Keep editing
+                  </Text>
                 </button>
               </motion.div>
             )}
@@ -263,24 +268,26 @@ export default function ExchangeAuthModal({
               <button
                 type="button"
                 onClick={handleCancel}
-                className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-bb-muted hover:text-foreground transition-colors"
+                className="hover:text-foreground transition-colors"
               >
-                Cancel
+                <Text variant="label" color="muted" as="span">
+                  Cancel
+                </Text>
               </button>
             </div>
 
             <div className="h-px bg-border/60 mb-10" />
 
-            <p className="font-garamond text-bb-muted text-[10px] uppercase tracking-[0.25em] text-center mb-10">
+            <Text variant="h3" className="mb-4">
               Exchange details with {profileFirstName}
-            </p>
+            </Text>
 
             <div className="max-w-[400px] mx-auto">
               {/* Always-shared fields */}
               <div className="mb-2">
-                <p className="font-helvetica text-[10px] uppercase tracking-[0.2em] text-bb-muted mb-3">
+                <Text variant="label-micro" className="mb-3">
                   Always shared
-                </p>
+                </Text>
 
                 <div className="flex items-center justify-between py-3 border-b border-border/30">
                   <div className="flex items-center gap-3">
@@ -292,9 +299,9 @@ export default function ExchangeAuthModal({
                       Name
                     </span>
                   </div>
-                  <span className="font-garamond text-[13px] italic text-bb-muted truncate max-w-[55%]">
+                  <Text variant="note" as="span" className="truncate max-w-[55%]">
                     {myName || <span className="text-bb-muted/40">Not set</span>}
-                  </span>
+                  </Text>
                 </div>
 
                 {myProfile?.username && (
@@ -307,18 +314,18 @@ export default function ExchangeAuthModal({
                         Profile
                       </span>
                     </div>
-                    <span className="font-garamond text-[13px] italic text-bb-muted truncate max-w-[55%]">
+                    <Text variant="note" as="span" className="truncate max-w-[55%]">
                       /p/{myProfile.username}
-                    </span>
+                    </Text>
                   </div>
                 )}
               </div>
 
               {/* Selectable fields */}
               <div className="mt-6 mb-10">
-                <p className="font-helvetica text-[10px] uppercase tracking-[0.2em] text-bb-muted mb-3">
+                <Text variant="label-micro" className="mb-3">
                   Choose what to share
-                </p>
+                </Text>
 
                 {FIELDS.filter(({ key }) => !!fieldValues[key]).map(({ key, label }) => {
                   const value = fieldValues[key]!;
@@ -357,9 +364,13 @@ export default function ExchangeAuthModal({
                           />
                         </div>
                       ) : (
-                        <span className="font-garamond text-[13px] italic text-bb-muted text-right truncate max-w-[55%]">
+                        <Text
+                          variant="note"
+                          as="span"
+                          className="normal-case text-right truncate max-w-[55%]"
+                        >
                           {value}
-                        </span>
+                        </Text>
                       )}
                     </button>
                   );
@@ -368,9 +379,9 @@ export default function ExchangeAuthModal({
 
               {/* Note */}
               <div className="mb-10">
-                <p className="font-helvetica text-[10px] uppercase tracking-[0.2em] text-bb-muted mb-3">
+                <Text variant="label-micro" className="mb-3">
                   Note
-                </p>
+                </Text>
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
@@ -394,13 +405,15 @@ export default function ExchangeAuthModal({
                 type="button"
                 onClick={handleConfirm}
                 disabled={!canExchange || loading}
-                className={`font-helvetica font-normal ${
+                className={`${
                   canExchange && !loading
                     ? 'bg-bb-dark cursor-pointer'
                     : 'bg-bb-dark/15 cursor-not-allowed'
-                } text-bb-cream w-full py-5 uppercase tracking-[0.12em] text-[11px] transition-colors relative overflow-hidden grain-overlay`}
+                } w-full py-5 transition-colors relative overflow-hidden grain-overlay`}
               >
-                {loading ? 'Sending…' : 'Exchange Details'}
+                <Text variant="label" color="cream" as="span">
+                  {loading ? 'Sending…' : 'Exchange Details'}
+                </Text>
               </button>
             </div>
           </div>

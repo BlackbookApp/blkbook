@@ -8,6 +8,7 @@ import { SOCIAL_FIELD_CONFIGS } from './social-config';
 import { validateProfileStep, type ProfileStepErrors } from './validation';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
+import { Text } from '@/components/ui/text';
 
 interface StepProfileProps {
   name: string;
@@ -90,9 +91,9 @@ export const StepProfile = ({
       transition={{ duration: 0.4 }}
       className="flex-1 flex flex-col px-6 pt-10 pb-8 overflow-y-auto"
     >
-      <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-6">
+      <Text variant="label-micro" className="mb-6">
         Your Profile
-      </p>
+      </Text>
 
       {/* Avatar upload */}
       <div className="flex justify-center mb-6">
@@ -150,9 +151,9 @@ export const StepProfile = ({
           },
         ].map((f) => (
           <div key={f.label}>
-            <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
+            <Text variant="label-micro" as="label" className="block mb-1">
               {f.label}
-            </label>
+            </Text>
             <Input
               value={f.value}
               onChange={(e) => {
@@ -167,9 +168,9 @@ export const StepProfile = ({
         ))}
 
         <div>
-          <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
+          <Text variant="label-micro" as="label" className="block mb-1">
             Bio
-          </label>
+          </Text>
           <Input
             variant="primary"
             value={bio}
@@ -187,9 +188,9 @@ export const StepProfile = ({
       <div className="space-y-4 mb-6">
         {SOCIAL_FIELD_CONFIGS.map((sf) => (
           <div key={sf.key}>
-            <label className="block text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
+            <Text variant="label-micro" as="label" className="block mb-1">
               {sf.label}
-            </label>
+            </Text>
             <div className="flex items-center gap-3">
               <div className="flex-1">
                 <Input

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createGuestExchangeAction } from '@/app/actions/exchanges';
+import { Text } from '@/components/ui/text';
 
 interface ExchangeDetailsModalProps {
   open: boolean;
@@ -117,22 +118,26 @@ const ExchangeDetailsModal = ({
                   className="w-16 h-px mb-8 bg-white/30"
                   style={{ transformOrigin: 'center' }}
                 />
-                <motion.h2
+                <Text
+                  as={motion.h2}
+                  variant="h3"
+                  color="cream"
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.5 }}
-                  className="font-garamond text-bb-cream font-normal text-[15px] tracking-[0.01em] uppercase"
                 >
                   Details sent
-                </motion.h2>
-                <motion.p
+                </Text>
+                <Text
+                  as={motion.p}
+                  variant="note"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7, duration: 0.5 }}
-                  className="font-garamond text-white/45 font-normal text-[13px] tracking-[0.01em] mt-1 italic"
+                  className="text-white/45 mt-1"
                 >
                   {firstName} will remember you
-                </motion.p>
+                </Text>
                 <motion.div
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
@@ -156,22 +161,22 @@ const ExchangeDetailsModal = ({
                 <p className="font-garamond text-foreground text-[18px] text-center mb-2">
                   Discard your details?
                 </p>
-                <p className="font-garamond text-bb-muted text-[13px] italic text-center mb-10">
+                <Text variant="note" className="text-center mb-10">
                   What you&apos;ve written will be lost.
-                </p>
+                </Text>
                 <button
                   type="button"
                   onClick={handleDiscard}
-                  className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-foreground w-full py-4 border border-border/60 mb-3"
+                  className="w-full py-4 border border-border/60 mb-3"
                 >
-                  Discard
+                  <Text variant="label" as="span">
+                    Discard
+                  </Text>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setShowDiscard(false)}
-                  className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-bb-muted"
-                >
-                  Keep editing
+                <button type="button" onClick={() => setShowDiscard(false)}>
+                  <Text variant="label" color="muted" as="span">
+                    Keep editing
+                  </Text>
                 </button>
               </motion.div>
             )}
@@ -182,23 +187,25 @@ const ExchangeDetailsModal = ({
               <button
                 type="button"
                 onClick={handleCancel}
-                className="font-helvetica text-[11px] uppercase tracking-[0.12em] text-bb-muted hover:text-foreground transition-colors"
+                className="hover:text-foreground transition-colors"
               >
-                Cancel
+                <Text variant="label" color="muted" as="span">
+                  Cancel
+                </Text>
               </button>
             </div>
 
             <div className="h-px bg-border/60 mb-10" />
 
-            <p className="font-garamond text-bb-muted text-[10px] uppercase tracking-[0.25em] text-center mb-10">
+            <Text variant="label-micro" align="center" className="mb-10">
               Send {firstName} your details
-            </p>
+            </Text>
 
             <div className="max-w-[400px] mx-auto">
               <div className="mb-8">
-                <p className="font-garamond text-bb-muted font-medium text-[11px] uppercase mb-3 tracking-[0.2em]">
+                <Text variant="label-micro" className="mb-3">
                   Your Name *
-                </p>
+                </Text>
                 <input
                   type="text"
                   value={form.name}
@@ -210,9 +217,9 @@ const ExchangeDetailsModal = ({
               </div>
 
               <div className="mb-8">
-                <p className="font-garamond text-bb-muted font-medium text-[11px] uppercase mb-3 tracking-[0.2em]">
+                <Text variant="label-micro" className="mb-3">
                   Email or Phone *
-                </p>
+                </Text>
                 <input
                   type="text"
                   value={form.emailOrPhone}
@@ -223,9 +230,9 @@ const ExchangeDetailsModal = ({
               </div>
 
               <div className="mb-10">
-                <p className="font-garamond text-bb-muted font-medium text-[11px] uppercase mb-3 tracking-[0.2em]">
+                <Text variant="label-micro" className="mb-3">
                   Note
-                </p>
+                </Text>
                 <textarea
                   value={form.note}
                   onChange={set('note')}
@@ -249,13 +256,15 @@ const ExchangeDetailsModal = ({
                 type="button"
                 onClick={handleSend}
                 disabled={!canSend || loading}
-                className={`font-helvetica font-normal ${
+                className={`${
                   canSend && !loading
                     ? 'bg-bb-dark cursor-pointer'
                     : 'bg-bb-dark/15 cursor-not-allowed'
-                } text-bb-cream w-full py-5 uppercase tracking-[0.12em] text-[11px] transition-colors relative overflow-hidden grain-overlay`}
+                } w-full py-5 transition-colors relative overflow-hidden grain-overlay`}
               >
-                {loading ? 'Sending…' : 'Send My Details'}
+                <Text variant="label" color="cream" as="span">
+                  {loading ? 'Sending…' : 'Send My Details'}
+                </Text>
               </button>
             </div>
           </div>

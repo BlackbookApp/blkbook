@@ -5,6 +5,7 @@ import Image from 'next/image';
 import dainaPortrait from '@/assets/daina-hazel-portrait.jpg';
 import jeremyPortrait from '@/assets/jeremy-allen-white-portrait.jpg';
 import type { ProfileStyle, ProfilePalette } from './types';
+import { Text } from '@/components/ui/text';
 
 interface StepStyleProps {
   style: ProfileStyle;
@@ -33,9 +34,9 @@ export const StepStyle = ({
       transition={{ duration: 0.4 }}
       className="flex-1 flex flex-col px-6 pt-10 pb-8"
     >
-      <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">
+      <Text variant="label-micro" className="mb-2">
         Your Style
-      </p>
+      </Text>
 
       <h1 className="text-xl tracking-tight text-foreground mb-8 uppercase">
         How should this feel?
@@ -58,9 +59,9 @@ export const StepStyle = ({
               className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
             />
             <div className="absolute inset-0 bg-foreground/5 flex items-end justify-center pb-3">
-              <span className="text-[10px] uppercase tracking-[0.2em] bg-background/90 px-3 py-1.5">
+              <Text variant="label-micro" as="span" className="bg-background/90 px-3 py-1.5">
                 Preview
-              </span>
+              </Text>
             </div>
           </button>
           <button
@@ -92,9 +93,7 @@ export const StepStyle = ({
               className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
             />
             <div className="absolute inset-0 bg-foreground/5 flex items-end justify-center pb-3">
-              <span className="text-[10px] uppercase tracking-[0.2em] bg-background/90 px-3 py-1.5">
-                Preview
-              </span>
+              <Text variant="label-micro" as="span" className="bg-background/90 px-3 py-1.5">Preview</Text>
             </div>
           </button>
           <button
@@ -111,9 +110,9 @@ export const StepStyle = ({
         </div> */}
       </div>
 
-      <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-4">
+      <Text variant="label-micro" className="mb-4">
         Your Palette
-      </p>
+      </Text>
       <div className="flex gap-3 mb-auto">
         {(
           [
@@ -132,7 +131,9 @@ export const StepStyle = ({
               className="w-full h-10 mb-3 border border-border"
               style={{ background: p.swatch }}
             />
-            <span className="block text-[11px] uppercase tracking-[0.15em]">{p.label}</span>
+            <Text variant="label" as="span" className="block">
+              {p.label}
+            </Text>
           </button>
         ))}
       </div>

@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useExchanges, useAcceptExchange } from '@/hooks/use-exchanges';
 import type { Exchange, SharedFields } from '@/lib/data/exchanges';
 import { routes } from '@/lib/routes';
+import { Text } from '@/components/ui/text';
 
 function ContactLine({ fields }: { fields: SharedFields }) {
   const parts: string[] = [];
@@ -17,7 +18,9 @@ function ContactLine({ fields }: { fields: SharedFields }) {
 
   if (parts.length === 0) return null;
   return (
-    <p className="font-helvetica text-[11px] text-bb-muted leading-relaxed">{parts.join(' · ')}</p>
+    <Text variant="label" color="muted" className="leading-relaxed">
+      {parts.join(' · ')}
+    </Text>
   );
 }
 
@@ -28,9 +31,9 @@ function ExtraLinks({ fields }: { fields: SharedFields }) {
   if (fields.location) items.push({ label: '', value: fields.location });
   if (items.length === 0) return null;
   return (
-    <p className="font-helvetica text-[10px] text-bb-muted/60 mt-0.5 leading-relaxed">
+    <Text variant="label-micro" className="text-bb-muted/60 mt-0.5 leading-relaxed">
       {items.map(({ label, value }) => (label ? `${label}: ${value}` : value)).join(' · ')}
-    </p>
+    </Text>
   );
 }
 
@@ -66,28 +69,30 @@ function RequestCard({ exchange }: { exchange: Exchange }) {
               {exchange.status === 'pending' && (
                 <span className="w-1.5 h-1.5 rounded-full bg-bb-dark flex-shrink-0" />
               )}
-              <p className="font-display font-light text-[15px] tracking-[0.01em] uppercase text-bb-dark truncate">
+              <Text variant="h3" color="dark" className="truncate">
                 {fields.name}
-              </p>
+              </Text>
             </div>
 
             {fields.role && (
-              <p className="font-garamond italic text-[12px] text-bb-muted mb-0.5">{fields.role}</p>
+              <Text variant="note" className="mb-0.5">
+                {fields.role}
+              </Text>
             )}
 
             <ContactLine fields={fields} />
             <ExtraLinks fields={fields} />
 
             {exchange.initiator_note && (
-              <p className="font-garamond italic text-[13px] text-bb-muted/80 mt-1.5 line-clamp-2">
+              <Text variant="note" className="text-bb-muted/80 mt-1.5 line-clamp-2">
                 &ldquo;{exchange.initiator_note}&rdquo;
-              </p>
+              </Text>
             )}
 
             <div className="flex items-center gap-3 mt-2">
-              <p className="font-helvetica text-[10px] text-bb-muted/50 uppercase tracking-[0.08em]">
+              <Text variant="label-micro" className="text-bb-muted/50">
                 {formatDistanceToNow(new Date(exchange.created_at), { addSuffix: true })}
-              </p>
+              </Text>
               {isMember && fields.username && (
                 <Link
                   href={routes.publicProfile(fields.username)}
@@ -104,13 +109,19 @@ function RequestCard({ exchange }: { exchange: Exchange }) {
           type="button"
           onClick={() => !isSuccess && accept(exchange.id)}
           disabled={isPending || isSuccess}
-          className={`flex-shrink-0 font-helvetica text-[10px] uppercase tracking-[0.12em] px-3 py-2 border transition-colors ${
+          className={`flex-shrink-0 px-3 py-2 border transition-colors ${
             isSuccess
-              ? 'border-bb-dark/20 text-bb-muted cursor-default'
-              : 'border-bb-dark text-bb-dark hover:bg-bb-dark hover:text-bb-cream'
+              ? 'border-bb-dark/20 cursor-default'
+              : 'border-bb-dark hover:bg-bb-dark hover:text-bb-cream'
           }`}
         >
-          {isSuccess ? 'Accepted' : isPending ? '…' : 'Accept'}
+          <Text
+            variant="label-micro"
+            as="span"
+            className={isSuccess ? 'text-bb-muted' : 'text-bb-dark'}
+          >
+            {isSuccess ? 'Accepted' : isPending ? '…' : 'Accept'}
+          </Text>
         </button>
       </div>
     </motion.div>
@@ -137,12 +148,12 @@ export function Inbox() {
   if (pending.length === 0) {
     return (
       <div className="pt-16 text-center">
-        <p className="font-display font-light text-[13px] uppercase tracking-[0.08em] text-bb-muted">
+        <Text variant="h3" color="muted">
           No requests yet
-        </p>
-        <p className="font-garamond italic text-[13px] text-bb-muted/60 mt-1">
+        </Text>
+        <Text variant="note" className="text-bb-muted/60 mt-1">
           Exchange requests from your profile visitors will appear here.
-        </p>
+        </Text>
       </div>
     );
   }
