@@ -7,9 +7,9 @@ import {
   createVaultContactAction,
   updateVaultContactAction,
   deleteVaultContactAction,
+  isProfileInVaultAction,
 } from '@/app/actions/vault-contacts';
-import type { VaultContact } from '@/lib/data/vault-contacts';
-import type { VaultContactInsert } from '@/lib/data/vault-contacts';
+import type { VaultContact, VaultContactInsert } from '@/lib/data/vault-contacts';
 
 export function useVaultContacts() {
   return useQuery<VaultContact[]>({
@@ -47,6 +47,15 @@ export function useCreateVaultContact() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vault-contacts'] });
     },
+  });
+}
+
+export function useIsInVault(profileId: string) {
+  return useQuery<boolean>({
+    queryKey: ['vault-in', profileId],
+    queryFn: () => isProfileInVaultAction(profileId),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!profileId,
   });
 }
 

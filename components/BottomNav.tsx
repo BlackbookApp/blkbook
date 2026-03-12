@@ -3,11 +3,12 @@
 import { usePathname, useRouter } from 'next/navigation';
 import AddDrawer from '@/components/AddDrawer';
 import { routes } from '@/lib/routes';
+import { useExchangeRequests } from '@/hooks/use-exchange-requests';
 
 const navItems = [
   { key: 'vault', label: 'Vault', path: routes.vault },
   { key: 'add', label: '+Add', path: null },
-  // { key: 'share', label: 'Share', path: routes.share },
+  { key: 'inbox', label: 'Inbox', path: routes.inbox },
   { key: 'profile', label: 'Profile', path: routes.myBlackbook },
 ];
 
@@ -21,6 +22,8 @@ interface BottomNavProps {
 const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: requests = [] } = useExchangeRequests();
+  const pendingCount = requests.filter((r) => r.status === 'pending').length;
 
   const getActiveKey = () => {
     if (
@@ -31,7 +34,7 @@ const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
       return 'vault';
     if (pathname === '/quick-add' || pathname === '/scan-qr' || pathname === '/scan-card')
       return 'add';
-    if (pathname === routes.share) return 'share';
+    if (pathname === routes.inbox) return 'inbox';
     if (pathname === routes.myBlackbook || pathname === '/profile') return 'profile';
     return '';
   };
@@ -77,9 +80,12 @@ const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
               <button
                 key={item.key}
                 onClick={() => item.path && router.push(item.path)}
-                className={itemClass}
+                className={`${itemClass} relative`}
               >
                 <span className={getTextClass(isActive)}>{item.label}</span>
+                {item.key === 'inbox' && pendingCount > 0 && (
+                  <span className="absolute top-2.5 right-[calc(50%-18px)] w-1.5 h-1.5 rounded-full bg-bb-cream/70" />
+                )}
               </button>
             );
           })}

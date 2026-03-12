@@ -8,7 +8,6 @@ import {
   PhoneIcon,
 } from './social-icons';
 import type { SocialEntry } from './social-block';
-import type { ContactMethod } from './contact-block';
 
 const iconClass = 'text-[var(--pg-muted-fg)] w-3 h-3';
 
@@ -17,18 +16,20 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
   const socials: SocialEntry[] = [];
 
   if (links.instagram) {
+    const handle = links.instagram.replace(/^@/, '');
     socials.push({
       icon: <InstagramIcon className={iconClass} />,
-      href: `https://instagram.com/${links.instagram.replace(/^@/, '')}`,
-      label: `@${links.instagram}`,
+      href: `https://instagram.com/${handle}`,
+      label: `@${handle}`,
     });
   }
 
   if (links.tiktok) {
+    const handle = links.tiktok.replace(/^@/, '');
     socials.push({
       icon: <TikTokIcon className={iconClass} />,
-      href: `https://tiktok.com/@${links.tiktok.replace(/^@/, '')}`,
-      label: `@${links.tiktok}`,
+      href: `https://tiktok.com/@${handle}`,
+      label: `@${handle}`,
     });
   }
 
@@ -43,10 +44,11 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
   }
 
   if (links.twitter) {
+    const handle = links.twitter.replace(/^@/, '');
     socials.push({
       icon: <TwitterIcon className={iconClass} />,
-      href: `https://x.com/${links.twitter}`,
-      label: `@${links.twitter}`,
+      href: `https://x.com/${handle}`,
+      label: `@${handle}`,
     });
   }
 
@@ -67,47 +69,4 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
   }
 
   return socials;
-}
-
-/** Build ContactMethod[] from profile social_links + action callbacks */
-export function buildContactMethods(
-  links: SocialLinks,
-  callbacks: {
-    onSaveContact: () => void;
-    onExchangeDetails: () => void;
-  }
-): ContactMethod[] {
-  const methods: ContactMethod[] = [
-    { label: 'Save Contact', onClick: callbacks.onSaveContact, variant: 'primary' },
-  ];
-
-  const halfItems: ContactMethod[] = [];
-
-  if (links.whatsapp) {
-    halfItems.push({
-      label: 'WhatsApp',
-      href: `https://wa.me/${links.whatsapp.replace(/\D/g, '')}`,
-      variant: 'secondary',
-      layout: 'half',
-    });
-  }
-
-  if (links.website) {
-    halfItems.push({
-      label: 'Website',
-      href: links.website.startsWith('http') ? links.website : `https://${links.website}`,
-      variant: 'secondary',
-      layout: 'half',
-    });
-  }
-
-  methods.push(...halfItems);
-
-  methods.push({
-    label: 'Exchange Details',
-    onClick: callbacks.onExchangeDetails,
-    variant: 'secondary',
-  });
-
-  return methods;
 }

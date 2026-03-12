@@ -10,6 +10,7 @@ const PUBLIC_ROUTES = [
   '/not-found',
   '/request-access',
   '/p',
+  '/api/vcard',
 ];
 const AUTH_ONLY_ROUTES = ['/login', '/signup']; // redirect to /my-blackbook if already authed
 

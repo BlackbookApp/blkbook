@@ -9,7 +9,7 @@ export function ContactBanner({ contact }: ContactBannerProps) {
   if (contact.photo_url) {
     return (
       <>
-        <div className="w-full aspect-[3/4] mb-6 overflow-hidden border-2 border-bb-dark">
+        <div className="relative w-full aspect-[3/4] mb-6 overflow-hidden border-2 border-bb-dark">
           <Image src={contact.photo_url} alt={contact.name} fill className="object-cover" />
         </div>
         <div className="text-center mb-6">

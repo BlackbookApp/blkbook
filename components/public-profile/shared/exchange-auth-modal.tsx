@@ -2,25 +2,41 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { createExchangeRequestAction } from '@/app/actions/exchange-requests';
+import { useUser } from '@/hooks/use-user';
+import { useProfile } from '@/hooks/use-profile';
+import { performExchangeAction } from '@/app/actions/exchange-requests';
+import { useQueryClient } from '@tanstack/react-query';
+import type { SocialLinks } from '@/lib/data/profiles';
 
-interface ExchangeDetailsModalProps {
+interface ExchangeAuthModalProps {
   open: boolean;
   onClose: () => void;
-  firstName: string;
   profileId: string;
+  profileFirstName: string;
+  profileName: string;
+  profileRole?: string | null;
+  profilePhotoUrl?: string | null;
+  socialLinks: SocialLinks;
 }
 
-const ExchangeDetailsModal = ({
+export default function ExchangeAuthModal({
   open,
   onClose,
-  firstName,
   profileId,
-}: ExchangeDetailsModalProps) => {
-  const [form, setForm] = useState({ name: '', emailOrPhone: '', note: '' });
-  const [showSuccess, setShowSuccess] = useState(false);
+  profileFirstName,
+  profileName,
+  profileRole,
+  profilePhotoUrl,
+  socialLinks,
+}: ExchangeAuthModalProps) {
+  const { data: user } = useUser();
+  const { data: myProfile } = useProfile();
+  const queryClient = useQueryClient();
+
+  const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [showDiscard, setShowDiscard] = useState(false);
 
   // Cleanup timeout on unmount (#4)
@@ -28,43 +44,39 @@ const ExchangeDetailsModal = ({
     if (!showSuccess) return;
     const t = setTimeout(() => {
       setShowSuccess(false);
-      setForm({ name: '', emailOrPhone: '', note: '' });
+      setNote('');
       onClose();
     }, 2500);
     return () => clearTimeout(t);
   }, [showSuccess, onClose]);
 
-  const set =
-    (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const myName = myProfile?.full_name ?? '';
+  const myRole = myProfile?.role ?? '';
+  // No auth email fallback — only use explicitly set social links (#19)
+  const myContact = myProfile?.social_links?.email ?? myProfile?.social_links?.phone ?? '';
+  const canExchange = !!user && !!myName && !!myContact;
 
-  const canSend = form.name.trim().length > 0 && form.emailOrPhone.trim().length > 0;
-  const isDirty = Object.values(form).some(Boolean);
-
-  const handleCancel = () => {
-    if (isDirty) {
-      setShowDiscard(true);
-    } else {
-      onClose();
-    }
-  };
-
-  const handleDiscard = () => {
-    setShowDiscard(false);
-    setForm({ name: '', emailOrPhone: '', note: '' });
-    onClose();
-  };
-
-  const handleSend = async () => {
-    if (!canSend || loading) return;
+  const handleConfirm = async () => {
+    if (!canExchange || loading) return;
     setLoading(true);
     setError(null);
     try {
-      await createExchangeRequestAction(profileId, {
-        requester_name: form.name,
-        requester_contact: form.emailOrPhone,
-        note: form.note || undefined,
+      // Atomic: vault contact + exchange request in one Postgres transaction (#1)
+      await performExchangeAction({
+        profileId,
+        profileName,
+        profileRole,
+        profilePhotoUrl,
+        profileEmail: socialLinks.email,
+        profilePhone: socialLinks.phone,
+        profileInstagram: socialLinks.instagram,
+        profileWebsite: socialLinks.website,
+        requesterName: myName,
+        requesterContact: myContact,
+        note: note || undefined,
       });
+      queryClient.invalidateQueries({ queryKey: ['vault-in', profileId] });
+      queryClient.invalidateQueries({ queryKey: ['vault-contacts'] });
       if (navigator.vibrate) navigator.vibrate(10);
       setShowSuccess(true);
     } catch {
@@ -72,6 +84,22 @@ const ExchangeDetailsModal = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCancel = () => {
+    if (note) {
+      setShowDiscard(true);
+    } else {
+      setError(null);
+      onClose();
+    }
+  };
+
+  const handleDiscard = () => {
+    setShowDiscard(false);
+    setNote('');
+    setError(null);
+    onClose();
   };
 
   return (
@@ -106,7 +134,7 @@ const ExchangeDetailsModal = ({
                   transition={{ delay: 0.5, duration: 0.5 }}
                   className="font-garamond text-bb-cream font-normal text-[15px] tracking-[0.01em] uppercase"
                 >
-                  Details sent
+                  Details exchanged
                 </motion.h2>
                 <motion.p
                   initial={{ opacity: 0, y: 8 }}
@@ -114,7 +142,7 @@ const ExchangeDetailsModal = ({
                   transition={{ delay: 0.7, duration: 0.5 }}
                   className="font-garamond text-white/45 font-normal text-[13px] tracking-[0.01em] mt-1 italic"
                 >
-                  {firstName} will remember you
+                  {profileFirstName} will remember you
                 </motion.p>
                 <motion.div
                   initial={{ scaleX: 0 }}
@@ -137,7 +165,7 @@ const ExchangeDetailsModal = ({
                 className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-background px-8"
               >
                 <p className="font-garamond text-foreground text-[18px] text-center mb-2">
-                  Discard your details?
+                  Discard your note?
                 </p>
                 <p className="font-garamond text-bb-muted text-[13px] italic text-center mb-10">
                   What you&apos;ve written will be lost.
@@ -174,35 +202,28 @@ const ExchangeDetailsModal = ({
             <div className="h-px bg-border/60 mb-10" />
 
             <p className="font-garamond text-bb-muted text-[10px] uppercase tracking-[0.25em] text-center mb-10">
-              Send {firstName} your details
+              Exchange details with {profileFirstName}
             </p>
 
             <div className="max-w-[400px] mx-auto">
-              <div className="mb-8">
-                <p className="font-garamond text-bb-muted font-medium text-[11px] uppercase mb-3 tracking-[0.2em]">
-                  Your Name *
+              {/* Preview of what you're sharing */}
+              <div className="mb-10 p-4 border border-border/40">
+                <p className="font-garamond text-bb-muted font-medium text-[10px] uppercase mb-4 tracking-[0.2em]">
+                  You&apos;ll share
                 </p>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={set('name')}
-                  placeholder="Full name"
-                  autoFocus
-                  className="font-garamond text-bb-dark font-normal w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] tracking-[0.01em] placeholder:text-muted-foreground/25"
-                />
-              </div>
-
-              <div className="mb-8">
-                <p className="font-garamond text-bb-muted font-medium text-[11px] uppercase mb-3 tracking-[0.2em]">
-                  Email or Phone *
-                </p>
-                <input
-                  type="text"
-                  value={form.emailOrPhone}
-                  onChange={set('emailOrPhone')}
-                  placeholder="How to reach you"
-                  className="font-garamond text-bb-dark font-normal w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] italic tracking-[0.01em] placeholder:text-muted-foreground/25"
-                />
+                {myName && (
+                  <p className="font-garamond text-foreground text-[18px] mb-1">{myName}</p>
+                )}
+                {myRole && (
+                  <p className="font-garamond text-bb-muted text-[12px] mb-1 italic">{myRole}</p>
+                )}
+                {myContact ? (
+                  <p className="font-garamond text-bb-muted text-[12px]">{myContact}</p>
+                ) : (
+                  <p className="font-garamond text-bb-muted/60 text-[11px] italic">
+                    Add an email or phone to your profile to exchange details.
+                  </p>
+                )}
               </div>
 
               <div className="mb-10">
@@ -210,8 +231,8 @@ const ExchangeDetailsModal = ({
                   Note
                 </p>
                 <textarea
-                  value={form.note}
-                  onChange={set('note')}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
                   placeholder="Anything worth remembering..."
                   rows={3}
                   className="font-garamond text-bb-dark font-normal w-full bg-transparent outline-none border-b border-border/60 pb-3 text-[20px] italic leading-relaxed resize-none placeholder:text-muted-foreground/25"
@@ -224,11 +245,11 @@ const ExchangeDetailsModal = ({
 
               <button
                 type="button"
-                onClick={handleSend}
-                disabled={!canSend || loading}
-                className={`font-helvetica font-normal ${canSend && !loading ? 'bg-bb-dark cursor-pointer' : 'bg-bb-dark/15 cursor-not-allowed'} text-bb-cream w-full py-5 uppercase tracking-[0.12em] text-[11px] transition-colors relative overflow-hidden grain-overlay`}
+                onClick={handleConfirm}
+                disabled={!canExchange || loading}
+                className={`font-helvetica font-normal ${canExchange && !loading ? 'bg-bb-dark cursor-pointer' : 'bg-bb-dark/15 cursor-not-allowed'} text-bb-cream w-full py-5 uppercase tracking-[0.12em] text-[11px] transition-colors relative overflow-hidden grain-overlay`}
               >
-                {loading ? 'Sending…' : 'Send My Details'}
+                {loading ? 'Sending…' : 'Exchange Details'}
               </button>
             </div>
           </div>
@@ -236,6 +257,4 @@ const ExchangeDetailsModal = ({
       )}
     </AnimatePresence>
   );
-};
-
-export default ExchangeDetailsModal;
+}

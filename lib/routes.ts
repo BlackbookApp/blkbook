@@ -8,6 +8,7 @@ export const routes = {
   paywall: '/paywall',
   authCallback: '/auth/callback',
   vault: '/vault',
+  inbox: '/inbox',
   myBlackbook: '/my-blackbook',
   editProfile: '/edit-profile',
   contact: (id: string) => `/contact/${id}`,
@@ -22,4 +23,5 @@ export const routes = {
   requestAccess: '/request-access',
   requestAccessStatus: (id: string) => `/request-access/status?id=${id}`,
   adminRequests: '/admin/requests',
+  vcardDownload: (username: string) => `/api/vcard/${username}`,
 } as const;

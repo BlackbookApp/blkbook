@@ -138,6 +138,15 @@ export async function getProfileByUsername(username: string): Promise<Profile | 
   } as Profile;
 }
 
+export async function getProfileUsername(profileId: string): Promise<string | null> {
+  const { data } = await adminClient
+    .from('profiles')
+    .select('username')
+    .eq('id', profileId)
+    .maybeSingle();
+  return data?.username ?? null;
+}
+
 export async function publishProfile(): Promise<{ error: string | null }> {
   return updateProfile({ is_published: true });
 }
