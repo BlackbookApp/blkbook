@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/hooks/use-user';
 import { useIsInVault, useCreateVaultContact } from '@/hooks/use-vault-contacts';
+import { useHasExchanged } from '@/hooks/use-exchanges';
 import { useQueryClient } from '@tanstack/react-query';
 import ExchangeDetailsModal from '@/components/ExchangeDetailsModal';
 import ExchangeAuthModal from './exchange-auth-modal';
@@ -49,6 +50,8 @@ export function ProfileCTA({
   const isOwner = isAuthed && user.id === profileOwnerId;
 
   const { data: inVault } = useIsInVault(profileId);
+  // Only fetch for non-owner authed users; enabled guard in the hook handles the rest
+  const { data: hasExchanged } = useHasExchanged(isAuthed && !isOwner ? profileId : '');
   const { mutateAsync: saveToVault, isPending: addingToVault } = useCreateVaultContact();
   const queryClient = useQueryClient();
 
@@ -144,8 +147,13 @@ export function ProfileCTA({
         >
           {inVault ? 'In Vault' : addingToVault ? 'Saving…' : 'Add to Vault'}
         </Button>
-        <Button variant="outline" className={secBtn} onClick={() => setShowAuthExchange(true)}>
-          Exchange Details
+        <Button
+          variant="outline"
+          className={secBtn}
+          onClick={() => !hasExchanged && setShowAuthExchange(true)}
+          disabled={hasExchanged}
+        >
+          {hasExchanged ? 'Exchanged' : 'Exchange Details'}
         </Button>
       </>,
       <ExchangeAuthModal

@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import Image from 'next/image';
+import { useUser } from '@/hooks/use-user';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -130,6 +131,8 @@ const PublicProfile = ({
   profileUsername = '',
 }: PhotographerProfileProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { data: user } = useUser();
+  const isOwner = !!user && user.id === profileOwnerId;
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
@@ -213,7 +216,9 @@ const PublicProfile = ({
 
         {portfolio.length === 0 && (
           <p className="text-center text-[11px] uppercase tracking-wide text-[var(--pg-muted-fg)] py-16 px-4">
-            Your portfolio and contact details will appear here once you add them.
+            {isOwner
+              ? 'Your portfolio and contact details will appear here once you add them.'
+              : `${profile.name.split(' ')[0]} hasn't added their work yet.`}
           </p>
         )}
 

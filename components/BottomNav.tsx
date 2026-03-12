@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import AddDrawer from '@/components/AddDrawer';
 import { routes } from '@/lib/routes';
-import { useExchangeRequests } from '@/hooks/use-exchange-requests';
+import { useExchanges } from '@/hooks/use-exchanges';
 
 const navItems = [
   { key: 'vault', label: 'Vault', path: routes.vault },
@@ -22,8 +22,8 @@ interface BottomNavProps {
 const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: requests = [] } = useExchangeRequests();
-  const pendingCount = requests.filter((r) => r.status === 'pending').length;
+  const { data: exchanges = [] } = useExchanges();
+  const pendingCount = exchanges.filter((e) => e.status === 'pending').length;
 
   const getActiveKey = () => {
     if (

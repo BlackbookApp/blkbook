@@ -10,20 +10,20 @@ interface AddDrawerProps {
 }
 
 const addOptions = [
-  {
-    id: 'scan-card',
-    icon: Camera,
-    label: 'Scan Card',
-    description: 'Capture details with your camera',
-    path: '/scan-card',
-  },
-  {
-    id: 'scan-qr',
-    icon: QrCode,
-    label: 'Scan QR',
-    description: 'Scan a Blackbook QR code',
-    path: '/scan-qr',
-  },
+  // {
+  //   id: 'scan-card',
+  //   icon: Camera,
+  //   label: 'Scan Card',
+  //   description: 'Capture details with your camera',
+  //   path: '/scan-card',
+  // },
+  // {
+  //   id: 'scan-qr',
+  //   icon: QrCode,
+  //   label: 'Scan QR',
+  //   description: 'Scan a Blackbook QR code',
+  //   path: '/scan-qr',
+  // },
   {
     id: 'quick-add',
     icon: PenLine,
@@ -31,13 +31,13 @@ const addOptions = [
     description: 'Name, role, city, notes',
     path: '/quick-add',
   },
-  {
-    id: 'import-contacts',
-    icon: Users,
-    label: 'Import from Contacts',
-    description: 'Choose from your device',
-    path: null,
-  },
+  // {
+  //   id: 'import-contacts',
+  //   icon: Users,
+  //   label: 'Import from Contacts',
+  //   description: 'Choose from your device',
+  //   path: null,
+  // },
 ];
 
 const AddDrawer = ({ children, onQuickAdd }: AddDrawerProps) => {

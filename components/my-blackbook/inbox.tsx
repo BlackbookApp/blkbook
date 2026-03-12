@@ -1,37 +1,43 @@
 'use client';
 
+import Image from 'next/image';
+import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { useExchangeRequests, useMarkExchangeRequestsSeen } from '@/hooks/use-exchange-requests';
-import { useCreateVaultContact } from '@/hooks/use-vault-contacts';
-import type { ExchangeRequest } from '@/lib/data/exchange-requests';
+import { useExchanges, useAcceptExchange } from '@/hooks/use-exchanges';
+import type { Exchange, SharedFields } from '@/lib/data/exchanges';
+import { routes } from '@/lib/routes';
 
-function guessContactFields(contact: string): { email: string | null; phone: string | null } {
-  if (contact.includes('@')) return { email: contact, phone: null };
-  return { email: null, phone: contact };
+function ContactLine({ fields }: { fields: SharedFields }) {
+  const parts: string[] = [];
+  // For guests, show the raw contact string; for members, show individual fields
+  if (fields.contact) parts.push(fields.contact);
+  if (fields.email) parts.push(fields.email);
+  if (fields.phone) parts.push(fields.phone);
+
+  if (parts.length === 0) return null;
+  return (
+    <p className="font-helvetica text-[11px] text-bb-muted leading-relaxed">{parts.join(' · ')}</p>
+  );
 }
 
-function RequestCard({ req }: { req: ExchangeRequest }) {
-  const { mutate: saveToVault, isPending, isSuccess } = useCreateVaultContact();
-  const { mutate: markSeen } = useMarkExchangeRequestsSeen();
-  const { email, phone } = guessContactFields(req.requester_contact);
+function ExtraLinks({ fields }: { fields: SharedFields }) {
+  const items: { label: string; value: string }[] = [];
+  if (fields.instagram) items.push({ label: 'IG', value: fields.instagram });
+  if (fields.website) items.push({ label: 'Web', value: fields.website });
+  if (fields.location) items.push({ label: '', value: fields.location });
+  if (items.length === 0) return null;
+  return (
+    <p className="font-helvetica text-[10px] text-bb-muted/60 mt-0.5 leading-relaxed">
+      {items.map(({ label, value }) => (label ? `${label}: ${value}` : value)).join(' · ')}
+    </p>
+  );
+}
 
-  const handleSave = () => {
-    saveToVault(
-      {
-        name: req.requester_name,
-        email,
-        phone,
-        notes: req.note ?? null,
-        role: null,
-        city: null,
-        instagram: null,
-        website: null,
-        photo_url: null,
-      },
-      { onSuccess: () => markSeen([req.id]) }
-    );
-  };
+function RequestCard({ exchange }: { exchange: Exchange }) {
+  const { mutate: accept, isPending, isSuccess } = useAcceptExchange();
+  const fields = exchange.initiator_shared_fields;
+  const isMember = !!exchange.initiator_profile_id;
 
   return (
     <motion.div
@@ -41,29 +47,62 @@ function RequestCard({ req }: { req: ExchangeRequest }) {
       className="border-b border-border/50 py-5"
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            {req.status === 'pending' && (
-              <span className="w-1.5 h-1.5 rounded-full bg-bb-dark flex-shrink-0" />
-            )}
-            <p className="font-display font-light text-[15px] tracking-[0.01em] uppercase text-bb-dark truncate">
-              {req.requester_name}
-            </p>
-          </div>
-          <p className="font-helvetica text-[11px] text-bb-muted mb-1">{req.requester_contact}</p>
-          {req.note && (
-            <p className="font-garamond italic text-[13px] text-bb-muted/80 mt-1 line-clamp-2">
-              &ldquo;{req.note}&rdquo;
-            </p>
+        <div className="flex items-start gap-3 min-w-0">
+          {/* Avatar */}
+          {fields.photo_url && (
+            <div className="flex-shrink-0 w-9 h-9 rounded-full overflow-hidden bg-border/40 mt-0.5">
+              <Image
+                src={fields.photo_url}
+                alt={fields.name}
+                width={36}
+                height={36}
+                className="object-cover w-full h-full"
+              />
+            </div>
           )}
-          <p className="font-helvetica text-[10px] text-bb-muted/50 mt-2 uppercase tracking-[0.08em]">
-            {formatDistanceToNow(new Date(req.created_at), { addSuffix: true })}
-          </p>
+
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              {exchange.status === 'pending' && (
+                <span className="w-1.5 h-1.5 rounded-full bg-bb-dark flex-shrink-0" />
+              )}
+              <p className="font-display font-light text-[15px] tracking-[0.01em] uppercase text-bb-dark truncate">
+                {fields.name}
+              </p>
+            </div>
+
+            {fields.role && (
+              <p className="font-garamond italic text-[12px] text-bb-muted mb-0.5">{fields.role}</p>
+            )}
+
+            <ContactLine fields={fields} />
+            <ExtraLinks fields={fields} />
+
+            {exchange.initiator_note && (
+              <p className="font-garamond italic text-[13px] text-bb-muted/80 mt-1.5 line-clamp-2">
+                &ldquo;{exchange.initiator_note}&rdquo;
+              </p>
+            )}
+
+            <div className="flex items-center gap-3 mt-2">
+              <p className="font-helvetica text-[10px] text-bb-muted/50 uppercase tracking-[0.08em]">
+                {formatDistanceToNow(new Date(exchange.created_at), { addSuffix: true })}
+              </p>
+              {isMember && fields.username && (
+                <Link
+                  href={routes.publicProfile(fields.username)}
+                  className="font-helvetica text-[10px] text-bb-muted/50 uppercase tracking-[0.08em] underline underline-offset-2 hover:text-bb-dark transition-colors"
+                >
+                  View profile
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
 
         <button
           type="button"
-          onClick={handleSave}
+          onClick={() => !isSuccess && accept(exchange.id)}
           disabled={isPending || isSuccess}
           className={`flex-shrink-0 font-helvetica text-[10px] uppercase tracking-[0.12em] px-3 py-2 border transition-colors ${
             isSuccess
@@ -71,7 +110,7 @@ function RequestCard({ req }: { req: ExchangeRequest }) {
               : 'border-bb-dark text-bb-dark hover:bg-bb-dark hover:text-bb-cream'
           }`}
         >
-          {isSuccess ? 'Saved' : isPending ? '…' : 'Save'}
+          {isSuccess ? 'Accepted' : isPending ? '…' : 'Accept'}
         </button>
       </div>
     </motion.div>
@@ -79,8 +118,8 @@ function RequestCard({ req }: { req: ExchangeRequest }) {
 }
 
 export function Inbox() {
-  const { data: requests = [], isLoading } = useExchangeRequests();
-  const pending = requests.filter((r) => r.status === 'pending');
+  const { data: exchanges = [], isLoading } = useExchanges();
+  const pending = exchanges.filter((e) => e.status === 'pending');
 
   if (isLoading) {
     return (
@@ -110,8 +149,8 @@ export function Inbox() {
 
   return (
     <div className="pt-2">
-      {pending.map((req) => (
-        <RequestCard key={req.id} req={req} />
+      {pending.map((exchange) => (
+        <RequestCard key={exchange.id} exchange={exchange} />
       ))}
     </div>
   );

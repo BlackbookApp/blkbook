@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { createExchangeRequestAction } from '@/app/actions/exchange-requests';
+import { createGuestExchangeAction } from '@/app/actions/exchanges';
 
 interface ExchangeDetailsModalProps {
   open: boolean;
@@ -19,20 +19,26 @@ const ExchangeDetailsModal = ({
 }: ExchangeDetailsModalProps) => {
   const [form, setForm] = useState({ name: '', emailOrPhone: '', note: '' });
   const [showSuccess, setShowSuccess] = useState(false);
+  const [alreadySent, setAlreadySent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showDiscard, setShowDiscard] = useState(false);
 
-  // Cleanup timeout on unmount (#4)
+  // Stable ref so the success timer never captures a stale onClose
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
   useEffect(() => {
     if (!showSuccess) return;
     const t = setTimeout(() => {
       setShowSuccess(false);
       setForm({ name: '', emailOrPhone: '', note: '' });
-      onClose();
+      onCloseRef.current();
     }, 2500);
     return () => clearTimeout(t);
-  }, [showSuccess, onClose]);
+  }, [showSuccess]);
 
   const set =
     (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -52,6 +58,7 @@ const ExchangeDetailsModal = ({
   const handleDiscard = () => {
     setShowDiscard(false);
     setForm({ name: '', emailOrPhone: '', note: '' });
+    setAlreadySent(false);
     onClose();
   };
 
@@ -59,16 +66,26 @@ const ExchangeDetailsModal = ({
     if (!canSend || loading) return;
     setLoading(true);
     setError(null);
+    setAlreadySent(false);
     try {
-      await createExchangeRequestAction(profileId, {
-        requester_name: form.name,
-        requester_contact: form.emailOrPhone,
-        note: form.note || undefined,
-      });
+      const inserted = await createGuestExchangeAction(
+        profileId,
+        { name: form.name.trim(), contact: form.emailOrPhone.trim() },
+        form.note.trim() || undefined
+      );
+      if (!inserted) {
+        setAlreadySent(true);
+        return;
+      }
       if (navigator.vibrate) navigator.vibrate(10);
       setShowSuccess(true);
-    } catch {
-      setError('Something went wrong. Please try again.');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : null;
+      if (message?.toLowerCase().includes('network') || message?.toLowerCase().includes('fetch')) {
+        setError('Network error. Check your connection and try again.');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -127,7 +144,7 @@ const ExchangeDetailsModal = ({
             )}
           </AnimatePresence>
 
-          {/* Discard confirmation overlay (#10) */}
+          {/* Discard confirmation overlay */}
           <AnimatePresence>
             {showDiscard && (
               <motion.div
@@ -218,6 +235,12 @@ const ExchangeDetailsModal = ({
                 />
               </div>
 
+              {alreadySent && (
+                <p className="font-garamond text-bb-muted text-[12px] italic mb-4 text-center">
+                  You&apos;ve already sent your details to {firstName} recently.
+                </p>
+              )}
+
               {error && (
                 <p className="font-garamond text-red-500 text-[11px] mb-4 text-center">{error}</p>
               )}
@@ -226,7 +249,11 @@ const ExchangeDetailsModal = ({
                 type="button"
                 onClick={handleSend}
                 disabled={!canSend || loading}
-                className={`font-helvetica font-normal ${canSend && !loading ? 'bg-bb-dark cursor-pointer' : 'bg-bb-dark/15 cursor-not-allowed'} text-bb-cream w-full py-5 uppercase tracking-[0.12em] text-[11px] transition-colors relative overflow-hidden grain-overlay`}
+                className={`font-helvetica font-normal ${
+                  canSend && !loading
+                    ? 'bg-bb-dark cursor-pointer'
+                    : 'bg-bb-dark/15 cursor-not-allowed'
+                } text-bb-cream w-full py-5 uppercase tracking-[0.12em] text-[11px] transition-colors relative overflow-hidden grain-overlay`}
               >
                 {loading ? 'Sending…' : 'Send My Details'}
               </button>
