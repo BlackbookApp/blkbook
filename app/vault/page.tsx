@@ -4,7 +4,6 @@ import { useState, useMemo } from 'react';
 import Logo from '@/components/Logo';
 import BottomNav from '@/components/BottomNav';
 import VaultSearchBar from '@/components/VaultSearchBar';
-import AddContactDrawer from '@/components/AddContactDrawer';
 import { VaultContactList } from '@/components/vault/VaultContactList';
 import { useVaultContacts } from '@/hooks/use-vault-contacts';
 import type { VaultContact } from '@/lib/data/vault-contacts';
@@ -21,7 +20,6 @@ function toRecentContacts(contacts: VaultContact[]) {
 
 export default function VaultPage() {
   const [search, setSearch] = useState('');
-  const [isAddContactOpen, setIsAddContactOpen] = useState(false);
   const { data: contacts = [], isLoading } = useVaultContacts();
 
   const recentContacts = useMemo(() => toRecentContacts(contacts), [contacts]);
@@ -35,16 +33,10 @@ export default function VaultPage() {
 
         <VaultSearchBar onSearchChange={setSearch} recentContacts={recentContacts} />
 
-        <VaultContactList
-          contacts={contacts}
-          search={search}
-          isLoading={isLoading}
-          onQuickAdd={() => setIsAddContactOpen(true)}
-        />
+        <VaultContactList contacts={contacts} search={search} isLoading={isLoading} />
       </div>
 
-      <BottomNav onQuickAdd={() => setIsAddContactOpen(true)} />
-      <AddContactDrawer open={isAddContactOpen} onOpenChange={setIsAddContactOpen} />
+      <BottomNav />
     </div>
   );
 }

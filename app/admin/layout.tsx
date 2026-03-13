@@ -13,7 +13,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const { data: profile } = await supabase
     .from('profiles')
     .select('is_admin')
-    .eq('id', user.id)
+    .eq('user_id', user.id)
     .single();
 
   if (!profile?.is_admin) redirect(routes.myBlackbook);

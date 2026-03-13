@@ -85,41 +85,48 @@ export type Database = {
           },
         ];
       };
-      exchange_requests: {
+      exchanges: {
         Row: {
           created_at: string;
           id: string;
-          note: string | null;
-          profile_id: string;
-          requester_contact: string;
-          requester_name: string;
-          requester_user_id: string | null;
-          status: Database['public']['Enums']['exchange_request_status'];
+          initiator_note: string | null;
+          initiator_profile_id: string | null;
+          initiator_shared_fields: Json;
+          recipient_profile_id: string;
+          recipient_shared_fields: Json | null;
+          status: string;
         };
         Insert: {
           created_at?: string;
           id?: string;
-          note?: string | null;
-          profile_id: string;
-          requester_contact: string;
-          requester_name: string;
-          requester_user_id?: string | null;
-          status?: Database['public']['Enums']['exchange_request_status'];
+          initiator_note?: string | null;
+          initiator_profile_id?: string | null;
+          initiator_shared_fields?: Json;
+          recipient_profile_id: string;
+          recipient_shared_fields?: Json | null;
+          status?: string;
         };
         Update: {
           created_at?: string;
           id?: string;
-          note?: string | null;
-          profile_id?: string;
-          requester_contact?: string;
-          requester_name?: string;
-          requester_user_id?: string | null;
-          status?: Database['public']['Enums']['exchange_request_status'];
+          initiator_note?: string | null;
+          initiator_profile_id?: string | null;
+          initiator_shared_fields?: Json;
+          recipient_profile_id?: string;
+          recipient_shared_fields?: Json | null;
+          status?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'exchange_requests_profile_id_fkey';
-            columns: ['profile_id'];
+            foreignKeyName: 'exchanges_initiator_profile_id_fkey';
+            columns: ['initiator_profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'exchanges_recipient_profile_id_fkey';
+            columns: ['recipient_profile_id'];
             isOneToOne: false;
             referencedRelation: 'profiles';
             referencedColumns: ['id'];
@@ -356,8 +363,33 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      accept_exchange: { Args: { p_exchange_id: string }; Returns: undefined };
+      create_guest_exchange: {
+        Args: {
+          p_initiator_fields: Json;
+          p_note?: string;
+          p_recipient_profile_id: string;
+        };
+        Returns: boolean;
+      };
+      get_has_exchanged: { Args: { p_profile_id: string }; Returns: boolean };
       mark_invite_used: {
         Args: { p_code: string; p_user_id: string };
+        Returns: undefined;
+      };
+      perform_exchange: {
+        Args: {
+          p_initiator_fields?: Json;
+          p_note?: string;
+          p_recipient_email?: string;
+          p_recipient_instagram?: string;
+          p_recipient_name: string;
+          p_recipient_phone?: string;
+          p_recipient_photo_url?: string;
+          p_recipient_profile_id: string;
+          p_recipient_role?: string;
+          p_recipient_website?: string;
+        };
         Returns: undefined;
       };
     };

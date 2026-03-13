@@ -82,9 +82,13 @@ const CreateProfile = () => {
       }
     }
 
+    const supabaseClient = createClient();
+    await supabaseClient.auth.updateUser({ data: { profile_complete: true } });
+
     await updateProfileAction({
       bio,
       location,
+      profile_complete: true,
       ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
     });
 

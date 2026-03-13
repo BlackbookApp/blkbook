@@ -37,8 +37,7 @@ export default async function PublicProfilePage({ params }: Props) {
 
   const ctaProps = {
     profileId: profile.id,
-    // profiles.id == auth.users.id in this schema — ownership check is user.id === profileOwnerId
-    profileOwnerId: profile.id,
+    profileOwnerId: profile.user_id,
     profileUsername: username,
   };
 
