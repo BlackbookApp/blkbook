@@ -7,6 +7,7 @@ import { Plus, X, Image as ImageIcon } from 'lucide-react';
 import type { WorkData, PortfolioEntry } from './types';
 import { validateWorkStep, type WorkStepErrors } from './validation';
 import { Input } from '@/components/ui/input';
+import { Text } from '@/components/ui/text';
 
 interface StepWorkProps {
   work: WorkData;
@@ -75,9 +76,9 @@ export const StepWork = ({
       transition={{ duration: 0.4 }}
       className="flex-1 flex flex-col px-6 pt-10 pb-8 overflow-y-auto"
     >
-      <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-6">
+      <Text variant="label-micro" className="mb-6">
         Show Your Work
-      </p>
+      </Text>
 
       <h1 className="text-xl tracking-tight text-foreground mb-2 uppercase">
         Let your work speak.
@@ -100,9 +101,9 @@ export const StepWork = ({
           className="w-full py-6 border border-border text-center hover:bg-secondary/50 transition-colors"
         >
           <ImageIcon className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
-          <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+          <Text variant="label" className="text-muted-foreground" as="span">
             Portfolio images
-          </span>
+          </Text>
         </button>
         {work.portfolioImages.length > 0 && (
           <div className="flex gap-2 mt-3 flex-wrap">
@@ -157,9 +158,9 @@ export const StepWork = ({
           ) : (
             <>
               <Plus className="w-5 h-5 mx-auto mb-2 text-muted-foreground" />
-              <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+              <Text variant="label" className="text-muted-foreground" as="span">
                 Logo or brand mark
-              </span>
+              </Text>
             </>
           )}
         </button>
@@ -175,9 +176,9 @@ export const StepWork = ({
           {work.testimonials.map((t, i) => (
             <div key={i} className="border border-border p-4">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+                <Text variant="label" className="text-muted-foreground">
                   {i === 0 ? 'A line from someone who knows your work' : `Testimonial ${i + 1}`}
-                </p>
+                </Text>
                 {work.testimonials.length > 1 && (
                   <button
                     onClick={() =>
@@ -276,9 +277,9 @@ export const StepWork = ({
 
       <div className="mb-8">
         <div className="border border-border p-4">
-          <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-3">
+          <Text variant="label" className="text-muted-foreground mb-3">
             Your brand statement or values
-          </p>
+          </Text>
           <textarea
             value={work.brandStatement}
             onChange={(e) => {

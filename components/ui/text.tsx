@@ -8,38 +8,34 @@ export const defaultVariantMapping = {
   h2: 'h2',
   h3: 'h3',
   title: 'h4',
-  subtitle: 'p',
   heading: 'p',
+  label: 'label',
+  'label-micro': 'span',
+  subtitle: 'p',
   nav: 'span',
   'body-1': 'p',
   'body-2': 'p',
-  label: 'label',
   p: 'p',
+  note: 'p',
   inherit: 'p',
 };
 
 const textVariants = cva('', {
   variants: {
     variant: {
-      // Canela Deck headings — uppercase, tracked
-      h1: 'font-canela-deck font-normal text-4xl uppercase tracking-[0.01em] leading-[1.2]',
-      h2: 'font-canela-deck font-normal text-2xl uppercase tracking-[0.01em] leading-[1.3]',
-      h3: 'font-canela-deck font-normal text-lg uppercase tracking-[0.01em] leading-[1.4]',
-      // Section title — matches .blackbook-title
-      title: 'font-canela-deck font-normal text-base uppercase tracking-[0.01em]',
-      // Muted subtitle — matches .blackbook-subtitle
-      subtitle: 'text-sm uppercase tracking-[0.12em] text-bb-muted',
-      // Small bold label — matches .blackbook-heading
-      heading: 'text-[12px] font-bold uppercase tracking-[0.05em] text-bb-dark',
-      // Navigation text — matches .blackbook-nav
-      nav: 'text-[13px] font-medium uppercase tracking-[0.01em] text-bb-dark',
-      // Body sizes
+      h1: 'font-display font-light text-[19px] uppercase tracking-[0.01em] leading-tight',
+      h2: 'font-display font-normal text-[16px] uppercase tracking-[0.01em] leading-snug',
+      h3: 'font-display font-light text-[15px] uppercase tracking-[0.01em]',
+      title: 'font-canela-deck font-normal text-base uppercase tracking-tight',
+      heading: 'font-helvetica text-[12px] font-bold uppercase tracking-[0.05em] text-bb-dark',
+      label: 'font-helvetica text-[11px] font-normal uppercase tracking-[0.12em]',
+      'label-micro': 'font-helvetica text-[10px] uppercase tracking-[0.2em] text-muted-foreground',
+      subtitle: 'font-helvetica text-sm uppercase tracking-[0.12em] text-bb-muted',
+      nav: 'font-helvetica text-[13px] font-medium uppercase tracking-[0.01em] text-bb-dark',
       'body-1': 'text-base leading-relaxed',
-      'body-2': 'text-sm leading-relaxed',
-      // Small label — matches .blackbook-label
-      label: 'text-[11px] font-light uppercase tracking-[0.05em] text-bb-dark',
-      // Default paragraph
+      'body-2': 'text-sm leading-relaxed text-muted-foreground',
       p: 'text-base leading-[1.4]',
+      note: 'font-garamond italic text-[13px] text-bb-muted tracking-tight',
       inherit: '',
     },
     align: {
@@ -49,26 +45,38 @@ const textVariants = cva('', {
       right: 'text-right',
       justify: 'text-justify',
     },
+    color: {
+      default: '',
+      muted: 'text-bb-muted',
+      dark: 'text-bb-dark',
+      cream: 'text-bb-cream',
+      destructive: 'text-destructive',
+    },
   },
   defaultVariants: {
     variant: 'p',
     align: 'inherit',
+    color: 'default',
   },
 });
+
+type TextVariant = keyof typeof defaultVariantMapping;
 
 type TextProps<C extends React.ElementType> = {
   as?: C;
   align?: 'inherit' | 'left' | 'center' | 'right' | 'justify';
+  color?: 'default' | 'muted' | 'dark' | 'cream' | 'destructive';
   className?: string;
   paragraph?: boolean;
-  variant?: keyof typeof defaultVariantMapping;
-  variantMapping?: typeof defaultVariantMapping;
+  variant?: TextVariant;
+  variantMapping?: Partial<Record<TextVariant, string>>;
   children: React.ReactNode;
 } & React.ComponentPropsWithoutRef<C>;
 
 const Text = <C extends React.ElementType>({
   as,
   align = 'inherit',
+  color = 'default',
   className,
   paragraph = false,
   variant = 'p',
@@ -80,7 +88,11 @@ const Text = <C extends React.ElementType>({
     as || (paragraph ? 'p' : variantMapping[variant] || defaultVariantMapping[variant]) || 'span';
 
   return (
-    <Component className={cn(textVariants({ align, variant }), className)} {...restProps}>
+    <Component
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      className={cn(textVariants({ align, variant: variant as any, color }), className)}
+      {...restProps}
+    >
       {children}
     </Component>
   );

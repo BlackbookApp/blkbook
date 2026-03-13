@@ -5,6 +5,7 @@ import {
   updateProfile,
   addPortfolioImage,
   removePortfolioImage,
+  getProfileUsername,
 } from '@/lib/data/profiles';
 import type { Profile, ProfileUpdate } from '@/lib/data/profiles';
 
@@ -27,4 +28,8 @@ export async function addPortfolioImageAction(
 
 export async function removePortfolioImageAction(id: string): Promise<{ error: string | null }> {
   return removePortfolioImage(id);
+}
+
+export async function getProfileUsernameAction(profileId: string): Promise<string | null> {
+  return getProfileUsername(profileId);
 }

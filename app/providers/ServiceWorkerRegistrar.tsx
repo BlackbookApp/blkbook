@@ -4,6 +4,13 @@ import { useEffect } from 'react';
 
 export default function ServiceWorkerRegistrar() {
   useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      navigator.serviceWorker?.getRegistrations().then((registrations) => {
+        registrations.forEach((r) => r.unregister());
+      });
+      return;
+    }
+
     if (!('serviceWorker' in navigator)) return;
 
     navigator.serviceWorker.getRegistrations().then((registrations) => {

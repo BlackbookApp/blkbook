@@ -1,14 +1,13 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import ExchangeDetailsModal from '@/components/ExchangeDetailsModal';
 import Logo from '@/components/Logo';
 import { SocialBlock } from './shared/social-block';
-import { ContactBlock } from './shared/contact-block';
+import { ProfileCTA } from './shared/profile-cta';
 import { HeroPortrait } from './shared/hero-portrait';
-import { buildSocials, buildContactMethods } from './shared/profile-adapters';
+import { buildSocials } from './shared/profile-adapters';
 import type {
   ProfileData,
   PortfolioItem,
@@ -23,6 +22,9 @@ interface PublicProfileEditorialProps {
   testimonials?: Testimonial[];
   profileStyle: 'visual' | 'editorial';
   isPreview?: boolean;
+  profileId?: string;
+  profileOwnerId?: string;
+  profileUsername?: string;
 }
 
 const PublicProfileEditorial = ({
@@ -30,9 +32,11 @@ const PublicProfileEditorial = ({
   portfolio,
   testimonials = [],
   isPreview = false,
+  profileId = '',
+  profileOwnerId = '',
+  profileUsername = '',
 }: PublicProfileEditorialProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [showExchange, setShowExchange] = useState(false);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
@@ -195,13 +199,18 @@ const PublicProfileEditorial = ({
         {/* Social links */}
         <SocialBlock socials={buildSocials(profile.socialLinks ?? {})} />
 
-        {/* Contact CTAs */}
-        <ContactBlock
-          methods={buildContactMethods(profile.socialLinks ?? {}, {
-            onSaveContact: () => {},
-            onExchangeDetails: () => setShowExchange(true),
-          })}
-        />
+        {!isPreview && (
+          <ProfileCTA
+            profileId={profileId}
+            profileOwnerId={profileOwnerId}
+            profileFirstName={profile.name.split(' ')[0]}
+            profileUsername={profileUsername}
+            profileName={profile.name}
+            profileRole={profile.role}
+            profilePhotoUrl={profile.portraitSrc}
+            socialLinks={profile.socialLinks ?? {}}
+          />
+        )}
 
         <div className="h-20" />
 
@@ -212,12 +221,6 @@ const PublicProfileEditorial = ({
           </div>
         </div>
       </div>
-
-      <ExchangeDetailsModal
-        open={isPreview ? false : showExchange}
-        onClose={() => setShowExchange(false)}
-        firstName={profile.name.split(' ')[0]}
-      />
     </div>
   );
 };

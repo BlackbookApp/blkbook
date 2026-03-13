@@ -11,6 +11,8 @@ import { ContactNotes } from '@/components/contact/ContactNotes';
 import { EditContactDialog } from '@/components/contact/EditContactDialog';
 import { useVaultContact, useUpdateVaultContact } from '@/hooks/use-vault-contacts';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getProfileUsernameAction } from '@/app/actions/profiles';
 
 const ContactDetail = () => {
   const router = useRouter();
@@ -19,6 +21,13 @@ const ContactDetail = () => {
 
   const { data: contact, isLoading } = useVaultContact(id);
   const updateContact = useUpdateVaultContact();
+
+  const { data: profileUsername } = useQuery({
+    queryKey: ['profile-username', contact?.profile_id],
+    queryFn: () => getProfileUsernameAction(contact!.profile_id!),
+    enabled: !!contact?.profile_id,
+    staleTime: Infinity,
+  });
 
   const handleAddNote = (note: string) => {
     if (!contact) return;
@@ -83,6 +92,28 @@ const ContactDetail = () => {
 
         <ContactBanner contact={contact} />
         <ContactInfo contact={contact} />
+
+        {profileUsername && (
+          <a
+            href={routes.publicProfile(profileUsername)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between w-full py-4 border-b border-border mb-6 group"
+          >
+            <div>
+              <p className="font-helvetica text-[11px] font-normal uppercase tracking-[0.12em] mb-1.5 text-bb-muted">
+                Blackbook Profile
+              </p>
+              <p className="font-garamond text-[14px] italic font-normal tracking-tight text-bb-dark">
+                blkbook/p/{profileUsername}
+              </p>
+            </div>
+            <span className="font-helvetica text-[10px] uppercase tracking-[0.12em] text-bb-muted group-hover:text-bb-dark transition-colors">
+              View →
+            </span>
+          </a>
+        )}
+
         <ContactNotes
           notes={contact.notes}
           addedDate={addedDate}

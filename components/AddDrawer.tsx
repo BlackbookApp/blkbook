@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Camera, QrCode, PenLine, Users } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
+import { Text } from '@/components/ui/text';
 
 interface AddDrawerProps {
   children: React.ReactNode;
@@ -10,20 +11,20 @@ interface AddDrawerProps {
 }
 
 const addOptions = [
-  {
-    id: 'scan-card',
-    icon: Camera,
-    label: 'Scan Card',
-    description: 'Capture details with your camera',
-    path: '/scan-card',
-  },
-  {
-    id: 'scan-qr',
-    icon: QrCode,
-    label: 'Scan QR',
-    description: 'Scan a Blackbook QR code',
-    path: '/scan-qr',
-  },
+  // {
+  //   id: 'scan-card',
+  //   icon: Camera,
+  //   label: 'Scan Card',
+  //   description: 'Capture details with your camera',
+  //   path: '/scan-card',
+  // },
+  // {
+  //   id: 'scan-qr',
+  //   icon: QrCode,
+  //   label: 'Scan QR',
+  //   description: 'Scan a Blackbook QR code',
+  //   path: '/scan-qr',
+  // },
   {
     id: 'quick-add',
     icon: PenLine,
@@ -31,13 +32,13 @@ const addOptions = [
     description: 'Name, role, city, notes',
     path: '/quick-add',
   },
-  {
-    id: 'import-contacts',
-    icon: Users,
-    label: 'Import from Contacts',
-    description: 'Choose from your device',
-    path: null,
-  },
+  // {
+  //   id: 'import-contacts',
+  //   icon: Users,
+  //   label: 'Import from Contacts',
+  //   description: 'Choose from your device',
+  //   path: null,
+  // },
 ];
 
 const AddDrawer = ({ children, onQuickAdd }: AddDrawerProps) => {
@@ -64,9 +65,9 @@ const AddDrawer = ({ children, onQuickAdd }: AddDrawerProps) => {
         <DrawerTitle className="sr-only">Add Connection</DrawerTitle>
         <div className="px-6 pt-2 pb-6">
           {/* Header */}
-          <p className="font-helvetica text-center mb-4 text-[11px] uppercase tracking-[0.12em] font-normal">
+          <Text variant="label" align="center" className="mb-4">
             Add Connection
-          </p>
+          </Text>
 
           {/* Options List */}
           <div className="space-y-0">
@@ -86,12 +87,12 @@ const AddDrawer = ({ children, onQuickAdd }: AddDrawerProps) => {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-helvetica text-[11px] uppercase tracking-[0.12em] font-normal group-hover:opacity-70 transition-opacity">
+                      <Text variant="label" className="group-hover:opacity-70 transition-opacity">
                         {option.label}
-                      </h3>
-                      <p className="font-helvetica text-[10px] font-light text-bb-muted">
+                      </Text>
+                      <Text variant="label-micro" color="muted" className="font-light">
                         {option.description}
-                      </p>
+                      </Text>
                     </div>
                   </button>
                 </div>

@@ -35,6 +35,13 @@ export default async function PublicProfilePage({ params }: Props) {
     brandStatement: profile.brand_statement,
   };
 
+  const ctaProps = {
+    profileId: profile.id,
+    // profiles.id == auth.users.id in this schema — ownership check is user.id === profileOwnerId
+    profileOwnerId: profile.id,
+    profileUsername: username,
+  };
+
   const portfolio = profile.portfolio_images.map((img) => ({ imageSrc: img.url }));
 
   const testimonials = profile.testimonials.map((t) => ({
@@ -52,6 +59,7 @@ export default async function PublicProfilePage({ params }: Props) {
         portfolio={portfolio}
         testimonials={testimonials}
         profileStyle="editorial"
+        {...ctaProps}
       />
     );
   }
@@ -63,6 +71,7 @@ export default async function PublicProfilePage({ params }: Props) {
       portfolio={portfolio}
       testimonials={testimonials}
       profileStyle={profile.style || 'visual'}
+      {...ctaProps}
     />
   );
 }

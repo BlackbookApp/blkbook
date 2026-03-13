@@ -6,6 +6,7 @@ import {
   createVaultContact,
   updateVaultContact,
   deleteVaultContact,
+  isProfileInVault,
 } from '@/lib/data/vault-contacts';
 import type { VaultContactInsert } from '@/lib/data/vault-contacts';
 
@@ -27,4 +28,8 @@ export async function updateVaultContactAction(id: string, input: Partial<VaultC
 
 export async function deleteVaultContactAction(id: string) {
   return deleteVaultContact(id);
+}
+
+export async function isProfileInVaultAction(profileId: string): Promise<boolean> {
+  return isProfileInVault(profileId);
 }

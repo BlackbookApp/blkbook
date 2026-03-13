@@ -85,6 +85,47 @@ export type Database = {
           },
         ];
       };
+      exchange_requests: {
+        Row: {
+          created_at: string;
+          id: string;
+          note: string | null;
+          profile_id: string;
+          requester_contact: string;
+          requester_name: string;
+          requester_user_id: string | null;
+          status: Database['public']['Enums']['exchange_request_status'];
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          note?: string | null;
+          profile_id: string;
+          requester_contact: string;
+          requester_name: string;
+          requester_user_id?: string | null;
+          status?: Database['public']['Enums']['exchange_request_status'];
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          note?: string | null;
+          profile_id?: string;
+          requester_contact?: string;
+          requester_name?: string;
+          requester_user_id?: string | null;
+          status?: Database['public']['Enums']['exchange_request_status'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'exchange_requests_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       invitations: {
         Row: {
           code: string;
@@ -259,6 +300,7 @@ export type Database = {
           notes: string | null;
           phone: string | null;
           photo_url: string | null;
+          profile_id: string | null;
           role: string | null;
           updated_at: string | null;
           user_id: string;
@@ -274,6 +316,7 @@ export type Database = {
           notes?: string | null;
           phone?: string | null;
           photo_url?: string | null;
+          profile_id?: string | null;
           role?: string | null;
           updated_at?: string | null;
           user_id: string;
@@ -289,12 +332,21 @@ export type Database = {
           notes?: string | null;
           phone?: string | null;
           photo_url?: string | null;
+          profile_id?: string | null;
           role?: string | null;
           updated_at?: string | null;
           user_id?: string;
           website?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'vault_contacts_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
       };
     };
     Views: {
@@ -308,6 +360,7 @@ export type Database = {
     };
     Enums: {
       access_request_status: 'pending' | 'approved' | 'rejected';
+      exchange_request_status: 'pending' | 'seen' | 'archived';
       membership_type: 'guest' | 'member';
       profile_palette: 'blanc' | 'noir';
       profile_style: 'visual' | 'editorial';
@@ -440,6 +493,7 @@ export const Constants = {
   public: {
     Enums: {
       access_request_status: ['pending', 'approved', 'rejected'],
+      exchange_request_status: ['pending', 'seen', 'archived'],
       membership_type: ['guest', 'member'],
       profile_palette: ['blanc', 'noir'],
       profile_style: ['visual', 'editorial'],

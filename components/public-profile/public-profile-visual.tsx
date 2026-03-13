@@ -1,16 +1,15 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
+import { useUser } from '@/hooks/use-user';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import ExchangeDetailsModal from '@/components/ExchangeDetailsModal';
 import { SocialBlock } from './shared/social-block';
-import { ContactBlock } from './shared/contact-block';
+import { ProfileCTA } from './shared/profile-cta';
 import { HeroPortrait } from './shared/hero-portrait';
-import { buildSocials, buildContactMethods } from './shared/profile-adapters';
+import { buildSocials } from './shared/profile-adapters';
 import type { SocialLinks } from '@/lib/data/profiles';
 
 export type ProfileTheme = 'blanc' | 'beige' | 'noir';
@@ -39,10 +38,6 @@ export interface Testimonial {
 }
 
 // ── Constants ─────────────────────────────────────────────
-
-// Shared button class strings
-const QUICK_CTA_BTN =
-  'rounded-none py-2.5 font-helvetica font-normal text-[10px] tracking-[0.14em] bg-transparent text-[var(--pg-btn-sec-fg)] border-[var(--pg-btn-sec-border)] hover:bg-transparent hover:opacity-70';
 
 // 4-position repeating pattern per block
 const BLOCK_LAYOUTS = [
@@ -120,6 +115,9 @@ interface PhotographerProfileProps {
   testimonials?: Testimonial[];
   profileStyle: 'visual' | 'editorial';
   isPreview?: boolean;
+  profileId?: string;
+  profileOwnerId?: string;
+  profileUsername?: string;
 }
 
 const PublicProfile = ({
@@ -128,13 +126,17 @@ const PublicProfile = ({
   portfolio,
   testimonials = [],
   isPreview = false,
+  profileId = '',
+  profileOwnerId = '',
+  profileUsername = '',
 }: PhotographerProfileProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { data: user } = useUser();
+  const isOwner = !!user && user.id === profileOwnerId;
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
   });
-  const [showExchange, setShowExchange] = useState(false);
 
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.6]);
   const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.98]);
@@ -159,21 +161,19 @@ const PublicProfile = ({
           />
         </motion.div>
 
-        {/* Quick CTAs */}
-        <div className="px-2 mt-6 mb-20">
-          <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className={QUICK_CTA_BTN}>
-              Save Contact
-            </Button>
-            <Button
-              variant="outline"
-              className={QUICK_CTA_BTN}
-              onClick={() => setShowExchange(true)}
-            >
-              Exchange Details
-            </Button>
-          </div>
-        </div>
+        {!isPreview && (
+          <ProfileCTA
+            compact
+            profileId={profileId}
+            profileOwnerId={profileOwnerId}
+            profileFirstName={profile.name.split(' ')[0]}
+            profileUsername={profileUsername}
+            profileName={profile.name}
+            profileRole={profile.role}
+            profilePhotoUrl={profile.portraitSrc}
+            socialLinks={profile.socialLinks ?? {}}
+          />
+        )}
 
         {portfolio.length > 0 && (
           <>
@@ -216,20 +216,27 @@ const PublicProfile = ({
 
         {portfolio.length === 0 && (
           <p className="text-center text-[11px] uppercase tracking-wide text-[var(--pg-muted-fg)] py-16 px-4">
-            Your portfolio and contact details will appear here once you add them.
+            {isOwner
+              ? 'Your portfolio and contact details will appear here once you add them.'
+              : `${profile.name.split(' ')[0]} hasn't added their work yet.`}
           </p>
         )}
 
         {/* Social links */}
         <SocialBlock socials={buildSocials(profile.socialLinks ?? {})} />
 
-        {/* Full CTA block */}
-        <ContactBlock
-          methods={buildContactMethods(profile.socialLinks ?? {}, {
-            onSaveContact: () => {},
-            onExchangeDetails: () => setShowExchange(true),
-          })}
-        />
+        {!isPreview && (
+          <ProfileCTA
+            profileId={profileId}
+            profileOwnerId={profileOwnerId}
+            profileFirstName={profile.name.split(' ')[0]}
+            profileUsername={profileUsername}
+            profileName={profile.name}
+            profileRole={profile.role}
+            profilePhotoUrl={profile.portraitSrc}
+            socialLinks={profile.socialLinks ?? {}}
+          />
+        )}
 
         <Separator className="my-14 bg-[var(--pg-separator)]" />
 
@@ -246,12 +253,6 @@ const PublicProfile = ({
           </span>
         </motion.div>
       </div>
-
-      <ExchangeDetailsModal
-        open={isPreview ? false : showExchange}
-        onClose={() => setShowExchange(false)}
-        firstName={profile.name.split(' ')[0]}
-      />
     </div>
   );
 };

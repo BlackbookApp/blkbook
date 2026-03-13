@@ -13,6 +13,7 @@ export interface VaultContact {
   website: string | null;
   notes: string | null;
   photo_url: string | null;
+  profile_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -64,8 +65,26 @@ export async function updateVaultContact(
 export async function getVaultContactById(id: string): Promise<VaultContact | null> {
   const supabase = await createClient();
   const { data, error } = await supabase.from('vault_contacts').select('*').eq('id', id).single();
-  if (error) return null;
+  if (error) {
+    // PGRST116 = row not found — treat as null; rethrow anything else
+    if (error.code === 'PGRST116') return null;
+    throw error;
+  }
   return data;
+}
+
+export async function isProfileInVault(profileId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+  const { count } = await supabase
+    .from('vault_contacts')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .eq('profile_id', profileId);
+  return (count ?? 0) > 0;
 }
 
 export async function deleteVaultContact(id: string): Promise<void> {

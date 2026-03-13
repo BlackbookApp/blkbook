@@ -3,11 +3,13 @@
 import { usePathname, useRouter } from 'next/navigation';
 import AddDrawer from '@/components/AddDrawer';
 import { routes } from '@/lib/routes';
+import { useExchanges } from '@/hooks/use-exchanges';
+import { Text } from '@/components/ui/text';
 
 const navItems = [
   { key: 'vault', label: 'Vault', path: routes.vault },
   { key: 'add', label: '+Add', path: null },
-  // { key: 'share', label: 'Share', path: routes.share },
+  { key: 'inbox', label: 'Inbox', path: routes.inbox },
   { key: 'profile', label: 'Profile', path: routes.myBlackbook },
 ];
 
@@ -21,6 +23,8 @@ interface BottomNavProps {
 const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: exchanges = [] } = useExchanges();
+  const pendingCount = exchanges.filter((e) => e.status === 'pending').length;
 
   const getActiveKey = () => {
     if (
@@ -31,7 +35,7 @@ const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
       return 'vault';
     if (pathname === '/quick-add' || pathname === '/scan-qr' || pathname === '/scan-card')
       return 'add';
-    if (pathname === routes.share) return 'share';
+    if (pathname === routes.inbox) return 'inbox';
     if (pathname === routes.myBlackbook || pathname === '/profile') return 'profile';
     return '';
   };
@@ -47,14 +51,10 @@ const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
     ? 'flex-1 py-4 transition-all'
     : 'flex-1 py-4 transition-all border-r border-border last:border-r-0';
 
-  const getTextClass = (isActive: boolean) =>
-    isDark
-      ? `font-display font-light text-[14px] tracking-[0.02em] uppercase ${isActive ? 'text-bb-cream' : 'text-white/40'}`
-      : `text-[13px] tracking-[0.01em] uppercase font-medium ${isActive ? 'text-bb-dark' : 'text-bb-muted'}`;
-
-  const addTextClass = isDark
-    ? 'font-display font-light text-[14px] tracking-[0.02em] uppercase text-white/40'
-    : 'text-[13px] tracking-[0.01em] uppercase font-medium text-bb-muted';
+  const getNavColor = (isActive: boolean): 'cream' | 'dark' | 'muted' => {
+    if (isDark) return isActive ? 'cream' : 'muted';
+    return isActive ? 'dark' : 'muted';
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40">
@@ -67,7 +67,9 @@ const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
               return (
                 <AddDrawer key={item.key} onQuickAdd={onQuickAdd}>
                   <button className={itemClass}>
-                    <span className={addTextClass}>{item.label}</span>
+                    <Text variant={isDark ? 'h3' : 'nav'} color="muted" as="span">
+                      {item.label}
+                    </Text>
                   </button>
                 </AddDrawer>
               );
@@ -77,9 +79,14 @@ const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
               <button
                 key={item.key}
                 onClick={() => item.path && router.push(item.path)}
-                className={itemClass}
+                className={`${itemClass} relative`}
               >
-                <span className={getTextClass(isActive)}>{item.label}</span>
+                <Text variant={isDark ? 'h3' : 'nav'} color={getNavColor(isActive)} as="span">
+                  {item.label}
+                </Text>
+                {item.key === 'inbox' && pendingCount > 0 && (
+                  <span className="absolute top-2.5 right-[calc(50%-18px)] w-1.5 h-1.5 rounded-full bg-bb-cream/70" />
+                )}
               </button>
             );
           })}
