@@ -35,10 +35,17 @@ export async function getMyInvitations(): Promise<Invitation[]> {
   } = await supabase.auth.getUser();
   if (!user) return [];
 
+  const { data: profileRow } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('user_id', user.id)
+    .single();
+  if (!profileRow) return [];
+
   const { data, error } = await supabase
     .from('invitations')
     .select('*')
-    .eq('inviter_id', user.id)
+    .eq('inviter_id', profileRow.id)
     .order('created_at', { ascending: false });
 
   if (error) return [];
@@ -56,8 +63,8 @@ export async function createInvite(
 
   const { data: profile } = await adminClient
     .from('profiles')
-    .select('invites_remaining')
-    .eq('id', user.id)
+    .select('id, invites_remaining')
+    .eq('user_id', user.id)
     .single();
 
   if (!profile || profile.invites_remaining <= 0) {
@@ -67,7 +74,7 @@ export async function createInvite(
   const { data: updated } = await adminClient
     .from('profiles')
     .update({ invites_remaining: profile.invites_remaining - 1 })
-    .eq('id', user.id)
+    .eq('user_id', user.id)
     .gt('invites_remaining', 0)
     .select('invites_remaining')
     .single();
@@ -78,13 +85,13 @@ export async function createInvite(
 
   const { error: insertError } = await supabase
     .from('invitations')
-    .insert({ code, inviter_id: user.id, invitee_email: inviteeEmail ?? null });
+    .insert({ code, inviter_id: profile.id, invitee_email: inviteeEmail ?? null });
 
   if (insertError) {
     await adminClient
       .from('profiles')
       .update({ invites_remaining: profile.invites_remaining })
-      .eq('id', user.id);
+      .eq('user_id', user.id);
     return { error: insertError.message };
   }
 

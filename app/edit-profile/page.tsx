@@ -112,7 +112,7 @@ const EditProfile = () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) {
+    if (!user || !profile) {
       setIsSaving(false);
       return;
     }
@@ -166,7 +166,7 @@ const EditProfile = () => {
         const {
           data: { publicUrl },
         } = supabase.storage.from('portfolio').getPublicUrl(path);
-        await addPortfolioImageAction(publicUrl, existingCount + i);
+        await addPortfolioImageAction(profile.id, publicUrl, existingCount + i);
         uploadedUrls.push(publicUrl);
       }
       if (uploadedUrls.length > 0) {
@@ -181,7 +181,7 @@ const EditProfile = () => {
 
       // 4. Delete removed portfolio images
       for (const id of removedPortfolioIds) {
-        await removePortfolioImageAction(id);
+        await removePortfolioImageAction(profile.id, id);
       }
 
       // 5. Update profile fields

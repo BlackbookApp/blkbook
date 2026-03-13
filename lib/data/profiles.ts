@@ -27,6 +27,7 @@ export interface TestimonialEntry {
 
 export interface Profile {
   id: string;
+  user_id: string;
   full_name: string | null;
   role: string | null;
   location: string | null;
@@ -60,7 +61,7 @@ export async function getMyProfile(): Promise<Profile | null> {
   const { data, error } = await supabase
     .from('profiles')
     .select('*, portfolio_images(id, url, position)')
-    .eq('id', user.id)
+    .eq('user_id', user.id)
     .single();
 
   if (error) return null;
@@ -107,7 +108,7 @@ export async function createProfile(
 ): Promise<void> {
   const username = fullName ? await generateUsername(fullName) : null;
   await adminClient.from('profiles').insert({
-    id: userId,
+    user_id: userId,
     full_name: fullName,
     invited_by: invitedBy,
     username,
@@ -152,7 +153,7 @@ export async function publishProfile(): Promise<{ error: string | null }> {
 }
 
 export type ProfileUpdate = Partial<
-  Omit<Profile, 'id' | 'created_at' | 'updated_at' | 'portfolio_images'>
+  Omit<Profile, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'portfolio_images'>
 >;
 
 export async function updateProfile(updates: ProfileUpdate): Promise<{ error: string | null }> {
@@ -165,12 +166,13 @@ export async function updateProfile(updates: ProfileUpdate): Promise<{ error: st
   const { error } = await supabase
     .from('profiles')
     .update({ ...updates, updated_at: new Date().toISOString() })
-    .eq('id', user.id);
+    .eq('user_id', user.id);
 
   return { error: error?.message ?? null };
 }
 
 export async function addPortfolioImage(
+  profileId: string,
   url: string,
   position: number
 ): Promise<{ error: string | null }> {
@@ -182,12 +184,15 @@ export async function addPortfolioImage(
 
   const { error } = await supabase
     .from('portfolio_images')
-    .insert({ profile_id: user.id, url, position });
+    .insert({ profile_id: profileId, url, position });
 
   return { error: error?.message ?? null };
 }
 
-export async function removePortfolioImage(id: string): Promise<{ error: string | null }> {
+export async function removePortfolioImage(
+  profileId: string,
+  id: string
+): Promise<{ error: string | null }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -198,6 +203,6 @@ export async function removePortfolioImage(id: string): Promise<{ error: string 
     .from('portfolio_images')
     .delete()
     .eq('id', id)
-    .eq('profile_id', user.id);
+    .eq('profile_id', profileId);
   return { error: error?.message ?? null };
 }

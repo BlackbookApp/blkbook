@@ -20,14 +20,18 @@ export async function updateProfileAction(
 }
 
 export async function addPortfolioImageAction(
+  profileId: string,
   url: string,
   position: number
 ): Promise<{ error: string | null }> {
-  return addPortfolioImage(url, position);
+  return addPortfolioImage(profileId, url, position);
 }
 
-export async function removePortfolioImageAction(id: string): Promise<{ error: string | null }> {
-  return removePortfolioImage(id);
+export async function removePortfolioImageAction(
+  profileId: string,
+  id: string
+): Promise<{ error: string | null }> {
+  return removePortfolioImage(profileId, id);
 }
 
 export async function getProfileUsernameAction(profileId: string): Promise<string | null> {

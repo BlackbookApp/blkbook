@@ -229,6 +229,7 @@ export type Database = {
           style: Database['public']['Enums']['profile_style'] | null;
           testimonials: Json;
           updated_at: string | null;
+          user_id: string;
           username: string | null;
         };
         Insert: {
@@ -237,7 +238,7 @@ export type Database = {
           brand_statement?: string | null;
           created_at?: string | null;
           full_name?: string | null;
-          id: string;
+          id?: string;
           invite_code?: string;
           invited_by?: string | null;
           invites_remaining?: number;
@@ -253,6 +254,7 @@ export type Database = {
           style?: Database['public']['Enums']['profile_style'] | null;
           testimonials?: Json;
           updated_at?: string | null;
+          user_id: string;
           username?: string | null;
         };
         Update: {
@@ -277,6 +279,7 @@ export type Database = {
           style?: Database['public']['Enums']['profile_style'] | null;
           testimonials?: Json;
           updated_at?: string | null;
+          user_id?: string;
           username?: string | null;
         };
         Relationships: [
