@@ -23,7 +23,7 @@ export function ContactInfo({ contact }: ContactInfoProps) {
   const rowClass = 'block py-4 border-b border-border';
   const labelClass =
     'font-helvetica text-[11px] font-normal uppercase tracking-[0.12em] mb-1.5 text-bb-muted';
-  const valueClass = 'font-garamond text-[14px] italic font-normal tracking-tight text-bb-dark';
+  const valueClass = 'font-granjon text-[14px] italic font-normal tracking-tight text-bb-dark';
 
   return (
     <div className="space-y-0 mb-6">

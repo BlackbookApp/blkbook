@@ -17,10 +17,9 @@ interface BottomNavProps {
   /** 'dark' (default): dark bg-bb-nav with grain, display font
    *  'cream': light bg-bb-cream with borders, helvetica font */
   theme?: 'dark' | 'cream';
-  onQuickAdd?: () => void;
 }
 
-const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
+const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const { data: exchanges = [] } = useExchanges();
@@ -65,9 +64,9 @@ const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
 
             if (item.key === 'add') {
               return (
-                <AddDrawer key={item.key} onQuickAdd={onQuickAdd}>
+                <AddDrawer key={item.key}>
                   <button className={itemClass}>
-                    <Text variant={isDark ? 'h3' : 'nav'} color="muted" as="span">
+                    <Text variant={'nav'} color="muted" as="span">
                       {item.label}
                     </Text>
                   </button>
@@ -81,7 +80,7 @@ const BottomNav = ({ theme = 'dark', onQuickAdd }: BottomNavProps) => {
                 onClick={() => item.path && router.push(item.path)}
                 className={`${itemClass} relative`}
               >
-                <Text variant={isDark ? 'h3' : 'nav'} color={getNavColor(isActive)} as="span">
+                <Text variant="nav" color={getNavColor(isActive)} as="span">
                   {item.label}
                 </Text>
                 {item.key === 'inbox' && pendingCount > 0 && (

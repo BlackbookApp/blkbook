@@ -40,7 +40,7 @@ export function ContactNotes({ notes, addedDate, city, onAddNote }: ContactNotes
             value={newNote}
             onChange={(e) => setNewNote(e.target.value)}
             placeholder="Add a note..."
-            className="font-garamond italic text-[14px] tracking-tight text-bb-dark border-border bg-transparent resize-none mb-3 focus-visible:ring-0 focus-visible:border-[var(--bb-border)]"
+            className="font-granjon italic text-[14px] tracking-tight text-bb-dark border-border bg-transparent resize-none mb-3 focus-visible:ring-0 focus-visible:border-[var(--bb-border)]"
             rows={3}
             autoFocus
           />
@@ -63,7 +63,7 @@ export function ContactNotes({ notes, addedDate, city, onAddNote }: ContactNotes
 
       {notes && (
         <div className="py-4 border-b border-border">
-          <p className="font-garamond text-[14px] italic font-normal leading-[1.7] tracking-tight text-bb-dark/80 whitespace-pre-line">
+          <p className="font-granjon text-[14px] italic font-normal leading-[1.7] tracking-tight text-bb-dark/80 whitespace-pre-line">
             {notes}
           </p>
         </div>

@@ -22,9 +22,11 @@ const BeforeYouExplore = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-xl tracking-tight uppercase text-foreground mb-5">Almost there.</h1>
+            <h1 className="font-granjon text-xl tracking-tight uppercase text-foreground mb-5">
+              Almost there.
+            </h1>
 
-            <p className="text-sm font-normal text-foreground/60 leading-relaxed mb-8">
+            <p className="font-helvetica text-[11px] font-normal text-bb-muted leading-relaxed mb-8">
               Your profile is how the world meets you. Two minutes. Make it count.
             </p>
           </motion.div>
@@ -42,7 +44,7 @@ const BeforeYouExplore = () => {
               Complete my profile
             </button>
 
-            <p className="text-[10px] text-muted-foreground font-normal">
+            <p className="font-helvetica text-[10px] text-bb-muted font-normal">
               <button
                 onClick={() => router.push('/vault-empty')}
                 className="hover:text-foreground/50 transition-colors"

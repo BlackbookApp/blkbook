@@ -13,6 +13,13 @@ const PUBLIC_ROUTES = [
   '/api/vcard',
 ];
 const AUTH_ONLY_ROUTES = ['/login', '/signup']; // redirect to /my-blackbook if already authed
+const ONBOARDING_EXEMPT = [
+  '/create-profile',
+  '/profile-preview',
+  '/paywall',
+  '/auth/callback',
+  '/api',
+];
 
 function isPublic(pathname: string) {
   return PUBLIC_ROUTES.some((r) => pathname === r || pathname.startsWith(r + '/'));
@@ -59,6 +66,16 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
+  }
+
+  // Authenticated users who haven't completed onboarding → redirect to /create-profile
+  if (user && !user.user_metadata?.profile_complete) {
+    const isExempt = ONBOARDING_EXEMPT.some((r) => pathname === r || pathname.startsWith(r + '/'));
+    if (!isExempt && !isPublic(pathname)) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/create-profile';
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;

@@ -36,7 +36,7 @@ const Paywall = () => {
             transition={{ duration: 0.8 }}
             className="mb-6 text-center"
           >
-            <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-normal">
+            <p className="font-helvetica text-[10px] uppercase tracking-[0.3em] text-bb-muted font-normal">
               Choose your access
             </p>
           </motion.div>
@@ -53,32 +53,35 @@ const Paywall = () => {
                 <h3 className="text-base tracking-tight uppercase text-foreground">
                   Founding Member
                 </h3>
-                <p className="text-[10px] uppercase tracking-wide text-muted-foreground/60 mt-0.5">
+                <p className="font-helvetica text-[10px] uppercase tracking-wide text-bb-muted/60 mt-0.5">
                   Limited to the first 100
                 </p>
               </div>
-              <span className="font-garamond font-normal text-base text-foreground uppercase tracking-[0.01em]">
+              <span className="font-granjon font-normal text-base text-foreground uppercase tracking-[0.01em]">
                 €199
               </span>
             </div>
             <div className="h-px bg-border my-3" />
-            <p className="text-xs text-foreground/60 mb-1">
+            <p className="font-helvetica text-[11px] text-bb-muted mb-1">
               Everything, permanently. One time payment.
             </p>
-            <p className="text-[10px] text-muted-foreground mb-6">
+            <p className="font-helvetica text-[10px] text-bb-muted mb-6">
               30-day guarantee. No questions asked.
             </p>
 
             <ul className="space-y-2 mb-5">
               {memberFeatures.map((feature, index) => (
-                <li key={index} className="flex items-start gap-3 text-xs text-foreground/70">
-                  <Check className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-foreground/50" />
+                <li
+                  key={index}
+                  className="flex items-start gap-3 font-helvetica text-[11px] text-bb-muted"
+                >
+                  <Check className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-bb-muted/50" />
                   <span>{feature}</span>
                 </li>
               ))}
             </ul>
             <div className="h-px bg-border mb-4" />
-            <p className="text-[11px] leading-relaxed text-muted-foreground mb-5">
+            <p className="font-helvetica text-[11px] leading-relaxed text-bb-muted mb-5">
               We don&apos;t sell data. We don&apos;t run ads. We&apos;re not that kind of company.
             </p>
 
@@ -99,7 +102,7 @@ const Paywall = () => {
           >
             <button
               onClick={handleGuestPass}
-              className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
+              className="font-helvetica text-[10px] uppercase tracking-[0.2em] text-bb-muted underline underline-offset-4 hover:text-foreground transition-colors"
             >
               Continue as guest
             </button>

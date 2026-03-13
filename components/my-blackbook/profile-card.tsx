@@ -42,7 +42,7 @@ export function ProfileCard({ profile }: ProfileCardProps) {
           />
         ) : (
           <div className="w-full h-full bg-bb-muted/20 flex items-center justify-center">
-            <span className="font-display text-4xl text-bb-muted">
+            <span className="font-granjon text-4xl text-bb-muted">
               {getInitials(profile.full_name)}
             </span>
           </div>
@@ -71,13 +71,11 @@ export function ProfileCard({ profile }: ProfileCardProps) {
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="font-display font-light text-[15px] uppercase mb-0.5">
+            <h2 className="font-granjon font-light text-[15px] uppercase mb-0.5">
               {profile.full_name || 'Your Name'}
             </h2>
-            {profile.role && <p className="blackbook-label text-bb-muted">{profile.role}</p>}
-            {profile.location && (
-              <p className="blackbook-label text-bb-muted mt-1">{profile.location}</p>
-            )}
+            {profile.role && <p className="blackbook-label">{profile.role}</p>}
+            {profile.location && <p className="blackbook-label mt-1">{profile.location}</p>}
           </div>
         </div>
 
@@ -97,7 +95,7 @@ export function ProfileCard({ profile }: ProfileCardProps) {
 
         {/* Profile Link */}
         {profile.username && (
-          <div className="flex items-center gap-2 blackbook-label text-bb-muted">
+          <div className="flex items-center gap-2 blackbook-label">
             <ExternalLink className="w-3 h-3" />
             <span>blkbook/p/{profile.username}</span>
           </div>

@@ -45,7 +45,7 @@ export function EditContactDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-background border-border">
         <DialogHeader>
-          <DialogTitle className="font-garamond font-normal text-lg tracking-tight uppercase">
+          <DialogTitle className="font-granjon font-normal text-lg tracking-tight uppercase">
             Edit Contact
           </DialogTitle>
         </DialogHeader>
@@ -58,7 +58,7 @@ export function EditContactDialog({
               <Input
                 value={form[key] ?? ''}
                 onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-                className="font-garamond italic text-[14px] bg-transparent border-border"
+                className="font-granjon italic text-[14px] bg-transparent border-border"
               />
             </div>
           ))}

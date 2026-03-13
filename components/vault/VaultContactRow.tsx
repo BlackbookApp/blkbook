@@ -19,7 +19,7 @@ export function VaultContactRow({ contact, showDivider }: VaultContactRowProps) 
     >
       {showDivider && <div className="h-px bg-border" />}
       <div className="py-3">
-        <h2 className="font-display font-normal text-[16px] tracking-[0.01em] uppercase text-foreground mb-0.5 group-hover:opacity-60 transition-opacity">
+        <h2 className="font-granjon font-normal text-[16px] tracking-[0.01em] uppercase text-foreground mb-0.5 group-hover:opacity-60 transition-opacity">
           {contact.name}
         </h2>
         <p className="font-helvetica font-normal text-[10px] tracking-[0.08em] text-bb-muted uppercase">

@@ -88,7 +88,11 @@ const VaultSearchBar = ({ onSearchChange, recentContacts }: VaultSearchBarProps)
             }
           }}
           className="w-full bg-transparent outline-none pr-5"
-          style={{ ...searchFont, fontStyle: search ? 'normal' : 'italic', color: '#0E0E0E' }}
+          style={{
+            ...searchFont,
+            fontStyle: search ? 'normal' : 'italic',
+            color: 'var(--color-bb-dark)',
+          }}
           placeholder=""
         />
 
@@ -102,7 +106,7 @@ const VaultSearchBar = ({ onSearchChange, recentContacts }: VaultSearchBarProps)
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
                 className="whitespace-nowrap"
-                style={{ ...searchFont, color: '#9A9691' }}
+                style={{ ...searchFont, color: 'var(--color-bb-muted)' }}
               >
                 {placeholders[placeholderIndex]}
               </motion.span>

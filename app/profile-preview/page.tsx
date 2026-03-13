@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import Logo from '@/components/Logo';
 import { useProfile } from '@/hooks/use-profile';
 import { updateProfileAction } from '@/app/actions/profiles';
 import { useQueryClient } from '@tanstack/react-query';
@@ -29,7 +28,7 @@ const ProfilePreview = () => {
   if (isLoading || !profile) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="blackbook-label text-bb-muted">Loading…</p>
+        <p className="blackbook-label">Loading…</p>
       </div>
     );
   }
@@ -92,7 +91,7 @@ const ProfilePreview = () => {
       {/* Fixed bottom CTA */}
       <div className="fixed bottom-0 left-0 right-0 z-50" data-pg-theme={profileTheme}>
         <div className="max-w-md mx-auto px-6 pt-12 pb-8 flex flex-col items-center gap-3 bg-gradient-to-t from-[var(--pg-bg)] via-[var(--pg-bg)/80] to-transparent">
-          <p className="text-[10px] tracking-wide text-muted-foreground/60">
+          <p className="font-helvetica text-[10px] tracking-wide text-muted-foreground/60">
             This is your first impression.
           </p>
           <button

@@ -12,7 +12,7 @@ import {
 } from '@/lib/data/access-requests';
 import { sendApprovalEmail, sendRequestReceivedEmail } from '@/lib/email';
 
-async function assertAdmin(): Promise<{ userId: string } | { error: string }> {
+async function assertAdmin(): Promise<{ userId: string; profileId: string } | { error: string }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -21,12 +21,12 @@ async function assertAdmin(): Promise<{ userId: string } | { error: string }> {
 
   const { data: profile } = await adminClient
     .from('profiles')
-    .select('is_admin')
-    .eq('id', user.id)
+    .select('id, is_admin')
+    .eq('user_id', user.id)
     .single();
   if (!profile?.is_admin) return { error: 'Forbidden' };
 
-  return { userId: user.id };
+  return { userId: user.id, profileId: profile.id };
 }
 
 const submitSchema = z.object({
@@ -95,7 +95,7 @@ export async function approveRequest(requestId: string): Promise<ApproveRequestR
 
   const { error: inviteError } = await adminClient.from('invitations').insert({
     code,
-    inviter_id: auth.userId,
+    inviter_id: auth.profileId,
     invitee_email: request.email,
     expires_at: expiresAt.toISOString(),
   });

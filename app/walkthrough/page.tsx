@@ -60,12 +60,14 @@ const VaultPreview = () => {
                 </div>
               )}
               <div className="py-2">
-                <h2 className="text-sm tracking-tight font-semibold uppercase">{c.name}</h2>
-                <p className="text-[11px] text-muted-foreground font-normal tracking-wide">
+                <h2 className="font-granjon font-normal text-[16px] tracking-[0.01em] uppercase">
+                  {c.name}
+                </h2>
+                <p className="font-helvetica text-[10px] text-bb-muted font-normal tracking-[0.08em] uppercase">
                   {c.role} — {c.city}
                 </p>
                 {c.context && (
-                  <p className="text-[10px] text-muted-foreground/60 font-light italic">
+                  <p className="font-granjon text-[10px] text-bb-muted/60 font-light italic">
                     {c.context}
                   </p>
                 )}
@@ -97,8 +99,12 @@ const AddPreview = () => (
         <div key={i}>
           {i > 0 && <div className="h-px bg-border" />}
           <div className="py-4">
-            <h3 className="text-sm tracking-wide uppercase mb-1">{item.title}</h3>
-            <p className="text-xs text-muted-foreground font-light">{item.desc}</p>
+            <h3 className="font-granjon font-normal text-[14px] tracking-[0.01em] uppercase mb-1">
+              {item.title}
+            </h3>
+            <p className="font-helvetica text-[10px] text-bb-muted font-normal tracking-[0.08em]">
+              {item.desc}
+            </p>
           </div>
         </div>
       ))}
@@ -106,19 +112,19 @@ const AddPreview = () => (
     <div className="h-px bg-border mt-2 mb-6" />
     <div className="space-y-0">
       <div className="border-b border-border py-3">
-        <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground block mb-2">
+        <label className="font-helvetica text-[10px] uppercase tracking-[0.2em] text-bb-muted block mb-2">
           Full Name
         </label>
         <p className="text-sm text-foreground/40">e.g. James Chen</p>
       </div>
       <div className="border-b border-border py-3">
-        <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground block mb-2">
+        <label className="font-helvetica text-[10px] uppercase tracking-[0.2em] text-bb-muted block mb-2">
           Role
         </label>
         <p className="text-sm text-foreground/40">e.g. Photographer</p>
       </div>
       <div className="border-b border-border py-3">
-        <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground block mb-2">
+        <label className="font-helvetica text-[10px] uppercase tracking-[0.2em] text-bb-muted block mb-2">
           Where you met
         </label>
         <p className="text-sm text-foreground/40">e.g. Milan Design Week</p>
@@ -264,7 +270,7 @@ const Walkthrough = () => {
           style={{
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            background: 'rgba(245, 244, 240, 0.88)',
+            background: 'rgba(250, 250, 249, 0.88)',
           }}
         >
           {/* Subtle top edge */}
@@ -280,13 +286,13 @@ const Walkthrough = () => {
                 transition={{ duration: 0.5 }}
                 className="flex-1"
               >
-                <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-8">
+                <p className="font-helvetica text-[10px] uppercase tracking-[0.3em] text-bb-muted mb-8">
                   {step.label}
                 </p>
 
                 <h1 className="blackbook-title text-foreground mb-6">{step.headline}</h1>
 
-                <p className="text-xs font-light text-muted-foreground leading-relaxed">
+                <p className="font-helvetica text-[11px] font-light text-bb-muted leading-relaxed">
                   {step.body}
                 </p>
               </motion.div>

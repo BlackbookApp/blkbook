@@ -24,15 +24,9 @@ interface VaultContactListProps {
   contacts: VaultContact[];
   search: string;
   isLoading: boolean;
-  onQuickAdd: () => void;
 }
 
-export function VaultContactList({
-  contacts,
-  search,
-  isLoading,
-  onQuickAdd,
-}: VaultContactListProps) {
+export function VaultContactList({ contacts, search, isLoading }: VaultContactListProps) {
   if (isLoading) {
     return (
       <div className="flex flex-col flex-1 overflow-y-auto pb-28">
@@ -44,7 +38,7 @@ export function VaultContactList({
   if (!search && contacts.length === 0) {
     return (
       <div className="flex flex-col flex-1 overflow-y-auto pb-28">
-        <VaultEmptyState onQuickAdd={onQuickAdd} />
+        <VaultEmptyState />
       </div>
     );
   }
