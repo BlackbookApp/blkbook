@@ -212,7 +212,7 @@
   --font-mono: var(--font-geist-mono);
 
   /* Blackbook typefaces */
-  /* --font-helvetica: 'Helvetica Neue', Helvetica, sans-serif; */
+  --font-helvetica: 'Helvetica Neue', Helvetica, sans-serif;
   --font-granjon: 'Granjon LT', 'Granjon LT Std', Georgia, serif;
 
   /* Blackbook brand colours */

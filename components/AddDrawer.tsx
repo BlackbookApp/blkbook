@@ -78,7 +78,7 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
                           strokeWidth={1.5}
                         />
                       </div>
-                      <div className="flex gap-2 flex-1 min-w-0">
+                      <div className="flex flex-col flex-1 min-w-0">
                         <Text variant="label" className="group-hover:opacity-70 transition-opacity">
                           {option.label}
                         </Text>
