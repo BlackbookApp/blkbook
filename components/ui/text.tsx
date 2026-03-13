@@ -23,10 +23,10 @@ export const defaultVariantMapping = {
 const textVariants = cva('', {
   variants: {
     variant: {
-      h1: 'font-display font-light text-[19px] uppercase tracking-[0.01em] leading-tight',
-      h2: 'font-display font-normal text-[16px] uppercase tracking-[0.01em] leading-snug',
-      h3: 'font-display font-light text-[15px] uppercase tracking-[0.01em]',
-      title: 'font-canela-deck font-normal text-base uppercase tracking-tight',
+      h1: 'font-granjon font-light text-[19px] uppercase tracking-[0.01em] leading-tight',
+      h2: 'font-granjon font-normal text-[16px] uppercase tracking-[0.01em] leading-snug',
+      h3: 'font-granjon font-light text-[15px] uppercase tracking-[0.01em]',
+      title: 'font-granjon font-normal text-base uppercase tracking-tight',
       heading: 'font-helvetica text-[12px] font-bold uppercase tracking-[0.05em] text-bb-dark',
       label: 'font-helvetica text-[11px] font-normal uppercase tracking-[0.12em]',
       'label-micro': 'font-helvetica text-[10px] uppercase tracking-[0.2em] text-muted-foreground',
@@ -35,7 +35,7 @@ const textVariants = cva('', {
       'body-1': 'text-base leading-relaxed',
       'body-2': 'text-sm leading-relaxed text-muted-foreground',
       p: 'text-base leading-[1.4]',
-      note: 'font-garamond italic text-[13px] text-bb-muted tracking-tight',
+      note: 'font-granjon italic text-[13px] text-bb-muted tracking-tight',
       inherit: '',
     },
     align: {

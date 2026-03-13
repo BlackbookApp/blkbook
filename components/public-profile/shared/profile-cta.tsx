@@ -9,6 +9,7 @@ import { useHasExchanged } from '@/hooks/use-exchanges';
 import { useQueryClient } from '@tanstack/react-query';
 import ExchangeDetailsModal from '@/components/ExchangeDetailsModal';
 import ExchangeAuthModal from './exchange-auth-modal';
+import { ShareProfileModal } from '@/components/share-profile-modal';
 import { routes } from '@/lib/routes';
 import type { SocialLinks } from '@/lib/data/profiles';
 
@@ -57,23 +58,7 @@ export function ProfileCTA({
 
   const [showExchange, setShowExchange] = useState(false);
   const [showAuthExchange, setShowAuthExchange] = useState(false);
-  const [shareFeedback, setShareFeedback] = useState<'idle' | 'copied' | 'error'>('idle');
-
-  const handleShare = async () => {
-    const url = window.location.href;
-    if (navigator.share) {
-      await navigator.share({ url }).catch(() => {});
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      setShareFeedback('copied');
-      setTimeout(() => setShareFeedback('idle'), 2000);
-    } catch {
-      setShareFeedback('error');
-      setTimeout(() => setShareFeedback('idle'), 2000);
-    }
-  };
+  const [showShare, setShowShare] = useState(false);
 
   const handleAddToVault = async () => {
     if (inVault) return;
@@ -116,22 +101,20 @@ export function ProfileCTA({
 
   // Owner CTAs
   if (isOwner) {
-    const shareLabel =
-      shareFeedback === 'copied'
-        ? 'Link Copied'
-        : shareFeedback === 'error'
-          ? 'Copy Failed'
-          : 'Share Profile';
-
     return wrap(
       <>
-        <Button variant="outline" className={btn} onClick={handleShare}>
-          {shareLabel}
+        <Button variant="outline" className={btn} onClick={() => setShowShare(true)}>
+          Share Profile
         </Button>
         <Button asChild variant="outline" className={secBtn}>
           <Link href={routes.editProfile}>Edit Profile</Link>
         </Button>
-      </>
+      </>,
+      <ShareProfileModal
+        open={showShare}
+        onClose={() => setShowShare(false)}
+        username={profileUsername}
+      />
     );
   }
 

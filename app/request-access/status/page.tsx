@@ -50,7 +50,9 @@ function RequestAccessStatus() {
           {status === 'loading' && (
             <div className="text-center">
               <div className="w-5 h-5 border border-foreground border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-              <p className="text-xs text-muted-foreground uppercase tracking-widest">Loading…</p>
+              <p className="font-helvetica text-[11px] text-bb-muted uppercase tracking-widest">
+                Loading…
+              </p>
             </div>
           )}
 
@@ -64,7 +66,7 @@ function RequestAccessStatus() {
               </div>
               <div className="text-center">
                 <h1 className="blackbook-title text-base mb-4">Under Review</h1>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="font-helvetica text-[11px] text-bb-muted leading-relaxed">
                   We review every request personally.
                 </p>
                 <p className="text-xs text-muted-foreground leading-relaxed mt-3">
@@ -88,7 +90,7 @@ function RequestAccessStatus() {
               </div>
               <div className="text-center">
                 <h1 className="blackbook-title text-base mb-4">You&apos;re Approved</h1>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="font-helvetica text-[11px] text-bb-muted leading-relaxed">
                   Check your email — your invitation link is waiting.
                 </p>
               </div>
@@ -109,7 +111,7 @@ function RequestAccessStatus() {
               </div>
               <div className="text-center">
                 <h1 className="blackbook-title text-base mb-4">Not Approved</h1>
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="font-helvetica text-[11px] text-bb-muted leading-relaxed">
                   We&apos;re unable to approve this request at the moment.
                 </p>
               </div>
@@ -119,7 +121,7 @@ function RequestAccessStatus() {
           {status === 'not_found' && (
             <div className="text-center">
               <h1 className="blackbook-title text-base mb-4">Request Not Found</h1>
-              <p className="text-xs text-muted-foreground leading-relaxed mb-6">
+              <p className="font-helvetica text-[11px] text-bb-muted leading-relaxed mb-6">
                 We couldn&apos;t find your request.
               </p>
               <Link

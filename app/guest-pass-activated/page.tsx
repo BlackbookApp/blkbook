@@ -24,7 +24,7 @@ const GuestPassActivated = () => {
           >
             <h1 className="text-xl tracking-tight uppercase text-foreground mb-5">Be our guest.</h1>
 
-            <p className="text-sm font-normal text-foreground/60 leading-relaxed mb-8">
+            <p className="font-helvetica text-[11px] font-normal text-bb-muted leading-relaxed mb-8">
               You have 14 days of full access to Blackbook. Your profile is live. Your vault is
               ready. At the end of 14 days you&apos;ll be invited to become a member.
             </p>
@@ -43,7 +43,7 @@ const GuestPassActivated = () => {
               Explore My Blackbook
             </button>
 
-            <p className="text-[10px] text-muted-foreground font-normal">
+            <p className="font-helvetica text-[10px] text-bb-muted font-normal">
               14 days remaining on your guest access.
             </p>
           </motion.div>

@@ -11,10 +11,10 @@ export default function InboxPage() {
         <Logo />
 
         <div className="mt-10 mb-6">
-          <h1 className="font-display font-light text-[19px] tracking-[0.01em] uppercase text-bb-dark mb-1">
+          <h1 className="font-granjon font-light text-[19px] tracking-[0.01em] uppercase text-bb-dark mb-1">
             Inbox
           </h1>
-          <p className="blackbook-label text-bb-muted">Exchange requests from your profile</p>
+          <p className="blackbook-label">Exchange requests from your profile</p>
         </div>
 
         <Inbox />

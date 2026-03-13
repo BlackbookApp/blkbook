@@ -117,8 +117,8 @@
 /* ── CSS custom properties ─────────────────────────────── */
 :root {
   /* Blackbook Design System - Light Luxury */
-  --background: hsl(48, 20%, 95%); /* Warm off-white #F5F4F0 */
-  --foreground: hsl(0, 0%, 5%); /* Near black */
+  --background: #fafaf9; /* WHITE */
+  --foreground: #0e0e0d; /* INK */
 
   --card: hsl(45, 20%, 97%);
   --card-foreground: hsl(0, 0%, 5%);
@@ -141,8 +141,8 @@
   --destructive: hsl(0, 72%, 51%);
   --destructive-foreground: hsl(0, 0%, 100%);
 
-  --border: hsl(45, 10%, 85%);
-  --input: hsl(45, 10%, 85%);
+  --border: #e4e0da; /* RULE */
+  --input: #e4e0da;
   --ring: hsl(0, 0%, 5%);
 
   --radius: 0.25rem;
@@ -212,24 +212,15 @@
   --font-mono: var(--font-geist-mono);
 
   /* Blackbook typefaces */
-  --font-display: 'GT Super Display', 'Canela Deck', serif;
-  --font-helvetica: 'Helvetica Neue', Helvetica, sans-serif;
-  --font-editorial: 'PP Editorial Old', serif;
-  --font-playfair: 'Playfair Display', serif;
-  --font-garamond: 'EB Garamond', serif;
-  --font-engravers: 'Engravers Gothic', 'Helvetica Neue', sans-serif;
-  --font-dancing: 'Dancing Script', cursive;
-  --font-freight: 'FreightDisp Pro Medium', serif;
-  --font-canela: 'Canela Text Trial', serif;
-  --font-canela-condensed: 'Canela Condensed', serif;
-  --font-canela-deck: 'Canela Deck', serif;
+  /* --font-helvetica: 'Helvetica Neue', Helvetica, sans-serif; */
   --font-granjon: 'Granjon LT', 'Granjon LT Std', Georgia, serif;
 
   /* Blackbook brand colours */
-  --color-bb-dark: #0e0e0e;
-  --color-bb-muted: #9a9691;
-  --color-bb-nav: #1a1a1a;
-  --color-bb-cream: #f5f4f0;
+  --color-bb-dark: #0e0e0d;
+  --color-bb-muted: #b8b4ae;
+  --color-bb-nav: #0e0e0d;
+  --color-bb-cream: #fafaf9;
+  --color-bb-rule: #e4e0da;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: var(--radius);
@@ -311,7 +302,7 @@
   h4,
   h5,
   h6 {
-    font-family: 'Canela Deck', 'Canela Condensed', serif;
+    font-family: var(--font-granjon);
     font-weight: 400;
     letter-spacing: 0.01em;
     text-transform: uppercase;
@@ -330,7 +321,7 @@
 
   .blackbook-title {
     @apply text-base font-normal tracking-tight uppercase;
-    font-family: 'Canela Deck', 'Canela Condensed', serif;
+    font-family: var(--font-granjon);
     font-weight: 400;
     letter-spacing: 0.01em;
   }
@@ -338,7 +329,7 @@
   .blackbook-subtitle {
     @apply text-sm uppercase;
     letter-spacing: 0.12em;
-    color: #9a9691;
+    color: #b8b4ae;
   }
 
   .blackbook-body {
@@ -348,11 +339,12 @@
 
   /* Small label text used across pages */
   .blackbook-label {
+    font-family: var(--font-helvetica);
     font-size: 11px;
     font-weight: 300;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: #0e0e0e;
+    color: #9a9691;
   }
 
   .blackbook-heading {
@@ -360,21 +352,21 @@
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: #0e0e0e;
+    color: #0e0e0d;
   }
 
   .blackbook-nav {
     font-size: 13px;
     letter-spacing: 0.01em;
     text-transform: uppercase;
-    color: #0e0e0e;
+    color: #0e0e0d;
     font-weight: 500;
   }
 
   .blackbook-nav-active {
     font-weight: 500;
     letter-spacing: 0.01em;
-    color: #0e0e0e;
+    color: #0e0e0d;
   }
 
   .blackbook-input {
@@ -384,7 +376,7 @@
     font-weight: 300;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: #0e0e0e;
+    color: #0e0e0d;
   }
 
   .blackbook-input::placeholder {

@@ -227,7 +227,7 @@ const EditProfile = () => {
   if (isLoading) {
     return (
       <div className="min-h-[100dvh] flex items-center justify-center bg-background">
-        <p className="blackbook-label text-bb-muted">Loading…</p>
+        <p className="blackbook-label">Loading…</p>
       </div>
     );
   }
@@ -317,7 +317,7 @@ const EditProfile = () => {
       </div>
 
       <div className="flex justify-center mt-2">
-        <span className="text-[10px] tracking-[0.2em] text-muted-foreground/40 font-light">
+        <span className="font-helvetica text-[10px] tracking-[0.2em] text-bb-muted/40 font-light">
           Step {step} of 3
         </span>
       </div>
@@ -385,7 +385,7 @@ const EditProfile = () => {
 
       {isSaving && (
         <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
-          <p className="blackbook-label text-bb-muted">Saving…</p>
+          <p className="blackbook-label">Saving…</p>
         </div>
       )}
 

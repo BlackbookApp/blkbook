@@ -45,7 +45,7 @@ export default function RequestAccessPage() {
             <h1 className="text-xl tracking-tight text-foreground mb-3 uppercase">
               Request Access
             </h1>
-            <p className="text-xs text-muted-foreground leading-relaxed">
+            <p className="font-helvetica text-[11px] text-bb-muted leading-relaxed">
               We&apos;re building this for professionals who understand that relationships—not
               followers—are the real currency.
             </p>
@@ -115,7 +115,7 @@ export default function RequestAccessPage() {
             <button
               type="button"
               onClick={() => router.push(routes.login)}
-              className="text-[10px] text-muted-foreground hover:text-foreground/60 transition-colors tracking-wide"
+              className="font-helvetica text-[10px] text-bb-muted hover:text-foreground/60 transition-colors tracking-wide"
             >
               Already a member? Sign in
             </button>

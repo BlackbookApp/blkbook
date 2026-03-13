@@ -119,7 +119,7 @@ const CreateProfile = () => {
 
       {/* Progress */}
       <div className="flex justify-center mt-2">
-        <span className="text-[10px] tracking-[0.2em] text-muted-foreground/40 font-light">
+        <span className="font-helvetica text-[10px] tracking-[0.2em] text-bb-muted/40 font-light">
           Step {step} of {TOTAL_STEPS}
         </span>
       </div>
@@ -148,15 +148,15 @@ const CreateProfile = () => {
               transition={{ duration: 0.4, ease: 'easeOut' }}
               className="flex-1 flex flex-col w-full"
             >
-              <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-3">
+              <p className="font-helvetica text-[10px] tracking-[0.25em] uppercase text-bb-muted mb-3">
                 Your profile
               </p>
               <div className="h-px bg-border mb-4" />
 
-              <h1 className="font-canela text-xl tracking-tight uppercase text-foreground mb-2">
+              <h1 className="font-granjon text-xl tracking-tight uppercase text-foreground mb-2">
                 Describe yourself in one line.
               </h1>
-              <p className="text-xs font-normal leading-relaxed text-muted-foreground mb-5 font-helvetica">
+              <p className="font-helvetica text-[11px] font-normal leading-relaxed text-bb-muted mb-5">
                 A short bio or tagline — your role, your mission, whatever feels right.
               </p>
 
@@ -211,13 +211,13 @@ const CreateProfile = () => {
               transition={{ duration: 0.4, ease: 'easeOut' }}
               className="flex-1 flex flex-col w-full"
             >
-              <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-3">
+              <p className="font-helvetica text-[10px] tracking-[0.25em] uppercase text-bb-muted mb-3">
                 Your profile
               </p>
               <div className="h-px bg-border mb-4" />
 
               <h1 className="blackbook-title">First impressions happen in a second.</h1>
-              <p className="text-xs font-normal leading-relaxed text-muted-foreground mb-5">
+              <p className="font-helvetica text-[11px] font-normal leading-relaxed text-bb-muted mb-5">
                 Add a photo that feels like you. This is what someone sees the moment they tap your
                 card.
               </p>
@@ -238,7 +238,7 @@ const CreateProfile = () => {
                   ) : (
                     <>
                       <Plus className="w-5 h-5 text-muted-foreground/30" />
-                      <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/30 font-light">
+                      <span className="font-helvetica text-[10px] tracking-[0.2em] uppercase text-bb-muted/30 font-light">
                         Add your photo
                       </span>
                     </>

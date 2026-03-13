@@ -79,7 +79,7 @@ export function InviteSheet({ children }: InviteSheetProps) {
         </SheetHeader>
 
         <div className="max-w-[300px] mx-auto space-y-6">
-          <p className="blackbook-label text-bb-muted text-center leading-relaxed">
+          <p className="blackbook-label text-center leading-relaxed">
             Share a golden ticket. Your guest joins directly — no queue.
           </p>
 
@@ -107,7 +107,7 @@ export function InviteSheet({ children }: InviteSheetProps) {
 
               {/* URL display */}
               <div className="border border-border px-4 py-3">
-                <p className="blackbook-label text-bb-muted truncate text-center">{inviteUrl}</p>
+                <p className="blackbook-label truncate text-center">{inviteUrl}</p>
               </div>
 
               {/* Actions */}

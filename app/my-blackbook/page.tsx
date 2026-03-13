@@ -1,17 +1,20 @@
 'use client';
 
+import { useState } from 'react';
 import { useProfile } from '@/hooks/use-profile';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Logo from '@/components/Logo';
 import BottomNav from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
 import { InviteSheet } from '@/components/invite-sheet';
+import { ShareProfileModal } from '@/components/share-profile-modal';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProfileCard } from '@/components/my-blackbook/profile-card';
 
 const MyBlackbook = () => {
   const { data: profile, isLoading } = useProfile();
+  const [showShare, setShowShare] = useState(false);
 
   return (
     <div className="blackbook-container bg-background">
@@ -30,8 +33,8 @@ const MyBlackbook = () => {
           </h1>
           <p className="blackbook-label">
             <span className="text-bb-dark">{profile?.is_published ? 'Live' : 'Not published'}</span>
-            <span className="mx-2 text-bb-muted">|</span>
-            <span className="text-bb-muted">Your first impression starts here</span>
+            <span className="mx-2 ">|</span>
+            <span className="">Your first impression starts here</span>
           </p>
         </motion.div>
 
@@ -53,24 +56,41 @@ const MyBlackbook = () => {
           )}
         </motion.div>
 
-        {/* Invite CTA */}
+        {/* Invite + Share CTAs */}
         <motion.div
-          className="mt-8"
+          className="mt-8 flex gap-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <InviteSheet>
-            <Button variant="blackbook-secondary" className="w-full">
+            <Button variant="blackbook-secondary" className="flex-1">
               <UserPlus className="w-4 h-4 mr-2" />
-              Invite Someone
+              Invite
             </Button>
           </InviteSheet>
+          <Button
+            variant="blackbook-secondary"
+            className="flex-1"
+            onClick={() => setShowShare(true)}
+            disabled={!profile?.username}
+          >
+            <Share2 className="w-4 h-4 mr-2" />
+            Share
+          </Button>
         </motion.div>
+
+        {profile?.username && (
+          <ShareProfileModal
+            open={showShare}
+            onClose={() => setShowShare(false)}
+            username={profile.username}
+          />
+        )}
 
         {/* Bottom Tagline */}
         <motion.p
-          className="text-center blackbook-label text-bb-muted mt-12"
+          className="text-center blackbook-label mt-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
