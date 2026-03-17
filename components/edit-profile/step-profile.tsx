@@ -38,7 +38,6 @@ export const StepProfile = ({
   setLocation,
   bio,
   setBio,
-  avatarFile: _avatarFile,
   setAvatarFile,
   avatarPreview,
   setAvatarPreview,
@@ -79,6 +78,9 @@ export const StepProfile = ({
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (avatarPreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(avatarPreview);
+    }
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };
@@ -91,12 +93,12 @@ export const StepProfile = ({
       transition={{ duration: 0.4 }}
       className="flex-1 flex flex-col px-6 pt-10 pb-8 overflow-y-auto"
     >
-      <Text variant="label-micro" className="mb-6">
+      <Text variant="label-micro" className="mb-8">
         Your Profile
       </Text>
 
       {/* Avatar upload */}
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center mb-8">
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
@@ -123,7 +125,7 @@ export const StepProfile = ({
         />
       </div>
 
-      <div className="space-y-5 mb-6">
+      <div className="space-y-6 mb-8">
         {[
           {
             label: 'Name',
@@ -185,7 +187,7 @@ export const StepProfile = ({
         </div>
       </div>
 
-      <div className="space-y-4 mb-6">
+      <div className="space-y-6 mb-8">
         {SOCIAL_FIELD_CONFIGS.map((sf) => (
           <div key={sf.key}>
             <Text variant="label-micro" as="label" className="block mb-1">

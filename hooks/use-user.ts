@@ -7,9 +7,9 @@ import type { User } from '@supabase/supabase-js';
 async function fetchUser(): Promise<User | null> {
   const supabase = createClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+    data: { session },
+  } = await supabase.auth.getSession();
+  return session?.user ?? null;
 }
 
 export function useUser() {

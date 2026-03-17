@@ -1,4 +1,10 @@
-import type { SocialLinks } from '@/lib/data/profiles';
+import type { Profile, SocialLinks } from '@/lib/data/profiles';
+import type {
+  ProfileData,
+  PortfolioItem,
+  Testimonial,
+} from '@/components/public-profile/public-profile-visual';
+import type { SocialFields, WorkData } from '@/components/edit-profile/types';
 import {
   InstagramIcon,
   TikTokIcon,
@@ -69,4 +75,65 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
   }
 
   return socials;
+}
+
+export interface PublicProfileProps {
+  profile: ProfileData;
+  portfolio: PortfolioItem[];
+  testimonials: Testimonial[];
+}
+
+/** Build props for PublicProfileVisual/Editorial from a DB Profile */
+export function profileFromDB(profile: Profile): PublicProfileProps {
+  return {
+    profile: {
+      name: profile.full_name ?? profile.username ?? '',
+      bio: profile.bio,
+      role: profile.role,
+      location: profile.location,
+      portraitSrc: profile.avatar_url,
+      logoSrc: profile.logo_url,
+      socialLinks: profile.social_links,
+      brandStatement: profile.brand_statement,
+      recommendedBy: profile.recommended_by ?? [],
+    },
+    portfolio: profile.portfolio_images.map((img) => ({ imageSrc: img.url })),
+    testimonials: profile.testimonials.map((t) => ({
+      quote: t.quote,
+      author: t.author ? `${t.author}${t.title ? `, ${t.title}` : ''}` : undefined,
+    })),
+  };
+}
+
+/** Build props for PublicProfileVisual/Editorial from edit-profile state */
+export function profileFromEditState(params: {
+  name: string;
+  bio: string;
+  role: string;
+  location: string;
+  avatarPreview: string | null;
+  socials: SocialFields;
+  work: WorkData;
+}): PublicProfileProps {
+  const { name, bio, role, location, avatarPreview, socials, work } = params;
+  return {
+    profile: {
+      name,
+      bio,
+      role,
+      location,
+      portraitSrc: avatarPreview,
+      logoSrc: work.logo,
+      socialLinks: socials,
+      brandStatement: work.brandStatement,
+      recommendedBy: work.recommendedBy,
+    },
+    portfolio: work.portfolioImages.map((img) => ({ imageSrc: img.url })),
+    testimonials: work.testimonials
+      .filter((t) => t.quote.trim())
+      .map((t) => ({
+        quote: t.quote,
+        author: t.author ? `${t.author}${t.title ? `, ${t.title}` : ''}` : undefined,
+      })),
+  };
 }

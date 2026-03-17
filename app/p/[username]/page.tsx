@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { getProfileByUsername } from '@/lib/data/profiles';
 import PublicProfileVisual from '@/components/public-profile/public-profile-visual';
 import PublicProfileEditorial from '@/components/public-profile/public-profile-editorial';
+import { profileFromDB } from '@/components/public-profile/shared/profile-adapters';
 
 interface Props {
   params: Promise<{ username: string }>;
@@ -24,29 +25,13 @@ export default async function PublicProfilePage({ params }: Props) {
   const profile = await getProfileByUsername(username);
   if (!profile) notFound();
 
-  const profileData = {
-    name: profile.full_name ?? username,
-    bio: profile.bio,
-    role: profile.role,
-    location: profile.location,
-    portraitSrc: profile.avatar_url,
-    logoSrc: profile.logo_url,
-    socialLinks: profile.social_links,
-    brandStatement: profile.brand_statement,
-  };
+  const { profile: profileData, portfolio, testimonials } = profileFromDB(profile);
 
   const ctaProps = {
     profileId: profile.id,
     profileOwnerId: profile.user_id,
     profileUsername: username,
   };
-
-  const portfolio = profile.portfolio_images.map((img) => ({ imageSrc: img.url }));
-
-  const testimonials = profile.testimonials.map((t) => ({
-    quote: t.quote,
-    author: t.author ? `${t.author}${t.title ? `, ${t.title}` : ''}` : undefined,
-  }));
 
   const theme = profile.palette === 'noir' ? 'noir' : 'blanc';
 

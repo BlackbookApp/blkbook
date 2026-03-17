@@ -14,7 +14,7 @@ export const HeroPortrait = ({ name, portraitSrc, subtitle, location }: HeroPort
   const roleLine = [subtitle, location].filter(Boolean).join(' · ');
 
   return (
-    <motion.div className="mb-8 px-2">
+    <motion.div className="mb-8">
       <motion.div
         className="mb-1 text-right"
         initial={{ opacity: 0, y: 20 }}

@@ -5,68 +5,36 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { Copy, Share2, Check, UserPlus } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { useCreateInvite } from '@/hooks/use-invitations';
-import { useProfile } from '@/hooks/use-profile';
-import { toast } from '@/hooks/use-toast';
+import { useInvite } from '@/hooks/use-invite';
 
 interface InviteSheetProps {
   children: React.ReactNode;
 }
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? '';
-
 export function InviteSheet({ children }: InviteSheetProps) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [generatedCode, setGeneratedCode] = useState<string | null>(null);
-  const { data: profile } = useProfile();
-  const { mutate: createInvite, isPending } = useCreateInvite();
-
-  const inviteUrl = generatedCode ? `${APP_URL}/invite?ref=${generatedCode}` : null;
-
-  const handleGenerate = () => {
-    createInvite(undefined, {
-      onSuccess: (result) => {
-        if ('error' in result) {
-          toast({ title: 'Error', description: result.error, variant: 'destructive' });
-        } else {
-          setGeneratedCode(result.code);
-        }
-      },
-    });
-  };
+  const {
+    invitesRemaining,
+    inviteUrl,
+    generatedCode,
+    isPending,
+    handleGenerate,
+    handleShare,
+    reset,
+  } = useInvite();
 
   const handleCopy = async () => {
     if (!inviteUrl) return;
     await navigator.clipboard.writeText(inviteUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-    toast({ title: 'Copied', description: 'Invite link copied to clipboard' });
-  };
-
-  const handleShare = async () => {
-    if (!inviteUrl) return;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Join me on Blackbook',
-          text: "You've been invited to Blackbook — a private network for creative professionals.",
-          url: inviteUrl,
-        });
-      } catch {
-        // user cancelled
-      }
-    } else {
-      await handleCopy();
-    }
   };
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
-    if (!next) setGeneratedCode(null);
+    if (!next) reset();
   };
-
-  const invitesRemaining = profile?.invites_remaining ?? 0;
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>

@@ -8,10 +8,8 @@ import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { SocialBlock } from './shared/social-block';
 import { ProfileCTA } from './shared/profile-cta';
-import { HeroPortrait } from './shared/hero-portrait';
 import { buildSocials } from './shared/profile-adapters';
 import type { SocialLinks } from '@/lib/data/profiles';
-import BottomNav from '@/components/BottomNav';
 
 export type ProfileTheme = 'blanc' | 'beige' | 'noir';
 
@@ -24,6 +22,7 @@ export interface ProfileData {
   portraitSrc?: string | null;
   socialLinks?: SocialLinks;
   brandStatement?: string | null;
+  recommendedBy?: string[] | null;
 }
 
 export interface PortfolioItem {
@@ -149,7 +148,6 @@ const PublicProfile = ({
   profile,
   portfolio,
   testimonials = [],
-  isPreview = false,
   profileId = '',
   profileOwnerId = '',
   profileUsername = '',
@@ -181,28 +179,55 @@ const PublicProfile = ({
 
       <div className={cn('px-6 pt-28 min-h-screen animate-fade-in', isAuthed ? 'pb-28' : 'pb-8')}>
         {/* Hero */}
-        <motion.div style={{ opacity: heroOpacity, scale: heroScale }}>
-          <HeroPortrait
-            name={profile.name}
-            portraitSrc={profile.portraitSrc}
-            subtitle={profile.role}
-            location={profile.location}
-          />
+        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="mb-0">
+          {/* Name & Title — right aligned, above portrait */}
+          <motion.div
+            className="text-right mb-0"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <motion.h1
+              className="font-granjon font-normal text-xl tracking-[0.01em] uppercase leading-tight text-[var(--pg-fg)]"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              {profile.name}
+            </motion.h1>
+            {profile.role && (
+              <p className="font-granjon italic text-[17px] tracking-tight text-[var(--pg-fg)]">
+                {profile.role}
+              </p>
+            )}
+          </motion.div>
+
+          {/* Portrait */}
+          <motion.div
+            className="relative w-full aspect-[3/4] overflow-hidden border border-bb-dark mt-2"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            {profile.portraitSrc ? (
+              <Image src={profile.portraitSrc} alt={profile.name} fill className="object-cover" />
+            ) : (
+              <div className="w-full h-full bg-[var(--pg-border-image)]" />
+            )}
+          </motion.div>
         </motion.div>
 
-        {!isPreview && (
-          <ProfileCTA
-            compact
-            profileId={profileId}
-            profileOwnerId={profileOwnerId}
-            profileFirstName={profile.name.split(' ')[0]}
-            profileUsername={profileUsername}
-            profileName={profile.name}
-            profileRole={profile.role}
-            profilePhotoUrl={profile.portraitSrc}
-            socialLinks={profile.socialLinks ?? {}}
-          />
-        )}
+        <ProfileCTA
+          textOnly
+          profileId={profileId}
+          profileOwnerId={profileOwnerId}
+          profileFirstName={profile.name.split(' ')[0]}
+          profileUsername={profileUsername}
+          profileName={profile.name}
+          profileRole={profile.role}
+          profilePhotoUrl={profile.portraitSrc}
+          socialLinks={profile.socialLinks ?? {}}
+        />
 
         {portfolio.length > 0 && (
           <>
@@ -240,6 +265,31 @@ const PublicProfile = ({
                 </div>
               </div>
             )}
+
+            {/* Recommended by */}
+            {profile.recommendedBy && profile.recommendedBy.length > 0 && (
+              <motion.div
+                className="text-center py-16"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <p className="font-helvetica font-normal text-[9px] uppercase tracking-[0.25em] mb-5 text-[var(--pg-muted-fg)]">
+                  Recommended by
+                </p>
+                <div className="space-y-1">
+                  {profile.recommendedBy.map((name) => (
+                    <p
+                      key={name}
+                      className="font-granjon font-normal text-[15px] uppercase tracking-[0.1em] text-[var(--pg-fg)]"
+                    >
+                      {name}
+                    </p>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </>
         )}
 
@@ -254,18 +304,16 @@ const PublicProfile = ({
         {/* Social links */}
         <SocialBlock socials={buildSocials(profile.socialLinks ?? {})} />
 
-        {!isPreview && (
-          <ProfileCTA
-            profileId={profileId}
-            profileOwnerId={profileOwnerId}
-            profileFirstName={profile.name.split(' ')[0]}
-            profileUsername={profileUsername}
-            profileName={profile.name}
-            profileRole={profile.role}
-            profilePhotoUrl={profile.portraitSrc}
-            socialLinks={profile.socialLinks ?? {}}
-          />
-        )}
+        <ProfileCTA
+          profileId={profileId}
+          profileOwnerId={profileOwnerId}
+          profileFirstName={profile.name.split(' ')[0]}
+          profileUsername={profileUsername}
+          profileName={profile.name}
+          profileRole={profile.role}
+          profilePhotoUrl={profile.portraitSrc}
+          socialLinks={profile.socialLinks ?? {}}
+        />
 
         <Separator className="my-14 bg-[var(--pg-separator)]" />
 

@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useProfile } from '@/hooks/use-profile';
-import { UserPlus, Share2, ExternalLink } from 'lucide-react';
+import { UserPlus, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import Logo from '@/components/Logo';
 import BottomNav from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,6 @@ import { InviteSheet } from '@/components/invite-sheet';
 import { ShareProfileModal } from '@/components/share-profile-modal';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProfileCard } from '@/components/my-blackbook/profile-card';
-import { routes } from '@/lib/routes';
 
 const MyBlackbook = () => {
   const { data: profile, isLoading } = useProfile();
