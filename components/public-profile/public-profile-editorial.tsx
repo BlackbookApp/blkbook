@@ -8,6 +8,8 @@ import { SocialBlock } from './shared/social-block';
 import { ProfileCTA } from './shared/profile-cta';
 import { HeroPortrait } from './shared/hero-portrait';
 import { buildSocials } from './shared/profile-adapters';
+import { useUser } from '@/hooks/use-user';
+import BottomNav from '@/components/BottomNav';
 import type {
   ProfileData,
   PortfolioItem,
@@ -41,12 +43,14 @@ const PublicProfileEditorial = ({
     target: containerRef,
     offset: ['start start', 'end start'],
   });
+  const { data: user } = useUser();
+  const isAuthed = !!user;
 
   const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0.7]);
 
   return (
     <div ref={containerRef} data-pg-theme="blanc" className="blackbook-container bg-background">
-      <div className="px-6 pt-4 pb-8 min-h-screen animate-fade-in">
+      <div className={`px-6 pt-4 min-h-screen animate-fade-in ${isAuthed ? 'pb-28' : 'pb-8'}`}>
         {/* Header */}
         <div className="mb-16">
           <Logo />
@@ -221,6 +225,8 @@ const PublicProfileEditorial = ({
           </div>
         </div>
       </div>
+
+      {isAuthed && <BottomNav />}
     </div>
   );
 };

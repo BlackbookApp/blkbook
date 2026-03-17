@@ -25,16 +25,15 @@ export default function VaultPage() {
   const recentContacts = useMemo(() => toRecentContacts(contacts), [contacts]);
 
   return (
-    <div className="blackbook-container bg-background">
-      <div className="blackbook-page !py-6">
-        <div className="py-4">
-          <Logo />
-        </div>
+    /* max-w-md mx-auto instead of blackbook-container — avoids min-h-screen (100vh) which
+       exceeds 100svh in Safari browser (address bar), causing document-level scroll */
+    <div className="max-w-md mx-auto bg-background flex flex-col border-box h-[100svh] overflow-hidden px-6 pt-6">
+      {/* Logo already has py-4 internally — no wrapper needed */}
+      <Logo />
 
-        <VaultSearchBar onSearchChange={setSearch} recentContacts={recentContacts} />
+      <VaultSearchBar onSearchChange={setSearch} recentContacts={recentContacts} />
 
-        <VaultContactList contacts={contacts} search={search} isLoading={isLoading} />
-      </div>
+      <VaultContactList contacts={contacts} search={search} isLoading={isLoading} />
 
       <BottomNav />
     </div>

@@ -43,12 +43,12 @@ const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
   const isDark = theme === 'dark';
 
   const containerClass = isDark
-    ? 'flex items-stretch relative overflow-hidden grain-overlay bg-bb-nav'
-    : 'flex items-stretch border-t border-border bg-bb-cream';
+    ? 'flex items-stretch relative overflow-hidden grain-overlay bg-bb-nav pb-[env(safe-area-inset-bottom)]'
+    : 'flex items-stretch border-t border-border bg-bb-cream pb-[env(safe-area-inset-bottom)]';
 
   const itemClass = isDark
-    ? 'flex-1 py-4 transition-all'
-    : 'flex-1 py-4 transition-all border-r border-border last:border-r-0';
+    ? 'flex-1 py-7 transition-all'
+    : 'flex-1 py-7 transition-all border-r border-border last:border-r-0';
 
   const getNavColor = (isActive: boolean): 'cream' | 'dark' | 'muted' => {
     if (isDark) return isActive ? 'cream' : 'muted';
@@ -56,7 +56,7 @@ const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 will-change-transform">
       <div className="max-w-md mx-auto">
         <div className={containerClass}>
           {navItems.map((item) => {

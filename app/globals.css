@@ -304,7 +304,7 @@
   h6 {
     font-family: var(--font-granjon);
     font-weight: 400;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 }
@@ -320,10 +320,10 @@
   }
 
   .blackbook-title {
-    @apply text-base font-normal tracking-tight uppercase;
+    @apply text-base font-normal uppercase;
     font-family: var(--font-granjon);
     font-weight: 400;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.06em;
   }
 
   .blackbook-subtitle {
@@ -589,5 +589,16 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+}
+
+/* ── iOS zoom prevention ────────────────────────────────── */
+/* Outside @layer so this overrides all Tailwind utility classes.
+   font-size < 16px triggers auto-zoom on iOS Safari when an input is focused. */
+@media (hover: none) and (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
   }
 }
