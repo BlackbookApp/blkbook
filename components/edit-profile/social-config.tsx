@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Globe, Instagram, Linkedin, Mail, Phone, Twitter, MessageCircle } from 'lucide-react';
+import { Globe, Instagram, Linkedin, Mail, Phone, Twitter } from 'lucide-react';
 import { TikTokIcon, WhatsAppIcon } from '@/components/public-profile/shared/social-icons';
 import type { SocialFields } from './types';
 

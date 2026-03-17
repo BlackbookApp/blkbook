@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import dainaPortrait from '@/assets/daina-hazel-portrait.jpg';
-import jeremyPortrait from '@/assets/jeremy-allen-white-portrait.jpg';
 import type { ProfileStyle, ProfilePalette } from './types';
 import { Text } from '@/components/ui/text';
 

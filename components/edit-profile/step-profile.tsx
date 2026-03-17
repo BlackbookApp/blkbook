@@ -38,7 +38,6 @@ export const StepProfile = ({
   setLocation,
   bio,
   setBio,
-  avatarFile: _avatarFile,
   setAvatarFile,
   avatarPreview,
   setAvatarPreview,

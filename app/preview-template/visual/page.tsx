@@ -9,8 +9,6 @@ import portfolio2 from '@/assets/portfolio-2.jpg';
 import portfolio3 from '@/assets/portfolio-3.jpg';
 import portfolio4 from '@/assets/portfolio-4.jpg';
 
-const THEMES: ProfileTheme[] = ['blanc', 'beige', 'noir'];
-
 const demoProfile = {
   name: 'Julia Reyes',
   bio: 'Photographer & Creative Director',
@@ -43,7 +41,7 @@ const demoTestimonials = [
 ];
 
 export default function PreviewVisualTemplate() {
-  const [theme, setTheme] = useState<ProfileTheme>('blanc');
+  const [theme] = useState<ProfileTheme>('blanc');
 
   return (
     <div className="relative">

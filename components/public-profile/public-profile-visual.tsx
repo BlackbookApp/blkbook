@@ -148,7 +148,6 @@ const PublicProfile = ({
   profile,
   portfolio,
   testimonials = [],
-  isPreview = false,
   profileId = '',
   profileOwnerId = '',
   profileUsername = '',
