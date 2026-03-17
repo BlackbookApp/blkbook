@@ -40,6 +40,7 @@ export interface Profile {
   logo_url: string | null;
   testimonials: TestimonialEntry[];
   portfolio_images: PortfolioImage[];
+  recommended_by: string[] | null;
   membership_type: 'guest' | 'member' | null;
   profile_complete: boolean;
   is_published: boolean;
@@ -74,6 +75,7 @@ export async function getMyProfile(): Promise<Profile | null> {
     ...rest,
     social_links: (rest.social_links as SocialLinks) ?? {},
     testimonials: (rest.testimonials as TestimonialEntry[]) ?? [],
+    recommended_by: (rest.recommended_by as string[]) ?? [],
     portfolio_images: (portfolio_images ?? []).sort(
       (a: PortfolioImage, b: PortfolioImage) => a.position - b.position
     ),
@@ -133,6 +135,7 @@ export async function getProfileByUsername(username: string): Promise<Profile | 
     ...rest,
     social_links: (rest.social_links as SocialLinks) ?? {},
     testimonials: (rest.testimonials as TestimonialEntry[]) ?? [],
+    recommended_by: (rest.recommended_by as string[]) ?? [],
     portfolio_images: (portfolio_images ?? []).sort(
       (a: PortfolioImage, b: PortfolioImage) => a.position - b.position
     ),

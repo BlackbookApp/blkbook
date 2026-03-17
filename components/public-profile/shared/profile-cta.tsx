@@ -22,6 +22,9 @@ const SECONDARY_BTN =
 const COMPACT_BTN =
   'rounded-none py-2.5 font-helvetica font-normal text-[10px] tracking-[0.14em] bg-transparent text-[var(--pg-btn-sec-fg)] border-[var(--pg-btn-sec-border)] hover:bg-transparent hover:opacity-70';
 
+const TEXT_BTN =
+  'rounded-none font-granjon font-normal text-[14px] tracking-[0.01em] uppercase bg-transparent border-none text-[var(--pg-fg)] hover:opacity-50 p-0 h-auto shadow-none';
+
 export interface ProfileCTAProps {
   profileId: string;
   profileOwnerId: string;
@@ -33,6 +36,8 @@ export interface ProfileCTAProps {
   socialLinks: SocialLinks;
   /** Renders a 2-column grid of outline buttons (used under the hero photo) */
   compact?: boolean;
+  /** Renders text-only inline buttons (used directly under the hero, visual style) */
+  textOnly?: boolean;
 }
 
 export function ProfileCTA({
@@ -45,6 +50,7 @@ export function ProfileCTA({
   profilePhotoUrl,
   socialLinks,
   compact = false,
+  textOnly = false,
 }: ProfileCTAProps) {
   const { data: user, isLoading: userLoading } = useUser();
   const isAuthed = !!user;
@@ -83,9 +89,56 @@ export function ProfileCTA({
 
   if (userLoading) return null;
 
+  // Social link buttons — only shown in the full-width (non-compact, non-textOnly) block
+  const socialButtons =
+    !compact && !textOnly ? (
+      <>
+        {(socialLinks.website || socialLinks.whatsapp) &&
+          (() => {
+            const items = [
+              socialLinks.website && { label: 'WEBSITE', href: socialLinks.website },
+              socialLinks.whatsapp && {
+                label: 'WHATSAPP',
+                href: `https://wa.me/${socialLinks.whatsapp.replace(/\D/g, '')}`,
+              },
+            ].filter(Boolean) as { label: string; href: string }[];
+
+            // Render pairs of 2 in a grid, last one full-width if odd
+            const rows: React.ReactNode[] = [];
+            for (let i = 0; i < items.length; i += 2) {
+              const pair = items.slice(i, i + 2);
+              if (pair.length === 2) {
+                rows.push(
+                  <div key={i} className="grid grid-cols-2 gap-2">
+                    {pair.map((item) => (
+                      <Button key={item.label} asChild variant="outline" className={SECONDARY_BTN}>
+                        <a href={item.href} target="_blank" rel="noopener noreferrer">
+                          {item.label}
+                        </a>
+                      </Button>
+                    ))}
+                  </div>
+                );
+              } else {
+                rows.push(
+                  <Button key={pair[0].label} asChild variant="outline" className={SECONDARY_BTN}>
+                    <a href={pair[0].href} target="_blank" rel="noopener noreferrer">
+                      {pair[0].label}
+                    </a>
+                  </Button>
+                );
+              }
+            }
+            return <>{rows}</>;
+          })()}
+      </>
+    ) : null;
+
   const wrap = (buttons: React.ReactNode, modals?: React.ReactNode) => (
     <>
-      {compact ? (
+      {textOnly ? (
+        <div className="flex justify-between mt-2 mb-20">{buttons}</div>
+      ) : compact ? (
         <div className="px-2 mt-6 mb-20">
           <div className="grid grid-cols-2 gap-3">{buttons}</div>
         </div>
@@ -96,8 +149,8 @@ export function ProfileCTA({
     </>
   );
 
-  const btn = compact ? COMPACT_BTN : PRIMARY_BTN;
-  const secBtn = compact ? COMPACT_BTN : SECONDARY_BTN;
+  const btn = textOnly ? TEXT_BTN : compact ? COMPACT_BTN : PRIMARY_BTN;
+  const secBtn = textOnly ? TEXT_BTN : compact ? COMPACT_BTN : SECONDARY_BTN;
 
   // Owner CTAs
   if (isOwner) {
@@ -106,6 +159,7 @@ export function ProfileCTA({
         <Button variant="outline" className={btn} onClick={() => setShowShare(true)}>
           Share Profile
         </Button>
+        {socialButtons}
         <Button asChild variant="outline" className={secBtn}>
           <Link href={routes.editProfile}>Edit Profile</Link>
         </Button>
@@ -130,6 +184,7 @@ export function ProfileCTA({
         >
           {inVault ? 'In Vault' : addingToVault ? 'Saving…' : 'Add to Vault'}
         </Button>
+        {socialButtons}
         <Button
           variant="outline"
           className={secBtn}
@@ -158,6 +213,7 @@ export function ProfileCTA({
       <Button asChild variant="outline" className={btn}>
         <a href={routes.vcardDownload(profileUsername)}>Save Contact</a>
       </Button>
+      {socialButtons}
       <Button variant="outline" className={secBtn} onClick={() => setShowExchange(true)}>
         Exchange Details
       </Button>

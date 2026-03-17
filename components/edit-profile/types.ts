@@ -29,4 +29,5 @@ export interface WorkData {
   logo: string | null;
   testimonials: TestimonialDraft[];
   brandStatement: string;
+  recommendedBy: string[];
 }

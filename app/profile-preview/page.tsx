@@ -11,12 +11,12 @@ import PublicProfileVisual from '@/components/public-profile/public-profile-visu
 import PublicProfileEditorial from '@/components/public-profile/public-profile-editorial';
 import type { ProfileTheme } from '@/components/public-profile/public-profile-visual';
 import BottomNav from '@/components/BottomNav';
+import { profileFromDB } from '@/components/public-profile/shared/profile-adapters';
 
 const ProfilePreview = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data: profile, isLoading } = useProfile();
-  const [theme] = useState<ProfileTheme>('blanc');
   const [isPending, setIsPending] = useState(false);
 
   const handlePublish = async () => {
@@ -34,24 +34,7 @@ const ProfilePreview = () => {
     );
   }
 
-  const profileData = {
-    name: profile.full_name ?? '',
-    bio: profile.bio,
-    role: profile.role,
-    location: profile.location,
-    portraitSrc: profile.avatar_url,
-    logoSrc: profile.logo_url,
-    socialLinks: profile.social_links,
-    brandStatement: profile.brand_statement,
-  };
-
-  const portfolio = profile.portfolio_images.map((img) => ({ imageSrc: img.url }));
-
-  const testimonials = profile.testimonials.map((t) => ({
-    quote: t.quote,
-    author: t.author ? `${t.author}${t.title ? `, ${t.title}` : ''}` : undefined,
-  }));
-
+  const { profile: profileData, portfolio, testimonials } = profileFromDB(profile);
   const isEditorial = profile.style === 'editorial';
   const profileTheme: ProfileTheme = profile.palette === 'noir' ? 'noir' : 'blanc';
 
@@ -68,7 +51,7 @@ const ProfilePreview = () => {
         />
       ) : (
         <PublicProfileVisual
-          theme={theme}
+          theme={profileTheme}
           profile={profileData}
           portfolio={portfolio}
           testimonials={testimonials}

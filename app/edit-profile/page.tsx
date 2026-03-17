@@ -27,6 +27,7 @@ import { MiniPreview } from '@/components/edit-profile/mini-preview';
 import PublicProfileVisual from '@/components/public-profile/public-profile-visual';
 import PublicProfileEditorial from '@/components/public-profile/public-profile-editorial';
 import type { ProfileTheme } from '@/components/public-profile/public-profile-visual';
+import { profileFromEditState } from '@/components/public-profile/shared/profile-adapters';
 
 const EditProfile = () => {
   const router = useRouter();
@@ -64,6 +65,7 @@ const EditProfile = () => {
     logo: null,
     testimonials: [{ quote: '', author: '', title: '' }],
     brandStatement: '',
+    recommendedBy: [],
   });
 
   const [removedPortfolioIds, setRemovedPortfolioIds] = useState<string[]>([]);
@@ -101,6 +103,7 @@ const EditProfile = () => {
             }))
           : [{ quote: '', author: '', title: '' }],
       brandStatement: profile.brand_statement ?? '',
+      recommendedBy: profile.recommended_by ?? [],
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.id]);
@@ -212,6 +215,7 @@ const EditProfile = () => {
         testimonials: work.testimonials
           .filter((t) => t.quote.trim())
           .map((t) => ({ quote: t.quote, author: t.author || null, title: t.title || null })),
+        recommended_by: work.recommendedBy,
       });
 
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -234,23 +238,11 @@ const EditProfile = () => {
 
   if (showPreview) {
     const profileTheme: ProfileTheme = palette === 'noir' ? 'noir' : 'blanc';
-    const previewProfile = {
-      name,
-      bio,
-      role,
-      location,
-      portraitSrc: avatarPreview,
-      logoSrc: work.logo,
-      socialLinks: socials,
-      brandStatement: work.brandStatement,
-    };
-    const previewPortfolio = work.portfolioImages.map((img) => ({ imageSrc: img.url }));
-    const previewTestimonials = work.testimonials
-      .filter((t) => t.quote.trim())
-      .map((t) => ({
-        quote: t.quote,
-        author: t.author ? `${t.author}${t.title ? `, ${t.title}` : ''}` : undefined,
-      }));
+    const {
+      profile: previewProfile,
+      portfolio: previewPortfolio,
+      testimonials: previewTestimonials,
+    } = profileFromEditState({ name, bio, role, location, avatarPreview, socials, work });
 
     return (
       <div className="relative">

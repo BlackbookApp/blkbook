@@ -30,6 +30,7 @@ export const StepWork = ({
   const portfolioInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<WorkStepErrors>({});
+  const [recommendedByInput, setRecommendedByInput] = useState('');
 
   const handleFinish = () => {
     const { valid, errors: nextErrors } = validateWorkStep({
@@ -299,6 +300,67 @@ export const StepWork = ({
           <button className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground/50 transition-colors">
             Skip
           </button>
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <div className="border border-border p-4">
+          <Text variant="label" className="text-muted-foreground mb-3">
+            Recommended by
+          </Text>
+          <div className="flex gap-2">
+            <Input
+              value={recommendedByInput}
+              onChange={(e) => setRecommendedByInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const name = recommendedByInput.trim();
+                  if (name && !work.recommendedBy.includes(name)) {
+                    setWork({ ...work, recommendedBy: [...work.recommendedBy, name] });
+                  }
+                  setRecommendedByInput('');
+                }
+              }}
+              placeholder="Publication or venue name"
+              className="py-2 text-[11px] placeholder:text-muted-foreground/40"
+            />
+            <button
+              onClick={() => {
+                const name = recommendedByInput.trim();
+                if (name && !work.recommendedBy.includes(name)) {
+                  setWork({ ...work, recommendedBy: [...work.recommendedBy, name] });
+                }
+                setRecommendedByInput('');
+              }}
+              className="px-3 border border-border text-[10px] uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            >
+              Add
+            </button>
+          </div>
+          {work.recommendedBy.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {work.recommendedBy.map((name) => (
+                <span
+                  key={name}
+                  className="flex items-center gap-1 px-2 py-1 border border-border text-[10px] uppercase tracking-[0.1em] text-foreground"
+                >
+                  {name}
+                  <button
+                    onClick={() =>
+                      setWork({
+                        ...work,
+                        recommendedBy: work.recommendedBy.filter((n) => n !== name),
+                      })
+                    }
+                    className="text-muted-foreground/60 hover:text-foreground transition-colors"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
