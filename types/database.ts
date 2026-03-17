@@ -231,6 +231,7 @@ export type Database = {
           membership_type: Database['public']['Enums']['membership_type'] | null;
           palette: Database['public']['Enums']['profile_palette'] | null;
           profile_complete: boolean | null;
+          recommended_by: string[];
           role: string | null;
           social_links: Json;
           style: Database['public']['Enums']['profile_style'] | null;
@@ -256,6 +257,7 @@ export type Database = {
           membership_type?: Database['public']['Enums']['membership_type'] | null;
           palette?: Database['public']['Enums']['profile_palette'] | null;
           profile_complete?: boolean | null;
+          recommended_by?: string[];
           role?: string | null;
           social_links?: Json;
           style?: Database['public']['Enums']['profile_style'] | null;
@@ -281,6 +283,7 @@ export type Database = {
           membership_type?: Database['public']['Enums']['membership_type'] | null;
           palette?: Database['public']['Enums']['profile_palette'] | null;
           profile_complete?: boolean | null;
+          recommended_by?: string[];
           role?: string | null;
           social_links?: Json;
           style?: Database['public']['Enums']['profile_style'] | null;
