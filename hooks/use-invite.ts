@@ -5,7 +5,8 @@ import { useProfile } from '@/hooks/use-profile';
 import { useCreateInvite } from '@/hooks/use-invitations';
 import { toast } from '@/hooks/use-toast';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? '';
+const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : '');
 export const INVITE_TOTAL = 10;
 
 export function useInvite() {

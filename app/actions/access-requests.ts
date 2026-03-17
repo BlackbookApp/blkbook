@@ -89,7 +89,7 @@ export async function approveRequest(requestId: string): Promise<ApproveRequestR
   if (!request) return { error: 'Request not found' };
   if (request.status === 'approved') return { error: 'Already approved' };
 
-  const code = (await import('crypto')).randomBytes(4).toString('hex').toUpperCase();
+  const code = (await import('crypto')).randomBytes(8).toString('hex').toUpperCase();
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7);
 

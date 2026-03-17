@@ -81,8 +81,6 @@ const ProfilePreview = () => {
             </p>
             <a
               href={routes.publicProfile(profile.username!)}
-              target="_blank"
-              rel="noopener noreferrer"
               className="w-full py-4 text-xs tracking-wide uppercase font-helvetica font-normal transition-all hover:opacity-80 bg-bb-dark text-bb-cream flex items-center justify-center gap-2"
             >
               <ExternalLink className="w-4 h-4" />

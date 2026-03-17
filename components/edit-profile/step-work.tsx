@@ -276,7 +276,7 @@ export const StepWork = ({
         </button>
       </div>
 
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="border border-border p-4">
           <Text variant="label" className="text-muted-foreground mb-3">
             Your brand statement or values
@@ -303,7 +303,7 @@ export const StepWork = ({
         </div>
       </div>
 
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="border border-border p-4">
           <Text variant="label" className="text-muted-foreground mb-3">
             Recommended by
@@ -322,7 +322,7 @@ export const StepWork = ({
                   setRecommendedByInput('');
                 }
               }}
-              placeholder="Publication or venue name"
+              placeholder="e.g. The New York Times"
               className="py-2 text-[11px] placeholder:text-muted-foreground/40"
             />
             <button
@@ -343,7 +343,7 @@ export const StepWork = ({
               {work.recommendedBy.map((name) => (
                 <span
                   key={name}
-                  className="flex items-center gap-1 px-2 py-1 border border-border text-[10px] uppercase tracking-[0.1em] text-foreground"
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 border border-border text-[10px] uppercase tracking-[0.1em] text-foreground"
                 >
                   {name}
                   <button
@@ -353,7 +353,7 @@ export const StepWork = ({
                         recommendedBy: work.recommendedBy.filter((n) => n !== name),
                       })
                     }
-                    className="text-muted-foreground/60 hover:text-foreground transition-colors"
+                    className="text-muted-foreground/50 hover:text-foreground transition-colors"
                   >
                     <X className="w-2.5 h-2.5" />
                   </button>
