@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { useUser } from '@/hooks/use-user';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -11,6 +11,7 @@ import { ProfileCTA } from './shared/profile-cta';
 import { HeroPortrait } from './shared/hero-portrait';
 import { buildSocials } from './shared/profile-adapters';
 import type { SocialLinks } from '@/lib/data/profiles';
+import BottomNav from '@/components/BottomNav';
 
 export type ProfileTheme = 'blanc' | 'beige' | 'noir';
 
@@ -59,13 +60,36 @@ const ParallaxImage = ({
   posInBlock: number;
 }) => {
   const layout = BLOCK_LAYOUTS[posInBlock];
+  const [isVisible, setIsVisible] = useState(false);
+  const [hiddenY, setHiddenY] = useState(40);
+
   return (
     <motion.div
       className={`flex ${layout.justify}`}
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
-      viewport={{ once: true, margin: '-60px' }}
+      initial="hidden"
+      animate={isVisible ? 'visible' : 'hidden'}
+      custom={hiddenY}
+      variants={{
+        hidden: (y: number) => ({
+          opacity: 0,
+          y,
+          transition: { duration: 0 },
+        }),
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 1, ease: [0.25, 0.1, 0.25, 1] },
+        },
+      }}
+      onViewportEnter={() => setIsVisible(true)}
+      onViewportLeave={(entry) => {
+        // Determine which direction this element will re-enter from:
+        // top < 0  → element is above viewport (scrolled down past it) → next entry from above
+        // top >= 0 → element is below viewport (scrolled up past it)  → next entry from below
+        setHiddenY(entry && entry.boundingClientRect.top < 0 ? -40 : 40);
+        setIsVisible(false);
+      }}
+      viewport={{ margin: '-60px' }}
     >
       <div
         className={cn(
@@ -133,6 +157,7 @@ const PublicProfile = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const { data: user } = useUser();
   const isOwner = !!user && user.id === profileOwnerId;
+  const isAuthed = !!user;
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
@@ -142,15 +167,19 @@ const PublicProfile = ({
   const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.98]);
 
   return (
-    <div ref={containerRef} data-pg-theme={theme} className="max-w-md mx-auto min-h-screen">
+    <div
+      ref={containerRef}
+      data-pg-theme={theme}
+      className="max-w-md mx-auto min-h-screen relative"
+    >
       {/* Fixed wordmark */}
       <div className="fixed top-0 left-0 z-50 pt-6 pl-6">
-        <span className="font-granjon font-normal text-[12px] tracking-[0.15em] uppercase text-[var(--pg-ghost)]">
+        <span className="font-granjon font-normal text-[13px] tracking-[0.06em] uppercase text-[var(--pg-ghost)]">
           BLKBOOK.
         </span>
       </div>
 
-      <div className="px-6 pt-28 pb-8 min-h-screen animate-fade-in">
+      <div className={cn('px-6 pt-28 min-h-screen animate-fade-in', isAuthed ? 'pb-28' : 'pb-8')}>
         {/* Hero */}
         <motion.div style={{ opacity: heroOpacity, scale: heroScale }}>
           <HeroPortrait
@@ -248,7 +277,7 @@ const PublicProfile = ({
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <span className="font-granjon font-normal text-[18px] tracking-[0.15em] uppercase text-[var(--pg-fg)]">
+          <span className="font-granjon font-normal text-[18px] tracking-[0.06em] uppercase text-[var(--pg-ghost)]">
             BLKBOOK.
           </span>
         </motion.div>

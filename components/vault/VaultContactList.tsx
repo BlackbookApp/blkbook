@@ -37,7 +37,7 @@ export function VaultContactList({ contacts, search, isLoading }: VaultContactLi
 
   if (!search && contacts.length === 0) {
     return (
-      <div className="flex flex-col flex-1 overflow-y-auto pb-28">
+      <div className="flex flex-col flex-1 justify-center">
         <VaultEmptyState />
       </div>
     );

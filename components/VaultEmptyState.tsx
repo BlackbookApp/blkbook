@@ -7,7 +7,7 @@ const VaultEmptyState = () => {
       <div className="max-w-[260px] w-full text-center animate-fade-in space-y-8">
         {/* Copy */}
         <div className="space-y-4">
-          <p className="font-display font-light text-[19px] tracking-[0.01em] uppercase text-bb-dark">
+          <p className="font-granjon font-normal text-[19px] tracking-[0.06em] uppercase text-bb-dark">
             Your Vault is Ready
           </p>
           <p className="font-helvetica font-light text-[13px] leading-[1.6] text-bb-dark">

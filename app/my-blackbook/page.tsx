@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { useProfile } from '@/hooks/use-profile';
-import { UserPlus, Share2 } from 'lucide-react';
+import { UserPlus, Share2, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import Logo from '@/components/Logo';
 import BottomNav from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import { InviteSheet } from '@/components/invite-sheet';
 import { ShareProfileModal } from '@/components/share-profile-modal';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProfileCard } from '@/components/my-blackbook/profile-card';
+import { routes } from '@/lib/routes';
 
 const MyBlackbook = () => {
   const { data: profile, isLoading } = useProfile();
@@ -28,7 +30,7 @@ const MyBlackbook = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="font-display font-light text-[19px] tracking-[0.01em] uppercase text-bb-dark mb-1">
+          <h1 className="font-granjon font-light text-[19px] tracking-[0.06em] uppercase text-bb-dark mb-1">
             Your Blackbook Profile
           </h1>
           <p className="blackbook-label">
@@ -81,16 +83,18 @@ const MyBlackbook = () => {
         </motion.div>
 
         {profile?.username && (
-          <ShareProfileModal
-            open={showShare}
-            onClose={() => setShowShare(false)}
-            username={profile.username}
-          />
+          <>
+            <ShareProfileModal
+              open={showShare}
+              onClose={() => setShowShare(false)}
+              username={profile.username}
+            />
+          </>
         )}
 
         {/* Bottom Tagline */}
         <motion.p
-          className="text-center blackbook-label mt-12"
+          className="text-center blackbook-label mb-12 mt-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}

@@ -3,31 +3,35 @@
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Logo from '@/components/Logo';
+import { routes } from '@/lib/routes';
 
 const BeforeYouExplore = () => {
   const router = useRouter();
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col relative">
+    <div className="h-[100dvh] overflow-hidden bg-background text-foreground flex flex-col relative">
       {/* Logo */}
       <div className="px-8 pt-8">
         <Logo />
       </div>
 
       {/* Centered Content */}
-      <div className="flex-1 flex items-center justify-center px-6 -mt-12">
+      <div className="flex-1 flex items-center justify-center px-6 -mt-6">
         <div className="max-w-xs w-full text-center">
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="font-granjon text-xl tracking-tight uppercase text-foreground mb-5">
+            <h1 className="font-granjon text-xl tracking-[0.06em] uppercase text-foreground mb-5">
               Almost there.
             </h1>
 
+            <p className="font-helvetica text-[11px] font-normal text-bb-muted leading-relaxed mb-2">
+              Your profile is how the world meets you.
+            </p>
             <p className="font-helvetica text-[11px] font-normal text-bb-muted leading-relaxed mb-8">
-              Your profile is how the world meets you. Two minutes. Make it count.
+              Two minutes. Make it count.
             </p>
           </motion.div>
 
@@ -46,7 +50,7 @@ const BeforeYouExplore = () => {
 
             <p className="font-helvetica text-[10px] text-bb-muted font-normal">
               <button
-                onClick={() => router.push('/vault-empty')}
+                onClick={() => router.push(routes.vault)}
                 className="hover:text-foreground/50 transition-colors"
               >
                 I&apos;ll do this later

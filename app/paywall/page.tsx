@@ -53,7 +53,7 @@ const Paywall = () => {
                 <h3 className="text-base tracking-tight uppercase text-foreground">
                   Founding Member
                 </h3>
-                <p className="font-helvetica text-[10px] uppercase tracking-wide text-bb-muted/60 mt-0.5">
+                <p className="font-helvetica text-[10px] uppercase tracking-wide text-[#9a9691] mt-0.5">
                   Limited to the first 100
                 </p>
               </div>
@@ -62,10 +62,10 @@ const Paywall = () => {
               </span>
             </div>
             <div className="h-px bg-border my-3" />
-            <p className="font-helvetica text-[11px] text-bb-muted mb-1">
+            <p className="font-helvetica text-[11px] text-[#9a9691] mb-1">
               Everything, permanently. One time payment.
             </p>
-            <p className="font-helvetica text-[10px] text-bb-muted mb-6">
+            <p className="font-helvetica text-[10px] text-[#9a9691] mb-6">
               30-day guarantee. No questions asked.
             </p>
 
@@ -73,15 +73,15 @@ const Paywall = () => {
               {memberFeatures.map((feature, index) => (
                 <li
                   key={index}
-                  className="flex items-start gap-3 font-helvetica text-[11px] text-bb-muted"
+                  className="flex items-start gap-3 font-helvetica text-[11px] text-[#9a9691]"
                 >
-                  <Check className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-bb-muted/50" />
+                  <Check className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-[#9a9691]" />
                   <span>{feature}</span>
                 </li>
               ))}
             </ul>
             <div className="h-px bg-border mb-4" />
-            <p className="font-helvetica text-[11px] leading-relaxed text-bb-muted mb-5">
+            <p className="font-helvetica text-[11px] leading-relaxed text-[#9a9691] mb-5">
               We don&apos;t sell data. We don&apos;t run ads. We&apos;re not that kind of company.
             </p>
 

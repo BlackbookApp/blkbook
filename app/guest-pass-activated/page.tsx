@@ -8,7 +8,7 @@ const GuestPassActivated = () => {
   const router = useRouter();
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col relative">
+    <div className="h-[100dvh] overflow-hidden bg-background text-foreground flex flex-col relative">
       {/* Logo */}
       <div className="px-8 pt-8">
         <Logo />
@@ -22,7 +22,9 @@ const GuestPassActivated = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-xl tracking-tight uppercase text-foreground mb-5">Be our guest.</h1>
+            <h1 className="font-granjon text-xl tracking-[0.06em] uppercase text-foreground mb-5">
+              Be our guest.
+            </h1>
 
             <p className="font-helvetica text-[11px] font-normal text-bb-muted leading-relaxed mb-8">
               You have 14 days of full access to Blackbook. Your profile is live. Your vault is

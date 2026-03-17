@@ -22,16 +22,12 @@ function getInitials(name: string | null): string {
 
 export function ProfileCard({ profile }: ProfileCardProps) {
   const router = useRouter();
-  const publicProfileUrl = profile.username
-    ? routes.publicProfile(profile.username)
-    : routes.previewTemplateVisual;
-
   return (
     <div className="border border-border overflow-hidden mb-6 bg-background">
       {/* Large Portrait */}
       <div
         className="aspect-[4/5] relative cursor-pointer group"
-        onClick={() => router.push(publicProfileUrl)}
+        onClick={() => router.push(routes.profilePreview)}
       >
         {profile.avatar_url ? (
           <Image
@@ -52,7 +48,7 @@ export function ProfileCard({ profile }: ProfileCardProps) {
         <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors flex items-center justify-center">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-background/90 px-4 py-2 flex items-center gap-2">
             <Eye className="w-4 h-4" />
-            <span className="blackbook-label">View Live Profile</span>
+            <span className="blackbook-label">Preview Profile</span>
           </div>
         </div>
 
