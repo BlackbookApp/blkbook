@@ -213,6 +213,50 @@ export type Database = {
           },
         ];
       };
+      profile_components: {
+        Row: {
+          ai_generated: boolean;
+          created_at: string | null;
+          data: Json;
+          id: string;
+          is_predefined: boolean;
+          position: number;
+          profile_id: string | null;
+          type: string;
+          updated_at: string | null;
+        };
+        Insert: {
+          ai_generated?: boolean;
+          created_at?: string | null;
+          data?: Json;
+          id?: string;
+          is_predefined?: boolean;
+          position?: number;
+          profile_id?: string | null;
+          type: string;
+          updated_at?: string | null;
+        };
+        Update: {
+          ai_generated?: boolean;
+          created_at?: string | null;
+          data?: Json;
+          id?: string;
+          is_predefined?: boolean;
+          position?: number;
+          profile_id?: string | null;
+          type?: string;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'profile_components_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       profiles: {
         Row: {
           avatar_url: string | null;
@@ -379,6 +423,26 @@ export type Database = {
       mark_invite_used: {
         Args: { p_code: string; p_user_id: string };
         Returns: undefined;
+      };
+      merge_component_data: {
+        Args: { p_component_id: string; p_patch: Json };
+        Returns: {
+          ai_generated: boolean;
+          created_at: string | null;
+          data: Json;
+          id: string;
+          is_predefined: boolean;
+          position: number;
+          profile_id: string | null;
+          type: string;
+          updated_at: string | null;
+        };
+        SetofOptions: {
+          from: '*';
+          to: 'profile_components';
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       perform_exchange: {
         Args: {
