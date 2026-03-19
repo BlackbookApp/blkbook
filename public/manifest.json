@@ -1,7 +1,7 @@
 {
-  "name": "Blackbook",
-  "short_name": "Blackbook",
-  "description": "Blackbook app",
+  "name": "BLKBOOK",
+  "short_name": "BLKBOOK",
+  "description": "A modern little black book. Your network, in your hands.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
