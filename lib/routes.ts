@@ -24,4 +24,7 @@ export const routes = {
   requestAccessStatus: (id: string) => `/request-access/status?id=${id}`,
   adminRequests: '/admin/requests',
   vcardDownload: (username: string) => `/api/vcard/${username}`,
+  onboardingV2: '/onboarding-v2',
+  onboardingV2Ai: '/onboarding-v2/ai',
+  onboardingV2Manual: '/onboarding-v2/manual',
 } as const;

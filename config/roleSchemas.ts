@@ -18,13 +18,10 @@ export type ComponentType =
   | 'social_stat'
   | 'action_buttons_secondary';
 
-// Components listed in render order per role
-// QuoteBlock appears twice for some roles — use position to handle ordering
-
 export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
   founder: [
     'profile_hero_centered',
-    'quote_block', // position 2
+    'quote_block',
     'top_bio',
     'venture_card',
     'recognition_list',
@@ -34,12 +31,12 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
   ],
   photographer: [
     'profile_hero_centered',
-    'quote_block', // position 2
+    'quote_block',
     'image_portfolio',
     'image_gallery',
     'client_list',
     'press_strip',
-    'quote_block', // position 6 — second instance
+    'quote_block',
     'about_section',
     'logo',
     'social_stat',
@@ -47,7 +44,7 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
   ],
   talent: [
     'profile_hero_centered',
-    'quote_block', // position 2
+    'quote_block',
     'top_bio',
     'image_portfolio',
     'image_gallery',
@@ -68,10 +65,10 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
   ],
   designer: [
     'profile_hero_centered',
-    'quote_block', // position 2
+    'quote_block',
     'portfolio_card',
     'press_strip',
-    'quote_block', // position 6 — second instance
+    'quote_block',
     'about_section',
     'now_block',
     'logo',
@@ -80,10 +77,10 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
   ],
   realtor: [
     'profile_hero_centered',
-    'quote_block', // position 2
+    'quote_block',
     'portfolio_card',
     'recognition_list',
-    'quote_block', // position 6 — second instance
+    'quote_block',
     'about_section',
     'now_block',
     'logo',

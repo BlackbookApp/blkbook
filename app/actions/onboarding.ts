@@ -1,0 +1,52 @@
+'use server';
+
+import { createClient } from '@/lib/supabase/server';
+import { updateProfile } from '@/lib/data/profiles';
+import { insertComponentsForProfile } from '@/lib/data/components';
+import { ROLE_SCHEMAS } from '@/config/roleSchemas';
+import type { RoleType } from '@/config/roleSchemas';
+
+export async function saveOnboardingAction(params: {
+  roleType: RoleType;
+  fullName: string;
+  tagline: string;
+  avatarUrl: string | null;
+}): Promise<{ profileId: string | null; error: string | null }> {
+  const { roleType, fullName, tagline, avatarUrl } = params;
+
+  // 1. Update profile fields
+  const { error: profileError } = await updateProfile({
+    role: roleType,
+    full_name: fullName,
+    brand_statement: tagline || null,
+    ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
+  });
+
+  if (profileError) return { profileId: null, error: profileError };
+
+  // 2. Get the profile ID
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { profileId: null, error: 'Not authenticated' };
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('user_id', user.id)
+    .single();
+
+  if (!profile) return { profileId: null, error: 'Profile not found' };
+
+  // 3. Insert the predefined component stack for the role
+  const { error: componentsError } = await insertComponentsForProfile(
+    profile.id,
+    ROLE_SCHEMAS[roleType]
+  );
+
+  if (componentsError) return { profileId: null, error: componentsError };
+
+  return { profileId: profile.id, error: null };
+}
