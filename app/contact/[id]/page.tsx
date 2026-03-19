@@ -9,7 +9,21 @@ import { ContactBanner } from '@/components/contact/ContactBanner';
 import { ContactInfo } from '@/components/contact/ContactInfo';
 import { ContactNotes } from '@/components/contact/ContactNotes';
 import { EditContactDialog } from '@/components/contact/EditContactDialog';
-import { useVaultContact, useUpdateVaultContact } from '@/hooks/use-vault-contacts';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  useVaultContact,
+  useUpdateVaultContact,
+  useDeleteVaultContact,
+} from '@/hooks/use-vault-contacts';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getProfileUsernameAction } from '@/app/actions/profiles';
@@ -18,9 +32,11 @@ const ContactDetail = () => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const { data: contact, isLoading } = useVaultContact(id);
   const updateContact = useUpdateVaultContact();
+  const deleteContact = useDeleteVaultContact();
 
   const { data: profileUsername } = useQuery({
     queryKey: ['profile-username', contact?.profile_id],
@@ -38,6 +54,12 @@ const ContactDetail = () => {
   const handleSaveEdit = (fields: Parameters<typeof updateContact.mutate>[0]['input']) => {
     updateContact.mutate({ id, input: fields });
     setShowEditDialog(false);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteContact.mutate(id, {
+      onSuccess: () => router.push(routes.vault),
+    });
   };
 
   if (isLoading) {
@@ -66,8 +88,8 @@ const ContactDetail = () => {
   }
 
   const addedDate = new Date(contact.created_at).toLocaleDateString('en-US', {
-    month: 'long',
-    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   });
 
   return (
@@ -114,12 +136,19 @@ const ContactDetail = () => {
           </a>
         )}
 
-        <ContactNotes
-          notes={contact.notes}
-          addedDate={addedDate}
-          city={contact.city}
-          onAddNote={handleAddNote}
-        />
+        <ContactNotes notes={contact.notes} onAddNote={handleAddNote} />
+
+        <button
+          onClick={() => setShowDeleteDialog(true)}
+          className="w-full border border-border py-3 mt-4 text-center font-helvetica text-[11px] font-normal uppercase tracking-[0.12em] text-destructive transition-opacity hover:opacity-60"
+        >
+          Delete Contact
+        </button>
+
+        <p className="font-helvetica text-[10px] font-normal uppercase tracking-[0.12em] text-bb-muted/60 mt-4 mb-8 text-center">
+          Added {addedDate}
+          {contact.city && `, ${contact.city}`}
+        </p>
       </div>
 
       <EditContactDialog
@@ -130,6 +159,31 @@ const ContactDetail = () => {
         onOpenChange={setShowEditDialog}
         onSave={handleSaveEdit}
       />
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="bg-background border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-granjon text-[16px] font-normal uppercase tracking-[0.01em]">
+              Delete Contact
+            </AlertDialogTitle>
+            <AlertDialogDescription className="font-helvetica text-[13px] font-light text-bb-muted">
+              Are you sure you want to delete {contact.name}? This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row gap-3">
+            <AlertDialogCancel className="flex-1 py-3 font-helvetica text-[11px] font-normal uppercase tracking-[0.1em] border-border text-bb-dark bg-transparent mt-0 rounded-none">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              disabled={deleteContact.isPending}
+              className="flex-1 py-3 font-helvetica text-[11px] font-normal uppercase tracking-[0.1em] bg-destructive text-white rounded-none hover:bg-destructive/90 disabled:opacity-50"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <BottomNav />
     </div>
