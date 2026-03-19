@@ -47,8 +47,8 @@ const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
     : 'flex items-stretch border-t border-border bg-bb-cream pb-[env(safe-area-inset-bottom)]';
 
   const itemClass = isDark
-    ? 'flex-1 py-7 transition-all'
-    : 'flex-1 py-7 transition-all border-r border-border last:border-r-0';
+    ? 'flex-1 py-5 leading-none transition-all text-center border-box'
+    : 'flex-1 py-5 leading-none transition-all text-center border-r border-border last:border-r-0 border-box ';
 
   const getNavColor = (isActive: boolean): 'cream' | 'dark' | 'muted' => {
     if (isDark) return isActive ? 'cream' : 'muted';

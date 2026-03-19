@@ -11,6 +11,7 @@ const schema = z.object({
   city: z.string().optional(),
   email: z.string().optional(),
   phone: z.string().optional(),
+  instagram: z.string().optional(),
   notes: z.string().optional(),
 });
 
@@ -28,6 +29,7 @@ const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
     city: '',
     email: '',
     phone: '',
+    instagram: '',
     notes: '',
   });
   const [nameError, setNameError] = useState('');
@@ -46,7 +48,7 @@ const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
       setNameError(result.error.flatten().fieldErrors.name?.[0] ?? '');
       return;
     }
-    const { name, role, city, email, phone, notes } = result.data;
+    const { name, role, city, email, phone, instagram, notes } = result.data;
     createContact(
       {
         name,
@@ -54,14 +56,14 @@ const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
         city: city || null,
         email: email || null,
         phone: phone || null,
-        instagram: null,
+        instagram: instagram || null,
         website: null,
         notes: notes || null,
         photo_url: null,
       },
       {
         onSuccess: () => {
-          setForm({ name: '', role: '', city: '', email: '', phone: '', notes: '' });
+          setForm({ name: '', role: '', city: '', email: '', phone: '', instagram: '', notes: '' });
           onOpenChange(false);
         },
       }
@@ -84,9 +86,10 @@ const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
             {[
               { field: 'name' as const, label: 'Name', placeholder: 'Full name', required: true },
               { field: 'role' as const, label: 'Role', placeholder: 'Job title or role' },
-              { field: 'city' as const, label: 'City', placeholder: 'City' },
+              { field: 'city' as const, label: 'Location', placeholder: 'City or location' },
               { field: 'email' as const, label: 'Email', placeholder: 'Email address' },
               { field: 'phone' as const, label: 'Phone', placeholder: 'Phone number' },
+              { field: 'instagram' as const, label: 'Instagram', placeholder: '@username' },
             ].map(({ field, label, placeholder, required }, index) => (
               <div key={field}>
                 {index > 0 && <div className="h-px bg-border/50" />}

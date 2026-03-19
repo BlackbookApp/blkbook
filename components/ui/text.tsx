@@ -31,7 +31,7 @@ const textVariants = cva('', {
       label: 'font-helvetica text-[11px] font-normal uppercase tracking-[0.12em]',
       'label-micro': 'font-helvetica text-[10px] uppercase tracking-[0.2em] text-muted-foreground',
       subtitle: 'font-helvetica text-sm uppercase tracking-[0.12em] text-bb-muted',
-      nav: 'font-helvetica text-[11px] font-normal uppercase tracking-[1.1px] text-bb-dark',
+      nav: 'font-helvetica text-[12px] font-normal uppercase tracking-[1.1px] text-bb-dark',
       'body-1': 'text-base leading-relaxed',
       'body-2': 'text-sm leading-relaxed text-muted-foreground',
       p: 'text-base leading-[1.4]',

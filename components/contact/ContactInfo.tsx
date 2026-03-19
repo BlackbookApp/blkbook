@@ -8,7 +8,7 @@ export function ContactInfo({ contact }: ContactInfoProps) {
   const fields = [
     { label: 'Email', value: contact.email, href: `mailto:${contact.email}` },
     { label: 'Phone', value: contact.phone, href: `tel:${contact.phone}` },
-    { label: 'City', value: contact.city, href: undefined },
+    { label: 'Location', value: contact.city, href: undefined },
     { label: 'Website', value: contact.website, href: contact.website ?? '', external: true },
     {
       label: 'Instagram',
