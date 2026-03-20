@@ -27,4 +27,6 @@ export const routes = {
   onboardingV2: '/onboarding-v2',
   onboardingV2Ai: '/onboarding-v2/ai',
   onboardingV2Manual: '/onboarding-v2/manual',
+  onboardingV2Preview: '/onboarding-v2/preview',
+  onboardingV2Refine: '/onboarding-v2/refine',
 } as const;

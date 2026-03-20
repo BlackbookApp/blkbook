@@ -2,6 +2,7 @@
 
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { ImageUpload } from '@/components/ui/image-upload';
 
 interface ImageItem {
@@ -10,6 +11,8 @@ interface ImageItem {
 }
 
 interface ImagePortfolioData {
+  text: string | null;
+  text_attributed: string | null;
   images: ImageItem[];
 }
 
@@ -46,6 +49,23 @@ export function ImagePortfolioEditor({ component }: { component: ProfileComponen
           AI generated — review before publishing
         </p>
       )}
+      <div className="space-y-2 border-l border-bb-rule pl-4">
+        <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">
+          Text after first image
+        </span>
+        <Textarea
+          placeholder="Quote or note (optional)"
+          value={localData.text ?? ''}
+          onChange={(e) => onChange({ ...localData, text: e.target.value || null })}
+          className="bg-transparent border-b border-border border-0 rounded-none px-0 py-3 resize-none focus-visible:ring-0 focus-visible:border-foreground text-sm min-h-16"
+        />
+        <Input
+          variant="primary"
+          placeholder="Attribution (optional)"
+          value={localData.text_attributed ?? ''}
+          onChange={(e) => onChange({ ...localData, text_attributed: e.target.value || null })}
+        />
+      </div>
       <div className="space-y-4">
         {localData.images.map((img, i) => (
           <div key={i} className="space-y-2 border-l border-bb-rule pl-4">

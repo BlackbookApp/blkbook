@@ -6,7 +6,10 @@ import { Textarea } from '@/components/ui/textarea';
 
 interface VentureItem {
   name: string;
+  years: string | null;
+  role: string | null;
   description: string | null;
+  detail: string | null;
   url: string | null;
   logo_url: string | null;
 }
@@ -21,7 +24,15 @@ interface ProfileComponent {
   ai_generated: boolean;
 }
 
-const EMPTY_ITEM: VentureItem = { name: '', description: null, url: null, logo_url: null };
+const EMPTY_ITEM: VentureItem = {
+  name: '',
+  years: null,
+  role: null,
+  description: null,
+  detail: null,
+  url: null,
+  logo_url: null,
+};
 
 export function VentureCardEditor({ component }: { component: ProfileComponent }) {
   const { localData, onChange, saving, error } = useComponentEditor<VentureCardData>(component);
@@ -68,6 +79,18 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
               value={item.name}
               onChange={(e) => updateItem(i, { name: e.target.value })}
             />
+            <Input
+              variant="primary"
+              placeholder="Years (e.g. 2020 – 2024)"
+              value={item.years ?? ''}
+              onChange={(e) => updateItem(i, { years: e.target.value || null })}
+            />
+            <Input
+              variant="primary"
+              placeholder="Role (e.g. Co-Founder & CEO)"
+              value={item.role ?? ''}
+              onChange={(e) => updateItem(i, { role: e.target.value || null })}
+            />
             <Textarea
               placeholder="Description"
               value={item.description ?? ''}
@@ -76,15 +99,15 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
             />
             <Input
               variant="primary"
-              placeholder="URL"
-              value={item.url ?? ''}
-              onChange={(e) => updateItem(i, { url: e.target.value || null })}
+              placeholder="Detail (e.g. AI · Early stage · Stealth)"
+              value={item.detail ?? ''}
+              onChange={(e) => updateItem(i, { detail: e.target.value || null })}
             />
             <Input
               variant="primary"
-              placeholder="Logo Image URL"
-              value={item.logo_url ?? ''}
-              onChange={(e) => updateItem(i, { logo_url: e.target.value || null })}
+              placeholder="URL"
+              value={item.url ?? ''}
+              onChange={(e) => updateItem(i, { url: e.target.value || null })}
             />
           </div>
         ))}

@@ -117,6 +117,31 @@ export async function createProfile(
   });
 }
 
+/** Bypasses is_published filter — use only in server-side test/admin contexts. */
+export async function getProfileByUsernameAdmin(username: string): Promise<Profile | null> {
+  const { data, error } = await adminClient
+    .from('profiles')
+    .select('*, portfolio_images(id, url, position)')
+    .eq('username', username)
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  const { portfolio_images, ...rest } = data as typeof data & {
+    portfolio_images: PortfolioImage[];
+  };
+
+  return {
+    ...rest,
+    social_links: (rest.social_links as SocialLinks) ?? {},
+    testimonials: (rest.testimonials as TestimonialEntry[]) ?? [],
+    recommended_by: (rest.recommended_by as string[]) ?? [],
+    portfolio_images: (portfolio_images ?? []).sort(
+      (a: PortfolioImage, b: PortfolioImage) => a.position - b.position
+    ),
+  } as Profile;
+}
+
 export async function getProfileByUsername(username: string): Promise<Profile | null> {
   const { data, error } = await adminClient
     .from('profiles')

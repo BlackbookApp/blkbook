@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface Props {
   step: number;
@@ -8,23 +9,32 @@ interface Props {
 }
 
 export function OnboardingProgress({ step, total }: Props) {
-  const percent = (step / total) * 100;
-
   return (
-    <div className="px-6 mt-2">
-      <div className="flex justify-center mb-3">
-        <span className="font-helvetica text-[10px] tracking-[0.2em] text-bb-muted/40 font-light uppercase">
-          Step {step} of {total}
-        </span>
-      </div>
-      <div className="w-full h-[1px] bg-bb-rule/50 overflow-hidden">
-        <motion.div
-          className="h-full bg-foreground"
-          initial={{ width: 0 }}
-          animate={{ width: `${percent}%` }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-        />
-      </div>
+    <div className="w-full flex items-center justify-center gap-0 py-6">
+      {Array.from({ length: total }).map((_, i) => {
+        const stepNum = i + 1;
+        const completed = stepNum < step;
+        const active = stepNum === step;
+
+        return (
+          <div key={i} className="flex items-center">
+            <div
+              className={cn(
+                'w-[22px] h-[22px] rounded-full flex items-center justify-center transition-all',
+                'font-helvetica text-[9px] font-normal border-[1.5px] leading-none',
+                completed || active
+                  ? 'border-bb-dark bg-bb-dark text-white'
+                  : 'border-bb-rule text-bb-muted/60 bg-transparent'
+              )}
+            >
+              {completed ? <Check className="w-3 h-3" /> : stepNum}
+            </div>
+            {i < total - 1 && (
+              <div className={cn('w-8 h-px', completed ? 'bg-bb-dark' : 'bg-bb-rule')} />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

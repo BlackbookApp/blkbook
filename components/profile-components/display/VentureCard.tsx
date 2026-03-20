@@ -4,7 +4,10 @@ import { cn } from '@/lib/utils';
 
 interface VentureItem {
   name: string;
+  years: string | null;
+  role: string | null;
   description: string | null;
+  detail: string | null;
   url: string | null;
   logo_url: string | null;
 }
@@ -29,18 +32,32 @@ export function VentureCard({ data }: { data: VentureCardData }) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       {data.items.map((item, i) => (
-        <div
-          key={i}
-          className={cn('border-l pl-5', i === 0 ? 'border-foreground' : 'border-bb-rule')}
-        >
-          <div className="flex items-center justify-between mb-1">
-            <span className="font-granjon text-[16px] text-foreground">{item.name}</span>
+        <div key={i} className={cn('border-l pl-5', i === 0 ? 'border-bb-dark' : 'border-bb-rule')}>
+          <div className="flex items-baseline justify-between mb-1">
+            <span className="font-granjon text-[16px] tracking-[0.01em] text-bb-dark">
+              {item.name}
+            </span>
+            {item.years && (
+              <span className="font-helvetica text-[10px] tracking-[0.1em] uppercase font-light text-bb-muted">
+                {item.years}
+              </span>
+            )}
           </div>
+          {item.role && (
+            <p className="font-helvetica text-[10px] tracking-[0.1em] uppercase mb-3 text-bb-muted">
+              {item.role}
+            </p>
+          )}
           {item.description && (
-            <p className="font-granjon italic text-[13px] text-foreground/60 leading-[1.8]">
+            <p className="font-granjon text-[13px] leading-[1.8] tracking-tight mb-2 text-bb-muted">
               {item.description}
+            </p>
+          )}
+          {item.detail && (
+            <p className="font-helvetica text-[10px] tracking-[0.08em] font-light text-bb-muted">
+              {item.detail}
             </p>
           )}
         </div>

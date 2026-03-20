@@ -4,12 +4,12 @@ import { Input } from '@/components/ui/input';
 
 interface Props {
   fullName: string;
-  tagline: string;
+  roleTitle: string;
   onChangeName: (v: string) => void;
-  onChangeTagline: (v: string) => void;
+  onChangeRoleTitle: (v: string) => void;
 }
 
-export function StepEssentials({ fullName, tagline, onChangeName, onChangeTagline }: Props) {
+export function StepEssentials({ fullName, roleTitle, onChangeName, onChangeRoleTitle }: Props) {
   return (
     <div className="space-y-5">
       <div>
@@ -23,11 +23,11 @@ export function StepEssentials({ fullName, tagline, onChangeName, onChangeTaglin
         />
       </div>
       <div>
-        <label className="blackbook-label block mb-2">One line</label>
+        <label className="blackbook-label block mb-2">Role</label>
         <Input
           type="text"
-          value={tagline}
-          onChange={(e) => onChangeTagline(e.target.value)}
+          value={roleTitle}
+          onChange={(e) => onChangeRoleTitle(e.target.value)}
           placeholder="What you do or what you're building"
         />
       </div>

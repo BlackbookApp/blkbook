@@ -10,6 +10,8 @@ interface ExperienceItem {
   start_year: string | null;
   end_year: string | null;
   description: string | null;
+  type: string | null;
+  location: string | null;
 }
 
 interface ExperienceTimelineData {
@@ -28,6 +30,8 @@ const EMPTY_ITEM: ExperienceItem = {
   start_year: null,
   end_year: null,
   description: null,
+  type: null,
+  location: null,
 };
 
 export function ExperienceTimelineEditor({ component }: { component: ProfileComponent }) {
@@ -85,17 +89,29 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
             <div className="grid grid-cols-2 gap-3">
               <Input
                 variant="primary"
-                placeholder="Start year"
+                placeholder="Start (e.g. Jan 2020)"
                 value={item.start_year ?? ''}
                 onChange={(e) => updateItem(i, { start_year: e.target.value || null })}
               />
               <Input
                 variant="primary"
-                placeholder="End year"
+                placeholder="End (or leave blank)"
                 value={item.end_year ?? ''}
                 onChange={(e) => updateItem(i, { end_year: e.target.value || null })}
               />
             </div>
+            <Input
+              variant="primary"
+              placeholder="Type (e.g. Full-time)"
+              value={item.type ?? ''}
+              onChange={(e) => updateItem(i, { type: e.target.value || null })}
+            />
+            <Input
+              variant="primary"
+              placeholder="Location (optional)"
+              value={item.location ?? ''}
+              onChange={(e) => updateItem(i, { location: e.target.value || null })}
+            />
             <Textarea
               placeholder="Description (optional)"
               value={item.description ?? ''}

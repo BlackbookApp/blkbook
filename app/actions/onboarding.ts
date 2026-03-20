@@ -8,17 +8,17 @@ import type { RoleType } from '@/config/roleSchemas';
 
 export async function saveOnboardingAction(params: {
   roleType: RoleType;
+  buildMethod: 'ai' | 'manual';
   fullName: string;
-  tagline: string;
+  roleTitle: string;
   avatarUrl: string | null;
 }): Promise<{ profileId: string | null; error: string | null }> {
-  const { roleType, fullName, tagline, avatarUrl } = params;
+  const { roleType, buildMethod, fullName, roleTitle, avatarUrl } = params;
 
   // 1. Update profile fields
   const { error: profileError } = await updateProfile({
-    role: roleType,
     full_name: fullName,
-    brand_statement: tagline || null,
+    role: roleTitle || null,
     ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
   });
 
@@ -43,7 +43,10 @@ export async function saveOnboardingAction(params: {
   // 3. Insert the predefined component stack for the role
   const { error: componentsError } = await insertComponentsForProfile(
     profile.id,
-    ROLE_SCHEMAS[roleType]
+    ROLE_SCHEMAS[roleType],
+    roleType,
+    buildMethod,
+    { name: fullName, tagline: roleTitle || null, avatarUrl }
   );
 
   if (componentsError) return { profileId: null, error: componentsError };

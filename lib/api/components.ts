@@ -28,6 +28,7 @@ export async function insertComponents(
 
 // Atomic patch — only updates changed keys, never overwrites others
 export async function patchComponentData(componentId: string, patch: Record<string, unknown>) {
+  if (componentId.startsWith('test-')) return null; // no-op for test/preview components
   const supabase = createClient();
 
   const { data, error } = await supabase.rpc('merge_component_data', {

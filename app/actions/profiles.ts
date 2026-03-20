@@ -3,6 +3,7 @@
 import {
   getMyProfile,
   updateProfile,
+  publishProfile,
   addPortfolioImage,
   removePortfolioImage,
   getProfileUsername,
@@ -36,4 +37,8 @@ export async function removePortfolioImageAction(
 
 export async function getProfileUsernameAction(profileId: string): Promise<string | null> {
   return getProfileUsername(profileId);
+}
+
+export async function publishProfileAction(): Promise<{ error: string | null }> {
+  return publishProfile();
 }

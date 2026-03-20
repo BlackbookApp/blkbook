@@ -1,5 +1,8 @@
 'use client';
 
+import { useProfileView } from '@/contexts/profile-view-context';
+import { ProfileCTA } from '@/components/public-profile/shared/profile-cta';
+
 interface ButtonItem {
   label: string;
   url: string | null;
@@ -20,7 +23,7 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-export function ActionButtonsSecondary({ data }: { data: ActionButtonsSecondaryData }) {
+function PlainButtons({ data }: { data: ActionButtonsSecondaryData }) {
   if (!data.buttons || data.buttons.length === 0) {
     return <EmptyState message="Add action buttons" />;
   }
@@ -32,7 +35,11 @@ export function ActionButtonsSecondary({ data }: { data: ActionButtonsSecondaryD
       {data.buttons.map((btn, i) => {
         if (btn.style === 'primary') {
           return (
-            <a key={i} href={btn.url ?? '#'} className="bb-btn-primary block text-center">
+            <a
+              key={i}
+              href={btn.url ?? '#'}
+              className="bb-btn-primary  text-center flex justify-center items-center "
+            >
               {btn.label}
             </a>
           );
@@ -77,4 +84,16 @@ export function ActionButtonsSecondary({ data }: { data: ActionButtonsSecondaryD
       })}
     </div>
   );
+}
+
+export function ActionButtonsSecondary({ data }: { data: ActionButtonsSecondaryData }) {
+  const profileView = useProfileView();
+
+  // On the public profile: render the real interactive CTA with exchange/vault logic
+  if (profileView) {
+    return <ProfileCTA {...profileView} />;
+  }
+
+  // In the editor or onboarding preview: render plain buttons from saved data
+  return <PlainButtons data={data} />;
 }
