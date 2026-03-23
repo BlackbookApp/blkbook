@@ -177,6 +177,34 @@ export function buildSocialStatItems(items: RawSocialStatItem[]): ResolvedSocial
   });
 }
 
+/** Extract SocialLinks from the social_stat component in a profile's component list */
+export function extractContactsFromComponents(
+  components: { type: string; data: unknown }[]
+): SocialLinks {
+  const socialStat = components.find((c) => c.type === 'social_stat');
+  if (!socialStat) return {};
+
+  const items = (socialStat.data as { items?: RawSocialStatItem[] })?.items ?? [];
+  const result: SocialLinks = {};
+
+  for (const item of items) {
+    const p = item.platform.toLowerCase();
+    const value = item.handle?.replace(/^@/, '');
+    if (!value) continue;
+    if (p === 'email') result.email = value;
+    else if (p === 'phone') result.phone = value;
+    else if (p === 'whatsapp') result.whatsapp = value;
+    else if (p === 'website')
+      result.website = value.startsWith('http') ? value : `https://${value}`;
+    else if (p === 'instagram') result.instagram = value;
+    else if (p === 'tiktok') result.tiktok = value;
+    else if (p === 'linkedin') result.linkedin = value;
+    else if (p === 'twitter' || p === 'x') result.twitter = value;
+  }
+
+  return result;
+}
+
 export interface PublicProfileProps {
   profile: ProfileData;
   portfolio: PortfolioItem[];

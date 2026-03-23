@@ -93,9 +93,10 @@ export function ProfileCTA({
   const socialButtons =
     !compact && !textOnly ? (
       <>
-        {(socialLinks.website || socialLinks.whatsapp) &&
+        {(socialLinks.email || socialLinks.website || socialLinks.whatsapp) &&
           (() => {
             const items = [
+              socialLinks.email && { label: 'EMAIL', href: `mailto:${socialLinks.email}` },
               socialLinks.website && { label: 'WEBSITE', href: socialLinks.website },
               socialLinks.whatsapp && {
                 label: 'WHATSAPP',

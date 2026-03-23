@@ -89,9 +89,14 @@ function PlainButtons({ data }: { data: ActionButtonsSecondaryData }) {
 export function ActionButtonsSecondary({ data }: { data: ActionButtonsSecondaryData }) {
   const profileView = useProfileView();
 
-  // On the public profile: render the real interactive CTA with exchange/vault logic
+  // On the public profile: dynamic CTA + any custom buttons stored in data
   if (profileView) {
-    return <ProfileCTA {...profileView} />;
+    return (
+      <>
+        <ProfileCTA {...profileView} />
+        {data.buttons?.length > 0 && <PlainButtons data={data} />}
+      </>
+    );
   }
 
   // In the editor or onboarding preview: render plain buttons from saved data

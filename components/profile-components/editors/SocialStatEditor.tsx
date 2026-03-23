@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import {
@@ -36,8 +37,71 @@ const PLATFORM_OPTIONS: { value: KnownPlatform; label: string; placeholder: stri
   { value: 'whatsapp', label: 'WhatsApp', placeholder: '+44 7700 000000' },
 ];
 
-const SELECT_CLASS =
-  'w-full bg-transparent border-b border-border py-3 text-sm text-foreground focus:outline-none focus:border-foreground transition-colors appearance-none cursor-pointer';
+function PlatformSelect({
+  value,
+  onChange,
+}: {
+  value: KnownPlatform;
+  onChange: (val: KnownPlatform) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const selected = PLATFORM_OPTIONS.find((p) => p.value === value);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <div className="relative" onClick={() => setOpen((o) => !o)}>
+        <input
+          readOnly
+          value={selected?.label ?? ''}
+          className="w-full bg-transparent border-b border-border py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground transition-colors cursor-pointer"
+        />
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 10 10"
+          fill="none"
+          className={`absolute right-0 top-1/2 -translate-y-1/2 text-bb-muted transition-transform pointer-events-none ${open ? 'rotate-180' : ''}`}
+        >
+          <path
+            d="M2 3.5L5 6.5L8 3.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+      {open && (
+        <div className="absolute top-full left-0 right-0 z-50 bb-dropdown-panel border border-bb-rule mt-1 py-1 max-h-64 overflow-y-auto">
+          {PLATFORM_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setOpen(false);
+              }}
+              className={`w-full text-left px-3 py-2 font-helvetica text-[11px] tracking-[0.04em] transition-colors hover:bg-bb-rule/60 ${
+                value === opt.value ? 'text-foreground' : 'text-foreground/60'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const EMPTY_KNOWN: SocialStatItem = { platform: 'instagram', handle: null, count: null, url: null };
 const EMPTY_CUSTOM: SocialStatItem = { platform: '', handle: null, count: null, url: null };
@@ -114,19 +178,12 @@ export function SocialStatEditor({ component }: { component: ProfileComponent })
                   ×
                 </button>
               </div>
-              <select
-                className={SELECT_CLASS}
-                value={item.platform.toLowerCase()}
-                onChange={(e) =>
-                  updateKnown(i, { platform: e.target.value, handle: null, count: null, url: null })
+              <PlatformSelect
+                value={item.platform.toLowerCase() as KnownPlatform}
+                onChange={(val) =>
+                  updateKnown(i, { platform: val, handle: null, count: null, url: null })
                 }
-              >
-                {PLATFORM_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+              />
               <Input
                 variant="primary"
                 placeholder={handlePlaceholder}

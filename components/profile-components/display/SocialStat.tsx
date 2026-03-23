@@ -33,7 +33,11 @@ export function SocialStat({ data }: { data: SocialStatData }) {
         const inner = (
           <div className="flex items-center gap-1.5">
             <Icon className="text-bb-muted" />
-            {count && <span className="font-helvetica text-[10px] text-bb-muted">{count}</span>}
+            {count && (
+              <span className="font-helvetica text-[10px] text-bb-muted leading-none translate-y-px">
+                {count}
+              </span>
+            )}
           </div>
         );
 

@@ -9,14 +9,15 @@ import type { ComponentType } from '@/config/roleSchemas';
 interface Props {
   components: ProfileComponent[];
   profileView: ProfileViewContextValue;
+  theme?: string;
 }
 
-export function ProfileComponentsView({ components, profileView }: Props) {
+export function ProfileComponentsView({ components, profileView, theme = 'blanc' }: Props) {
   const visible = components.filter((c) => c.is_visible);
 
   return (
     <ProfileViewProvider value={profileView}>
-      <div className="max-w-md mx-auto px-6 py-8 space-y-8">
+      <div className="max-w-md mx-auto px-6 py-8 space-y-8" data-pg-theme={theme}>
         {visible.map((component) => {
           const entry = DISPLAY_MAP[component.type as ComponentType];
           if (!entry) return null;
