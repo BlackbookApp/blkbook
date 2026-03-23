@@ -2,6 +2,8 @@
 
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
+import { Text } from '@/components/ui/text';
+import { X } from 'lucide-react';
 
 interface RecognitionItem {
   title: string;
@@ -42,7 +44,7 @@ export function RecognitionListEditor({ component }: { component: ProfileCompone
     <div className="space-y-4">
       <div className="space-y-4">
         {localData.items.map((item, i) => (
-          <div key={i} className="space-y-2 border-l border-bb-rule pl-4">
+          <div key={i} className="space-y-4 border-l border-bb-rule pl-4">
             <div className="flex items-center justify-between">
               <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">
                 Award {i + 1}
@@ -51,27 +53,42 @@ export function RecognitionListEditor({ component }: { component: ProfileCompone
                 onClick={() => removeItem(i)}
                 className="font-helvetica text-[10px] text-bb-muted/60 hover:text-foreground transition-colors"
               >
-                ×
+                <X size={15} />
               </button>
             </div>
-            <Input
-              variant="primary"
-              placeholder="Title / award name"
-              value={item.title}
-              onChange={(e) => updateItem(i, { title: e.target.value })}
-            />
-            <Input
-              variant="primary"
-              placeholder="Year (optional)"
-              value={item.year ?? ''}
-              onChange={(e) => updateItem(i, { year: e.target.value || null })}
-            />
-            <Input
-              variant="primary"
-              placeholder="URL (optional)"
-              value={item.url ?? ''}
-              onChange={(e) => updateItem(i, { url: e.target.value || null })}
-            />
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Title
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="Title / award name"
+                value={item.title}
+                onChange={(e) => updateItem(i, { title: e.target.value })}
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Year
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="Year (optional)"
+                value={item.year ?? ''}
+                onChange={(e) => updateItem(i, { year: e.target.value || null })}
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                URL
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="URL (optional)"
+                value={item.url ?? ''}
+                onChange={(e) => updateItem(i, { url: e.target.value || null })}
+              />
+            </div>
           </div>
         ))}
       </div>

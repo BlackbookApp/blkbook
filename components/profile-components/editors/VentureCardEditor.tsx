@@ -3,6 +3,8 @@
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Text } from '@/components/ui/text';
+import { X } from 'lucide-react';
 
 interface VentureItem {
   name: string;
@@ -55,7 +57,7 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
     <div className="space-y-4">
       <div className="space-y-6">
         {localData.items.map((item, i) => (
-          <div key={i} className="space-y-2 border-l border-bb-rule pl-4">
+          <div key={i} className="space-y-4 border-l border-bb-rule pl-4">
             <div className="flex items-center justify-between">
               <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">
                 Venture {i + 1}
@@ -64,45 +66,75 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
                 onClick={() => removeItem(i)}
                 className="font-helvetica text-[10px] text-bb-muted/60 hover:text-foreground transition-colors"
               >
-                ×
+                <X size={15} />
               </button>
             </div>
-            <Input
-              variant="primary"
-              placeholder="Name"
-              value={item.name}
-              onChange={(e) => updateItem(i, { name: e.target.value })}
-            />
-            <Input
-              variant="primary"
-              placeholder="Years (e.g. 2020 – 2024)"
-              value={item.years ?? ''}
-              onChange={(e) => updateItem(i, { years: e.target.value || null })}
-            />
-            <Input
-              variant="primary"
-              placeholder="Role (e.g. Co-Founder & CEO)"
-              value={item.role ?? ''}
-              onChange={(e) => updateItem(i, { role: e.target.value || null })}
-            />
-            <Textarea
-              placeholder="Description"
-              value={item.description ?? ''}
-              onChange={(e) => updateItem(i, { description: e.target.value || null })}
-              className="bg-transparent border-b border-border border-0 rounded-none px-0 py-3 resize-none focus-visible:ring-0 focus-visible:border-foreground text-sm min-h-16"
-            />
-            <Input
-              variant="primary"
-              placeholder="Detail (e.g. AI · Early stage · Stealth)"
-              value={item.detail ?? ''}
-              onChange={(e) => updateItem(i, { detail: e.target.value || null })}
-            />
-            <Input
-              variant="primary"
-              placeholder="URL"
-              value={item.url ?? ''}
-              onChange={(e) => updateItem(i, { url: e.target.value || null })}
-            />
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Name
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="Name"
+                value={item.name}
+                onChange={(e) => updateItem(i, { name: e.target.value })}
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Years
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="e.g. 2020 – 2024"
+                value={item.years ?? ''}
+                onChange={(e) => updateItem(i, { years: e.target.value || null })}
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Role
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="e.g. Co-Founder & CEO"
+                value={item.role ?? ''}
+                onChange={(e) => updateItem(i, { role: e.target.value || null })}
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Description
+              </Text>
+              <Textarea
+                placeholder="Description"
+                value={item.description ?? ''}
+                onChange={(e) => updateItem(i, { description: e.target.value || null })}
+                className="bg-transparent border-b border-border border-0 rounded-none px-0 py-3 resize-none focus-visible:ring-0 focus-visible:border-foreground text-sm min-h-16"
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Detail
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="e.g. AI · Early stage · Stealth"
+                value={item.detail ?? ''}
+                onChange={(e) => updateItem(i, { detail: e.target.value || null })}
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                URL
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="URL"
+                value={item.url ?? ''}
+                onChange={(e) => updateItem(i, { url: e.target.value || null })}
+              />
+            </div>
           </div>
         ))}
       </div>

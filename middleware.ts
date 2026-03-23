@@ -11,10 +11,12 @@ const PUBLIC_ROUTES = [
   '/request-access',
   '/p',
   '/api/vcard',
+  '/test-profile-components',
 ];
 const AUTH_ONLY_ROUTES = ['/login', '/signup']; // redirect to /my-blackbook if already authed
 const ONBOARDING_EXEMPT = [
   '/create-profile',
+  '/onboarding-v2',
   '/profile-preview',
   '/paywall',
   '/auth/callback',
@@ -65,6 +67,13 @@ export async function middleware(request: NextRequest) {
   if (!user && !isPublic(pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
+    return NextResponse.redirect(url);
+  }
+
+  // Completed users visiting onboarding → redirect to my-blackbook
+  if (user && user.user_metadata?.profile_complete && pathname.startsWith('/onboarding-v2')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/my-blackbook';
     return NextResponse.redirect(url);
   }
 

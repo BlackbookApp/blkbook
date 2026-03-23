@@ -29,4 +29,5 @@ export const routes = {
   onboardingV2Manual: '/onboarding-v2/manual',
   onboardingV2Preview: '/onboarding-v2/preview',
   onboardingV2Refine: '/onboarding-v2/refine',
+  editProfileV2: '/edit-profile-v2',
 } as const;

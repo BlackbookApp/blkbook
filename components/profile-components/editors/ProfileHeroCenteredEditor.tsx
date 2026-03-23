@@ -3,6 +3,7 @@
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { ImageUpload } from '@/components/ui/image-upload';
+import { Text } from '@/components/ui/text';
 
 interface ProfileHeroCenteredData {
   name: string | null;
@@ -22,36 +23,56 @@ export function ProfileHeroCenteredEditor({ component }: { component: ProfileCom
 
   return (
     <div className="space-y-4">
-      <div className="space-y-3">
-        <Input
-          variant="primary"
-          placeholder="Name"
-          value={localData.name ?? ''}
-          onChange={(e) => onChange({ ...localData, name: e.target.value || null })}
-        />
-        <Input
-          variant="primary"
-          placeholder="Tagline / role"
-          value={localData.tagline ?? ''}
-          onChange={(e) => onChange({ ...localData, tagline: e.target.value || null })}
-        />
-        <Input
-          variant="primary"
-          placeholder="Location"
-          value={localData.location ?? ''}
-          onChange={(e) => onChange({ ...localData, location: e.target.value || null })}
-        />
-        <ImageUpload
-          value={localData.image_url}
-          onChange={(url) => onChange({ ...localData, image_url: url })}
-          bucket="avatars"
-          buildPath={(userId, file) => {
-            const ext = file.name.split('.').pop() ?? 'jpg';
-            return `${userId}/avatar.${ext}`;
-          }}
-          aspect="aspect-[3/4]"
-          label="Upload portrait"
-        />
+      <div className="space-y-6">
+        <div>
+          <Text variant="label-micro" as="label" className="block mb-1">
+            Portrait
+          </Text>
+          <ImageUpload
+            value={localData.image_url}
+            onChange={(url) => onChange({ ...localData, image_url: url })}
+            bucket="avatars"
+            buildPath={(userId, file) => {
+              const ext = file.name.split('.').pop() ?? 'jpg';
+              return `${userId}/avatar.${ext}`;
+            }}
+            aspect="aspect-[3/4]"
+            label="Upload portrait"
+          />
+        </div>
+        <div>
+          <Text variant="label-micro" as="label" className="block mb-1">
+            Name
+          </Text>
+          <Input
+            variant="primary"
+            placeholder="Full name"
+            value={localData.name ?? ''}
+            onChange={(e) => onChange({ ...localData, name: e.target.value || null })}
+          />
+        </div>
+        <div>
+          <Text variant="label-micro" as="label" className="block mb-1">
+            Tagline / Role
+          </Text>
+          <Input
+            variant="primary"
+            placeholder="What you do"
+            value={localData.tagline ?? ''}
+            onChange={(e) => onChange({ ...localData, tagline: e.target.value || null })}
+          />
+        </div>
+        <div>
+          <Text variant="label-micro" as="label" className="block mb-1">
+            Location
+          </Text>
+          <Input
+            variant="primary"
+            placeholder="City, Country"
+            value={localData.location ?? ''}
+            onChange={(e) => onChange({ ...localData, location: e.target.value || null })}
+          />
+        </div>
       </div>
       <div className="flex items-center gap-2 h-4">
         {saving && (

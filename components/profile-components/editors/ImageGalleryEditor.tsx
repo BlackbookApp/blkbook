@@ -3,6 +3,8 @@
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { ImageUpload } from '@/components/ui/image-upload';
+import { Text } from '@/components/ui/text';
+import { X } from 'lucide-react';
 
 interface ImageItem {
   url: string | null;
@@ -42,7 +44,7 @@ export function ImageGalleryEditor({ component }: { component: ProfileComponent 
     <div className="space-y-4">
       <div className="space-y-4">
         {localData.images.map((img, i) => (
-          <div key={i} className="space-y-2 border-l border-bb-rule pl-4">
+          <div key={i} className="space-y-4 border-l border-bb-rule pl-4">
             <div className="flex items-center justify-between">
               <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">
                 Image {i + 1}
@@ -51,26 +53,36 @@ export function ImageGalleryEditor({ component }: { component: ProfileComponent 
                 onClick={() => removeImage(i)}
                 className="font-helvetica text-[10px] text-bb-muted/60 hover:text-foreground transition-colors"
               >
-                ×
+                <X size={15} />
               </button>
             </div>
-            <ImageUpload
-              value={img.url}
-              onChange={(url) => updateImage(i, { url })}
-              bucket="portfolio"
-              buildPath={(userId, file) => {
-                const ext = file.name.split('.').pop() ?? 'jpg';
-                return `${userId}/portfolio-${Date.now()}-${i}.${ext}`;
-              }}
-              aspect="aspect-square"
-              label="Upload image"
-            />
-            <Input
-              variant="primary"
-              placeholder="Caption (optional)"
-              value={img.caption ?? ''}
-              onChange={(e) => updateImage(i, { caption: e.target.value || null })}
-            />
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Image
+              </Text>
+              <ImageUpload
+                value={img.url}
+                onChange={(url) => updateImage(i, { url })}
+                bucket="portfolio"
+                buildPath={(userId, file) => {
+                  const ext = file.name.split('.').pop() ?? 'jpg';
+                  return `${userId}/portfolio-${Date.now()}-${i}.${ext}`;
+                }}
+                aspect="aspect-square"
+                label="Upload image"
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Caption
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="Caption (optional)"
+                value={img.caption ?? ''}
+                onChange={(e) => updateImage(i, { caption: e.target.value || null })}
+              />
+            </div>
           </div>
         ))}
       </div>

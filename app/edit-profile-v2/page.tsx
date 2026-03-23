@@ -124,10 +124,10 @@ const EditProfileV2 = () => {
                   return (
                     <div key={component.id}>
                       <div className="mb-4">
-                        <p className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-bb-muted/60">
+                        <p className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-bb-muted">
                           {entry.label}
                         </p>
-                        <p className="font-helvetica text-[11px] text-bb-muted/40 mt-0.5">
+                        <p className="font-helvetica text-[11px] text-bb-muted mt-0.5">
                           {entry.description}
                         </p>
                       </div>

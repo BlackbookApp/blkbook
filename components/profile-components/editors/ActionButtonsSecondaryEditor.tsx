@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
+import { Text } from '@/components/ui/text';
+import { X } from 'lucide-react';
 
 interface ButtonItem {
   label: string;
@@ -70,7 +72,7 @@ function DynamicPreview() {
       </div>
       <div className="pointer-events-none space-y-2 opacity-50">
         <div className="bb-btn-primary flex items-center justify-center">{view.primary}</div>
-        <div className="border border-bb-rule py-3 w-full font-helvetica text-[11px] uppercase tracking-[0.1em] text-foreground text-center">
+        <div className="border border-bb-rule py-3 w-full font-helvetica text-[11px] uppercase tracking-widest text-foreground text-center">
           {view.secondary}
         </div>
       </div>
@@ -109,7 +111,7 @@ export function ActionButtonsSecondaryEditor({ component }: { component: Profile
 
       <div className="space-y-4">
         {localData.buttons.map((btn, i) => (
-          <div key={i} className="space-y-2 border-l border-bb-rule pl-4">
+          <div key={i} className="space-y-4 border-l border-bb-rule pl-4">
             <div className="flex items-center justify-between">
               <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">
                 Button {i + 1}
@@ -118,21 +120,31 @@ export function ActionButtonsSecondaryEditor({ component }: { component: Profile
                 onClick={() => removeButton(i)}
                 className="font-helvetica text-[10px] text-bb-muted/60 hover:text-foreground transition-colors"
               >
-                ×
+                <X size={15} />
               </button>
             </div>
-            <Input
-              variant="primary"
-              placeholder="Label"
-              value={btn.label}
-              onChange={(e) => updateButton(i, { label: e.target.value })}
-            />
-            <Input
-              variant="primary"
-              placeholder="URL (optional)"
-              value={btn.url ?? ''}
-              onChange={(e) => updateButton(i, { url: e.target.value || null })}
-            />
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Label
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="Label"
+                value={btn.label}
+                onChange={(e) => updateButton(i, { label: e.target.value })}
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                URL
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="URL (optional)"
+                value={btn.url ?? ''}
+                onChange={(e) => updateButton(i, { url: e.target.value || null })}
+              />
+            </div>
             <div className="flex gap-3 pt-1">
               {(['primary', 'secondary'] as const).map((s) => (
                 <button

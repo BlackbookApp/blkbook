@@ -3,6 +3,8 @@
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Text } from '@/components/ui/text';
+import { X } from 'lucide-react';
 
 interface ExperienceItem {
   role: string;
@@ -56,7 +58,7 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
     <div className="space-y-4">
       <div className="space-y-6">
         {localData.items.map((item, i) => (
-          <div key={i} className="space-y-2 border-l border-bb-rule pl-4">
+          <div key={i} className="space-y-4 border-l border-bb-rule pl-4">
             <div className="flex items-center justify-between">
               <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">
                 Position {i + 1}
@@ -65,53 +67,88 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
                 onClick={() => removeItem(i)}
                 className="font-helvetica text-[10px] text-bb-muted/60 hover:text-foreground transition-colors"
               >
-                ×
+                <X size={15} />
               </button>
             </div>
-            <Input
-              variant="primary"
-              placeholder="Role / title"
-              value={item.role}
-              onChange={(e) => updateItem(i, { role: e.target.value })}
-            />
-            <Input
-              variant="primary"
-              placeholder="Company"
-              value={item.company}
-              onChange={(e) => updateItem(i, { company: e.target.value })}
-            />
-            <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Role / Title
+              </Text>
               <Input
                 variant="primary"
-                placeholder="Start (e.g. Jan 2020)"
-                value={item.start_year ?? ''}
-                onChange={(e) => updateItem(i, { start_year: e.target.value || null })}
-              />
-              <Input
-                variant="primary"
-                placeholder="End (or leave blank)"
-                value={item.end_year ?? ''}
-                onChange={(e) => updateItem(i, { end_year: e.target.value || null })}
+                placeholder="Role / title"
+                value={item.role}
+                onChange={(e) => updateItem(i, { role: e.target.value })}
               />
             </div>
-            <Input
-              variant="primary"
-              placeholder="Type (e.g. Full-time)"
-              value={item.type ?? ''}
-              onChange={(e) => updateItem(i, { type: e.target.value || null })}
-            />
-            <Input
-              variant="primary"
-              placeholder="Location (optional)"
-              value={item.location ?? ''}
-              onChange={(e) => updateItem(i, { location: e.target.value || null })}
-            />
-            <Textarea
-              placeholder="Description (optional)"
-              value={item.description ?? ''}
-              onChange={(e) => updateItem(i, { description: e.target.value || null })}
-              className="bg-transparent border-b border-border border-0 rounded-none px-0 py-3 resize-none focus-visible:ring-0 focus-visible:border-foreground text-sm min-h-16"
-            />
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Company
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="Company"
+                value={item.company}
+                onChange={(e) => updateItem(i, { company: e.target.value })}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Text variant="label-micro" as="label" className="block mb-1">
+                  Start
+                </Text>
+                <Input
+                  variant="primary"
+                  placeholder="e.g. Jan 2020"
+                  value={item.start_year ?? ''}
+                  onChange={(e) => updateItem(i, { start_year: e.target.value || null })}
+                />
+              </div>
+              <div>
+                <Text variant="label-micro" as="label" className="block mb-1">
+                  End
+                </Text>
+                <Input
+                  variant="primary"
+                  placeholder="or leave blank"
+                  value={item.end_year ?? ''}
+                  onChange={(e) => updateItem(i, { end_year: e.target.value || null })}
+                />
+              </div>
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Type
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="e.g. Full-time"
+                value={item.type ?? ''}
+                onChange={(e) => updateItem(i, { type: e.target.value || null })}
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Location
+              </Text>
+              <Input
+                variant="primary"
+                placeholder="Location (optional)"
+                value={item.location ?? ''}
+                onChange={(e) => updateItem(i, { location: e.target.value || null })}
+              />
+            </div>
+            <div>
+              <Text variant="label-micro" as="label" className="block mb-1">
+                Description
+              </Text>
+              <Textarea
+                placeholder="Description (optional)"
+                value={item.description ?? ''}
+                onChange={(e) => updateItem(i, { description: e.target.value || null })}
+                className="bg-transparent border-b border-border border-0 rounded-none px-0 py-3 resize-none focus-visible:ring-0 focus-visible:border-foreground text-sm min-h-16"
+              />
+            </div>
           </div>
         ))}
       </div>

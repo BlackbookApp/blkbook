@@ -8,6 +8,7 @@ import {
   type KnownPlatform,
 } from '@/components/public-profile/shared/profile-adapters';
 
+import { X } from 'lucide-react';
 interface SocialStatItem {
   platform: string;
   handle: string | null;
@@ -168,7 +169,7 @@ export function SocialStatEditor({ component }: { component: ProfileComponent })
                   onClick={() => removeKnown(i)}
                   className="font-helvetica text-[10px] text-bb-muted/60 hover:text-foreground transition-colors"
                 >
-                  ×
+                  <X size={15} />
                 </button>
               </div>
               <PlatformSelect
@@ -215,7 +216,7 @@ export function SocialStatEditor({ component }: { component: ProfileComponent })
                 onClick={() => removeCustom(i)}
                 className="font-helvetica text-[10px] text-bb-muted/60 hover:text-foreground transition-colors"
               >
-                ×
+                <X size={15} />
               </button>
             </div>
             <Input

@@ -13,6 +13,7 @@ interface Props {
   /** Tailwind aspect class e.g. "aspect-square", "aspect-[3/4]" */
   aspect?: string;
   label?: string;
+  fit?: 'cover' | 'contain';
 }
 
 export function ImageUpload({
@@ -22,6 +23,7 @@ export function ImageUpload({
   buildPath,
   aspect = 'aspect-[3/4]',
   label = 'Upload image',
+  fit = 'cover',
 }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
   const { upload, uploading, uploadError } = useImageUpload({ bucket, buildPath });
@@ -44,7 +46,11 @@ export function ImageUpload({
       >
         {value ? (
           <>
-            <img src={value} alt="" className="w-full h-full object-cover" />
+            <img
+              src={value}
+              alt=""
+              className={cn('w-full h-full', fit === 'contain' ? 'object-contain' : 'object-cover')}
+            />
             {/* Overlay on hover */}
             <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 hover:opacity-100 transition-opacity bg-foreground/10">
               <button
