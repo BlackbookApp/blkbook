@@ -53,41 +53,42 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>{children}</DrawerTrigger>
         <DrawerContent
-          className="border-none rounded-none max-h-[85vh] backdrop-blur-[20px] bb-drawer-panel"
+          className="border-none rounded-none max-h-[85vh] bg-white"
           aria-describedby={undefined}
         >
           <DrawerTitle className="sr-only">Add Connection</DrawerTitle>
-          <div className="px-6 pt-2 pb-6">
-            <Text variant="label" align="center" className="mb-4">
-              Add Connection
-            </Text>
+          <div className="px-6 pt-4 pb-8">
+            <div className="flex items-center gap-3 mb-6">
+              <Text variant="label" className="shrink-0">
+                Add Connection
+              </Text>
+              <div className="flex-1 h-px bg-border/50" />
+            </div>
 
-            <div className="space-y-0">
-              {addOptions.map((option, index) => {
+            <div>
+              {addOptions.map((option) => {
                 const Icon = option.icon;
                 return (
-                  <div key={option.id}>
-                    {index > 0 && <div className="h-px bg-border/50" />}
-                    <button
-                      onClick={() => handleOptionClick(option)}
-                      className="w-full flex items-center gap-4 py-3 group text-left"
-                    >
-                      <div className="w-7 h-7 flex items-center justify-center">
-                        <Icon
-                          className="w-[16px] h-[16px] text-foreground/70 group-hover:text-foreground transition-colors"
-                          strokeWidth={1.5}
-                        />
-                      </div>
-                      <div className="flex flex-col flex-1 min-w-0">
-                        <Text variant="label" className="group-hover:opacity-70 transition-opacity">
-                          {option.label}
-                        </Text>
-                        <Text variant="label-micro" color="muted" className="font-light">
-                          {option.description}
-                        </Text>
-                      </div>
-                    </button>
-                  </div>
+                  <button
+                    key={option.id}
+                    onClick={() => handleOptionClick(option)}
+                    className="w-full flex items-center gap-4 py-4 group text-left border-b border-border/30 last:border-b-0"
+                  >
+                    <div className="w-11 h-11 flex items-center justify-center shrink-0 rounded-full border border-border/60">
+                      <Icon
+                        className="w-[16px] h-[16px] text-bb-dark/70 group-hover:text-bb-dark transition-colors"
+                        strokeWidth={1.4}
+                      />
+                    </div>
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <span className="font-granjon text-[13px] text-bb-dark leading-tight mb-0.5 group-hover:opacity-60 transition-opacity">
+                        {option.label}
+                      </span>
+                      <span className="font-helvetica text-[10px] font-light text-bb-muted">
+                        {option.description}
+                      </span>
+                    </div>
+                  </button>
                 );
               })}
             </div>

@@ -268,7 +268,7 @@ const EditProfile = () => {
 
         {/* Floating header */}
         <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-          <div className="max-w-md mx-auto px-6 pt-8 flex items-center justify-between pointer-events-auto">
+          <div className="max-w-md mx-auto px-6 bb-safe-top-8 flex items-center justify-between pointer-events-auto">
             <Logo />
             <button
               onClick={() => setShowPreview(false)}

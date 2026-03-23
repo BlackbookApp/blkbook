@@ -316,7 +316,8 @@
   }
 
   .blackbook-page {
-    @apply px-6 py-8 min-h-screen flex flex-col;
+    @apply px-6 pb-8 min-h-screen flex flex-col;
+    padding-top: calc(env(safe-area-inset-top) + 2rem);
   }
 
   .blackbook-title {
@@ -473,6 +474,24 @@
   /* Frosted-glass drawer/sheet */
   .bb-drawer-panel {
     background: rgba(255, 255, 255, 0.92);
+  }
+
+  .bb-nav-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  @media (display-mode: standalone) {
+    .bb-nav-safe-bottom {
+      padding-bottom: max(calc(env(safe-area-inset-bottom) - 16px), 0px);
+    }
+  }
+
+  .bb-safe-top-6 {
+    padding-top: calc(env(safe-area-inset-top) + 1.5rem);
+  }
+
+  .bb-safe-top-8 {
+    padding-top: calc(env(safe-area-inset-top) + 2rem);
   }
 }
 

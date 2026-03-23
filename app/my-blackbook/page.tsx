@@ -18,7 +18,7 @@ const MyBlackbook = () => {
 
   return (
     <div className="blackbook-container bg-background">
-      <div className="blackbook-page !py-6 pb-28">
+      <div className="blackbook-page !pb-6 pb-28 bb-safe-top-6">
         <Logo />
 
         {/* Header */}

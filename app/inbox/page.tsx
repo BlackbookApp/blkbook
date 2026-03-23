@@ -6,7 +6,7 @@ import { Inbox } from '@/components/my-blackbook/inbox';
 
 export default function InboxPage() {
   return (
-    <div className="max-w-md mx-auto bg-background flex flex-col h-[100svh] overflow-hidden px-6 pt-6">
+    <div className="max-w-md mx-auto bg-background flex flex-col h-[100svh] overflow-hidden px-6 bb-safe-top-6">
       <Logo />
 
       <div className="mt-10 mb-6">

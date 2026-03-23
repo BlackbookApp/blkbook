@@ -43,16 +43,16 @@ const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
   const isDark = theme === 'dark';
 
   const containerClass = isDark
-    ? 'flex items-stretch relative overflow-hidden grain-overlay bg-bb-nav pb-[env(safe-area-inset-bottom)]'
-    : 'flex items-stretch border-t border-border bg-bb-cream pb-[env(safe-area-inset-bottom)]';
+    ? 'flex items-stretch relative overflow-hidden grain-overlay bg-bb-nav bb-nav-safe-bottom'
+    : 'flex items-stretch border-t border-border bg-bb-cream bb-nav-safe-bottom';
 
   const itemClass = isDark
     ? 'flex-1 py-5 leading-none transition-all text-center border-box'
     : 'flex-1 py-5 leading-none transition-all text-center border-r border-border last:border-r-0 border-box ';
 
-  const getNavColor = (isActive: boolean): 'cream' | 'dark' | 'muted' => {
-    if (isDark) return isActive ? 'cream' : 'muted';
-    return isActive ? 'dark' : 'muted';
+  const getNavClassName = (isActive: boolean): string => {
+    if (isDark) return isActive ? 'text-bb-cream' : 'text-white/40';
+    return isActive ? 'text-bb-dark' : 'text-bb-muted';
   };
 
   return (
@@ -66,7 +66,7 @@ const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
               return (
                 <AddDrawer key={item.key}>
                   <button className={itemClass}>
-                    <Text variant={'nav'} color="muted" as="span">
+                    <Text variant={'nav'} as="span" className={getNavClassName(false)}>
                       {item.label}
                     </Text>
                   </button>
@@ -78,14 +78,16 @@ const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
               <button
                 key={item.key}
                 onClick={() => item.path && router.push(item.path)}
-                className={`${itemClass} relative`}
+                className={`${itemClass}  relative`}
               >
-                <Text variant="nav" color={getNavColor(isActive)} as="span">
-                  {item.label}
-                </Text>
-                {item.key === 'inbox' && pendingCount > 0 && (
-                  <span className="absolute top-2.5 right-[calc(50%-18px)] w-1.5 h-1.5 rounded-full bg-bb-cream/70" />
-                )}
+                <span className="relative inline-flex items-center">
+                  <Text variant="nav" as="span" className={getNavClassName(isActive)}>
+                    {item.label}
+                  </Text>
+                  {item.key === 'inbox' && pendingCount > 0 && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-bb-cream/70" />
+                  )}
+                </span>
               </button>
             );
           })}
