@@ -16,7 +16,6 @@ interface ImageGalleryData {
 interface ProfileComponent {
   id: string;
   data: unknown;
-  ai_generated: boolean;
 }
 
 const EMPTY_IMAGE: ImageItem = { url: null, caption: null };
@@ -41,11 +40,6 @@ export function ImageGalleryEditor({ component }: { component: ProfileComponent 
 
   return (
     <div className="space-y-4">
-      {component.ai_generated && (
-        <p className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted/60 border border-bb-rule px-3 py-2">
-          AI generated — review before publishing
-        </p>
-      )}
       <div className="space-y-4">
         {localData.images.map((img, i) => (
           <div key={i} className="space-y-2 border-l border-bb-rule pl-4">

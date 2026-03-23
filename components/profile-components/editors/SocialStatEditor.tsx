@@ -22,7 +22,6 @@ interface SocialStatData {
 interface ProfileComponent {
   id: string;
   data: unknown;
-  ai_generated: boolean;
 }
 
 const PLATFORM_OPTIONS: { value: KnownPlatform; label: string; placeholder: string }[] = [
@@ -150,12 +149,6 @@ export function SocialStatEditor({ component }: { component: ProfileComponent })
 
   return (
     <div className="space-y-6">
-      {component.ai_generated && (
-        <p className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted/60 border border-bb-rule px-3 py-2">
-          AI generated — review before publishing
-        </p>
-      )}
-
       {/* Known platforms */}
       <div className="space-y-4">
         <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">

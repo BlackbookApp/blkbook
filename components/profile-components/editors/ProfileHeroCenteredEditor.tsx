@@ -14,7 +14,6 @@ interface ProfileHeroCenteredData {
 interface ProfileComponent {
   id: string;
   data: unknown;
-  ai_generated: boolean;
 }
 
 export function ProfileHeroCenteredEditor({ component }: { component: ProfileComponent }) {
@@ -23,11 +22,6 @@ export function ProfileHeroCenteredEditor({ component }: { component: ProfileCom
 
   return (
     <div className="space-y-4">
-      {component.ai_generated && (
-        <p className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted/60 border border-bb-rule px-3 py-2">
-          AI generated — review before publishing
-        </p>
-      )}
       <div className="space-y-3">
         <Input
           variant="primary"

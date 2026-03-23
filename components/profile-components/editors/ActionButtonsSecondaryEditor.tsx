@@ -17,7 +17,6 @@ interface ActionButtonsSecondaryData {
 interface ProfileComponent {
   id: string;
   data: unknown;
-  ai_generated: boolean;
 }
 
 const EMPTY_BUTTON: ButtonItem = { label: '', url: null, style: 'secondary' };
@@ -100,12 +99,6 @@ export function ActionButtonsSecondaryEditor({ component }: { component: Profile
 
   return (
     <div className="space-y-4">
-      {component.ai_generated && (
-        <p className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted/60 border border-bb-rule px-3 py-2">
-          AI generated — review before publishing
-        </p>
-      )}
-
       <DynamicPreview />
 
       <div className="space-y-1">
