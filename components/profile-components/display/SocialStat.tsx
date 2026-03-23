@@ -1,23 +1,12 @@
 'use client';
 
 import {
-  InstagramIcon,
-  TikTokIcon,
-  YouTubeIcon,
-  LinkedInIcon,
-  TwitterIcon,
-  GlobeIcon,
-} from '@/components/public-profile/shared/social-icons';
-
-interface SocialStatItem {
-  platform: string;
-  handle: string | null;
-  count: string | null;
-  url: string | null;
-}
+  buildSocialStatItems,
+  type RawSocialStatItem,
+} from '@/components/public-profile/shared/profile-adapters';
 
 interface SocialStatData {
-  items: SocialStatItem[];
+  items: RawSocialStatItem[];
 }
 
 function EmptyState({ message }: { message: string }) {
@@ -30,39 +19,29 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-function getPlatformIcon(platform: string) {
-  const p = platform.toLowerCase();
-  if (p === 'instagram') return InstagramIcon;
-  if (p === 'tiktok') return TikTokIcon;
-  if (p === 'youtube') return YouTubeIcon;
-  if (p === 'linkedin') return LinkedInIcon;
-  if (p === 'twitter' || p === 'x') return TwitterIcon;
-  return GlobeIcon;
-}
-
 export function SocialStat({ data }: { data: SocialStatData }) {
   if (!data.items || data.items.length === 0) {
     return <EmptyState message="Add your social following" />;
   }
 
+  const resolved = buildSocialStatItems(data.items);
+
   return (
     <div className="flex flex-wrap justify-center items-center gap-8">
-      {data.items.map((item, i) => {
-        const Icon = getPlatformIcon(item.platform);
+      {resolved.map((item, i) => {
+        const { Icon, url, count } = item;
         const inner = (
           <div className="flex items-center gap-1.5">
             <Icon className="text-bb-muted" />
-            {item.count && (
-              <span className="font-helvetica text-[10px] text-bb-muted">{item.count}</span>
-            )}
+            {count && <span className="font-helvetica text-[10px] text-bb-muted">{count}</span>}
           </div>
         );
 
-        if (item.url) {
+        if (url) {
           return (
             <a
               key={i}
-              href={item.url}
+              href={url}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:opacity-70 transition-opacity"
