@@ -8,6 +8,7 @@ import {
   removePortfolioImage,
   getProfileUsername,
 } from '@/lib/data/profiles';
+import { createClient } from '@/lib/supabase/server';
 import type { Profile, ProfileUpdate } from '@/lib/data/profiles';
 
 export async function getMyProfileAction(): Promise<Profile | null> {
@@ -40,5 +41,14 @@ export async function getProfileUsernameAction(profileId: string): Promise<strin
 }
 
 export async function publishProfileAction(): Promise<{ error: string | null }> {
-  return publishProfile();
+  const { error } = await publishProfile();
+  if (error) return { error };
+
+  const supabase = await createClient();
+  const { error: authError } = await supabase.auth.updateUser({
+    data: { profile_complete: true },
+  });
+  if (authError) return { error: authError.message };
+
+  return { error: null };
 }

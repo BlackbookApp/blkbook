@@ -29,6 +29,8 @@ const MyBlackbook = () => {
   const { invitesUsed } = useInvite();
   const [showShare, setShowShare] = useState(false);
 
+  console.log(profile);
+
   const actions = [
     {
       icon: Eye,
@@ -43,7 +45,7 @@ const MyBlackbook = () => {
       icon: SquarePen,
       label: 'Edit profile',
       description: 'Update your profile details',
-      action: () => router.push(routes.editProfile),
+      action: () => router.push(routes.editProfileV2),
     },
   ];
 
