@@ -35,7 +35,7 @@ const SignUpContent = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col relative">
-      <div className="px-6 pt-6">
+      <div className="px-6 bb-safe-top-6">
         <Logo />
       </div>
 
