@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface ImageItem {
@@ -31,6 +33,45 @@ const POSITIONS = [
   { blockClass: '', imgClass: 'mx-auto w-[65%]', textAlign: 'text-center' },
 ];
 
+const ScrollReveal = ({
+  children,
+  yOffset = 32,
+}: {
+  children: React.ReactNode;
+  yOffset?: number;
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [hiddenY, setHiddenY] = useState(yOffset);
+
+  return (
+    <motion.div
+      initial="hidden"
+      animate={isVisible ? 'visible' : 'hidden'}
+      custom={hiddenY}
+      variants={{
+        hidden: (y: number) => ({
+          opacity: 0,
+          y,
+          transition: { duration: 0 },
+        }),
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] },
+        },
+      }}
+      onViewportEnter={() => setIsVisible(true)}
+      onViewportLeave={(entry) => {
+        setHiddenY(entry && entry.boundingClientRect.top < 0 ? -yOffset : yOffset);
+        setIsVisible(false);
+      }}
+      viewport={{ margin: '-60px' }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 export function ImagePortfolio({ data }: { data: ImagePortfolioData }) {
   if (!data.images || data.images.length === 0) {
     return <EmptyState message="Upload portfolio images" />;
@@ -42,38 +83,42 @@ export function ImagePortfolio({ data }: { data: ImagePortfolioData }) {
         const pos = POSITIONS[i % POSITIONS.length];
         return (
           <div key={i} className={pos.blockClass}>
-            <div className={pos.imgClass}>
-              {img.url ? (
-                <img
-                  src={img.url}
-                  alt={img.caption ?? `Image ${i + 1}`}
-                  className="w-full aspect-[3/4] object-cover block border border-bb-rule"
-                />
-              ) : (
-                <div className="w-full aspect-[3/4] bg-bb-rule/30 border border-bb-rule" />
-              )}
-              {img.caption && (
-                <p
-                  className={cn(
-                    'font-helvetica text-[9px] uppercase tracking-[0.2em] font-light text-[#bbbbbb] mt-2',
-                    pos.textAlign
-                  )}
-                >
-                  {img.caption}
-                </p>
-              )}
-            </div>
-            {i === 1 && data.text && (
-              <div className="text-center py-8 mb-16">
-                <p className="font-granjon italic text-[15px] leading-relaxed max-w-[260px] mx-auto">
-                  &ldquo;{data.text}&rdquo;
-                </p>
-                {data.text_attributed && (
-                  <p className="font-granjon text-[11px] mt-3 uppercase tracking-[0.12em] text-[#999]">
-                    — {data.text_attributed}
+            <ScrollReveal>
+              <div className={pos.imgClass}>
+                {img.url ? (
+                  <img
+                    src={img.url}
+                    alt={img.caption ?? `Image ${i + 1}`}
+                    className="w-full aspect-[3/4] object-cover block border border-bb-rule"
+                  />
+                ) : (
+                  <div className="w-full aspect-[3/4] bg-bb-rule/30 border border-bb-rule" />
+                )}
+                {img.caption && (
+                  <p
+                    className={cn(
+                      'font-helvetica text-[9px] uppercase tracking-[0.2em] font-light text-[#bbbbbb] mt-2',
+                      pos.textAlign
+                    )}
+                  >
+                    {img.caption}
                   </p>
                 )}
               </div>
+            </ScrollReveal>
+            {i === 1 && data.text && (
+              <ScrollReveal yOffset={20}>
+                <div className="text-center py-8 mb-16">
+                  <p className="font-granjon italic text-[15px] leading-relaxed max-w-[260px] mx-auto">
+                    &ldquo;{data.text}&rdquo;
+                  </p>
+                  {data.text_attributed && (
+                    <p className="font-granjon text-[11px] mt-3 uppercase tracking-[0.12em] text-[#999]">
+                      — {data.text_attributed}
+                    </p>
+                  )}
+                </div>
+              </ScrollReveal>
             )}
           </div>
         );

@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useProfileView } from '@/contexts/profile-view-context';
 import { ProfileCTA } from '@/components/public-profile/shared/profile-cta';
 
@@ -31,11 +32,21 @@ export function ProfileHeroCentered({ data }: { data: ProfileHeroCenteredData })
     <div className="w-full">
       {/* Name + tagline above image */}
       {(data.name || data.tagline) && (
-        <div className="text-right mb-2">
+        <motion.div
+          className="text-right mb-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+        >
           {data.name && (
-            <h1 className="font-granjon text-xl uppercase tracking-[0.01em] leading-tight text-foreground">
+            <motion.h1
+              className="font-granjon text-xl uppercase tracking-[0.01em] leading-tight text-foreground"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               {data.name}
-            </h1>
+            </motion.h1>
           )}
           {data.tagline && (
             <p className="font-granjon italic text-[17px] tracking-tight text-foreground">
@@ -47,18 +58,23 @@ export function ProfileHeroCentered({ data }: { data: ProfileHeroCenteredData })
               {data.location}
             </p>
           )}
-        </div>
+        </motion.div>
       )}
 
       {/* Image */}
       {data.image_url ? (
-        <div className="w-full aspect-[3/4] border border-bb-rule overflow-hidden">
+        <motion.div
+          className="w-full aspect-[3/4] border border-bb-rule overflow-hidden"
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+        >
           <img
             src={data.image_url}
             alt={data.name ?? 'Profile photo'}
             className="w-full h-full object-cover"
           />
-        </div>
+        </motion.div>
       ) : (
         <div className="w-full aspect-[3/4] border border-bb-rule bg-bb-rule/30 flex items-center justify-center">
           <span className="font-helvetica text-[9px] uppercase tracking-[0.2em] text-bb-muted/40">
@@ -68,7 +84,15 @@ export function ProfileHeroCentered({ data }: { data: ProfileHeroCenteredData })
       )}
 
       {/* CTA buttons — only on public profile */}
-      {profileView && <ProfileCTA {...profileView} textOnly />}
+      {profileView && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.7 }}
+        >
+          <ProfileCTA {...profileView} textOnly />
+        </motion.div>
+      )}
     </div>
   );
 }
