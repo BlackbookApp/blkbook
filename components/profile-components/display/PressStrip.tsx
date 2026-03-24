@@ -24,7 +24,7 @@ function PressItem({ item }: { item: PressItem }) {
   const content = item.logo_url ? (
     <img src={item.logo_url} alt={item.name} className="h-6 object-contain" />
   ) : (
-    <span className="font-granjon text-[20px] leading-none">{item.name}</span>
+    <span className="font-granjon text-[20px] leading-none text-foreground">{item.name}</span>
   );
 
   if (item.url) {
@@ -53,7 +53,7 @@ export function PressStrip({ data }: { data: PressStripData }) {
   return (
     <div className="overflow-hidden py-4 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
       <div
-        className="flex items-center gap-12 opacity-60"
+        className="flex items-center gap-12"
         style={{
           animation: 'press-ticker 20s linear infinite',
           width: 'max-content',

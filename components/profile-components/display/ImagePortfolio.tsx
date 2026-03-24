@@ -24,10 +24,11 @@ function EmptyState({ message }: { message: string }) {
 }
 
 const POSITIONS = [
-  { width: 'w-[70%]', justify: 'justify-start', aspect: 'aspect-[3/4]', textAlign: 'text-left' },
-  { width: 'w-[50%]', justify: 'justify-end', aspect: 'aspect-[3/4]', textAlign: 'text-right' },
-  { width: 'w-[45%]', justify: 'justify-start', aspect: 'aspect-[4/5]', textAlign: 'text-left' },
-  { width: 'w-[55%]', justify: 'justify-center', aspect: 'aspect-[3/4]', textAlign: 'text-center' },
+  { blockClass: 'mb-16', imgClass: 'mx-auto w-[78%]', textAlign: 'text-center' },
+  { blockClass: 'mb-20', imgClass: 'mr-auto w-[52%]', textAlign: 'text-left' },
+  { blockClass: 'mb-20', imgClass: 'w-full', textAlign: 'text-left' },
+  { blockClass: 'mb-20', imgClass: 'ml-auto w-[48%]', textAlign: 'text-right' },
+  { blockClass: '', imgClass: 'mx-auto w-[65%]', textAlign: 'text-center' },
 ];
 
 export function ImagePortfolio({ data }: { data: ImagePortfolioData }) {
@@ -36,41 +37,39 @@ export function ImagePortfolio({ data }: { data: ImagePortfolioData }) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="mb-6">
       {data.images.map((img, i) => {
         const pos = POSITIONS[i % POSITIONS.length];
         return (
-          <div key={i}>
-            <div className={cn('flex', pos.justify)}>
-              <div className={cn(pos.width, pos.aspect, 'overflow-hidden border border-bb-rule')}>
-                {img.url ? (
-                  <img
-                    src={img.url}
-                    alt={img.caption ?? `Image ${i + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-bb-rule/30" />
-                )}
-              </div>
+          <div key={i} className={pos.blockClass}>
+            <div className={pos.imgClass}>
+              {img.url ? (
+                <img
+                  src={img.url}
+                  alt={img.caption ?? `Image ${i + 1}`}
+                  className="w-full aspect-[3/4] object-cover block border border-bb-rule"
+                />
+              ) : (
+                <div className="w-full aspect-[3/4] bg-bb-rule/30 border border-bb-rule" />
+              )}
+              {img.caption && (
+                <p
+                  className={cn(
+                    'font-helvetica text-[9px] uppercase tracking-[0.2em] font-light text-[#bbbbbb] mt-2',
+                    pos.textAlign
+                  )}
+                >
+                  {img.caption}
+                </p>
+              )}
             </div>
-            {img.caption && (
-              <p
-                className={cn(
-                  'font-helvetica text-[9px] uppercase tracking-[0.2em] font-light text-[#bbbbbb] mt-2',
-                  pos.textAlign
-                )}
-              >
-                {img.caption}
-              </p>
-            )}
-            {i === 0 && data.text && (
-              <div className="py-6 text-center">
-                <p className="font-granjon italic text-[15px] leading-[1.8] text-bb-dark/70">
+            {i === 1 && data.text && (
+              <div className="text-center py-8 mb-16">
+                <p className="font-granjon italic text-[15px] leading-relaxed max-w-[260px] mx-auto">
                   &ldquo;{data.text}&rdquo;
                 </p>
                 {data.text_attributed && (
-                  <p className="font-helvetica text-[9px] uppercase tracking-[0.2em] text-[#bbbbbb] mt-3">
+                  <p className="font-granjon text-[11px] mt-3 uppercase tracking-[0.12em] text-[#999]">
                     — {data.text_attributed}
                   </p>
                 )}
