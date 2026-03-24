@@ -15,9 +15,7 @@ import { StepBuildMethod } from '@/components/onboarding-v2/StepBuildMethod';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EDITOR_MAP } from '@/config/editorMap';
 import { DISPLAY_MAP } from '@/config/displayMap';
-import { REQUIRED_COMPONENTS } from '@/config/roleSchemas';
 import { useProfileComponents } from '@/hooks/use-profile-components';
-import { updateComponentVisibilityAction } from '@/app/actions/components';
 import { publishProfileAction } from '@/app/actions/profiles';
 import { saveOnboardingAction } from '@/app/actions/onboarding';
 import { createClient } from '@/lib/supabase/client';
@@ -73,13 +71,6 @@ const STEPS: Array<{
     label: 'Your profile',
     title: 'Edit your sections.',
     subtext: 'Tap Edit on any section. Changes save automatically.',
-    canContinue: () => true,
-    continueLabel: () => 'Choose sections',
-  },
-  {
-    label: 'Choose what to show',
-    title: 'Almost there.',
-    subtext: 'Toggle sections on or off. You can always change this later.',
     canContinue: () => true,
     continueLabel: () => 'Publish profile',
   },
@@ -171,64 +162,6 @@ function EditableSection({
   );
 }
 
-// ─── Component toggle card ────────────────────────────────────────────────────
-
-function ComponentCard({
-  component,
-  isVisible,
-  isRequired,
-  onToggle,
-}: {
-  component: ProfileComponent;
-  isVisible: boolean;
-  isRequired: boolean;
-  onToggle: () => void;
-}) {
-  const label = EDITOR_MAP[component.type as ComponentType]?.label ?? component.type;
-
-  return (
-    <button
-      onClick={() => !isRequired && onToggle()}
-      disabled={isRequired}
-      className={cn(
-        'flex flex-col justify-between p-3 border text-left transition-all',
-        isVisible ? 'border-foreground bg-background' : 'border-bb-rule bg-transparent',
-        isRequired && 'cursor-default'
-      )}
-    >
-      <div className="space-y-1.5 mb-3 pointer-events-none">
-        <div className={cn('h-1.5 w-full', isVisible ? 'bg-foreground/15' : 'bg-bb-rule')} />
-        <div className={cn('h-1.5 w-3/4', isVisible ? 'bg-foreground/10' : 'bg-bb-rule/60')} />
-        <div className={cn('h-1.5 w-1/2', isVisible ? 'bg-foreground/10' : 'bg-bb-rule/60')} />
-      </div>
-      <div className="flex items-end justify-between gap-1">
-        <span
-          className={cn(
-            'font-helvetica text-[9px] uppercase tracking-[0.15em] leading-tight',
-            isVisible ? 'text-foreground' : 'text-bb-muted/50'
-          )}
-        >
-          {label}
-        </span>
-        {isRequired ? (
-          <span className="font-helvetica text-[7px] uppercase tracking-[0.12em] text-bb-muted/50 whitespace-nowrap">
-            Always on
-          </span>
-        ) : (
-          <span
-            className={cn(
-              'w-3.5 h-3.5 border flex-shrink-0 flex items-center justify-center',
-              isVisible ? 'border-foreground' : 'border-bb-rule'
-            )}
-          >
-            {isVisible && <span className="w-1.5 h-1.5 bg-foreground block" />}
-          </span>
-        )}
-      </div>
-    </button>
-  );
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function OnboardingV2() {
@@ -246,7 +179,6 @@ export default function OnboardingV2() {
   const [isPending, setIsPending] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [activeEditId, setActiveEditId] = useState<string | null>(null);
-  const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
 
   const { data: components, isLoading: componentsLoading } = useProfileComponents(
     stepIndex >= 4 ? (profileId ?? undefined) : undefined
@@ -255,13 +187,8 @@ export default function OnboardingV2() {
   const state: OnboardingState = { roleType, fullName, heroPreview, buildMethod };
   const currentStep = STEPS[stepIndex];
   const isProfileStep = stepIndex === 4;
-  const isRefineStep = stepIndex === 5;
-  const required = roleType ? (REQUIRED_COMPONENTS[roleType] ?? []) : [];
 
-  const effectiveComponents = components?.map((c) => ({
-    ...c,
-    is_visible: visibilityMap[c.id] ?? c.is_visible,
-  }));
+  const effectiveComponents = components;
 
   async function handleDoneEditing() {
     setActiveEditId(null);
@@ -318,16 +245,12 @@ export default function OnboardingV2() {
       return;
     }
 
-    // Step 4 → 5: close any open editor + refresh before refine
+    // Step 4 → publish
     if (stepIndex === 4) {
       setActiveEditId(null);
       if (profileId) {
         await queryClient.invalidateQueries({ queryKey: ['profile-components', profileId] });
       }
-    }
-
-    // Step 5 → publish
-    if (stepIndex === 5) {
       setIsPending(true);
       const { error } = await publishProfileAction();
       setIsPending(false);
@@ -335,7 +258,7 @@ export default function OnboardingV2() {
         setSaveError(error);
         return;
       }
-      router.push(routes.myBlackbook); // TODO: confirm destination
+      router.push(routes.myBlackbook);
       return;
     }
 
@@ -347,15 +270,8 @@ export default function OnboardingV2() {
     else router.back();
   }
 
-  function handleToggle(component: ProfileComponent) {
-    const current = visibilityMap[component.id] ?? component.is_visible;
-    const next = !current;
-    setVisibilityMap((prev) => ({ ...prev, [component.id]: next }));
-    updateComponentVisibilityAction(component.id, next);
-  }
-
   const canContinue = currentStep.canContinue(state) && !isPending;
-  const isFullStep = isProfileStep || isRefineStep;
+  const isFullStep = isProfileStep;
 
   return (
     <div className="min-h-[100dvh] bg-background flex flex-col">
@@ -459,45 +375,6 @@ export default function OnboardingV2() {
                 )}
               </div>
             )}
-
-            {/* Step 5: refine — header + scrollable toggle grid */}
-            {isRefineStep && (
-              <div className="flex-1 flex flex-col overflow-hidden">
-                <div className="px-6 pt-6 pb-4 flex-shrink-0 max-w-md mx-auto w-full">
-                  <StepHeader
-                    label={currentStep.label}
-                    title={currentStep.title}
-                    subtext={currentStep.subtext}
-                  />
-                </div>
-                <div className="flex-1 overflow-y-auto px-6 pb-4">
-                  {componentsLoading || !effectiveComponents ? (
-                    <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
-                      {Array.from({ length: 8 }).map((_, i) => (
-                        <Skeleton key={i} className="h-24 rounded-none" />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
-                      {effectiveComponents.map((component) => {
-                        const isRequired = required.includes(
-                          component.type as (typeof required)[number]
-                        );
-                        return (
-                          <ComponentCard
-                            key={component.id}
-                            component={component}
-                            isVisible={component.is_visible}
-                            isRequired={isRequired}
-                            onToggle={() => handleToggle(component)}
-                          />
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -517,11 +394,7 @@ export default function OnboardingV2() {
           disabled={!canContinue}
           className="bb-btn-primary disabled:opacity-30"
         >
-          {isPending
-            ? isRefineStep
-              ? 'Publishing…'
-              : 'Saving…'
-            : currentStep.continueLabel(state)}
+          {isPending ? 'Publishing…' : currentStep.continueLabel(state)}
         </button>
         {stepIndex > 0 && !isFullStep && (
           <button

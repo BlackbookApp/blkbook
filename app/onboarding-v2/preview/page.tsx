@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import Logo from '@/components/Logo';
@@ -7,6 +8,7 @@ import { useProfile } from '@/hooks/use-profile';
 import { useProfileComponents } from '@/hooks/use-profile-components';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DISPLAY_MAP } from '@/config/displayMap';
+import { publishProfileAction } from '@/app/actions/profiles';
 import { routes } from '@/lib/routes';
 import type { ComponentType } from '@/config/roleSchemas';
 
@@ -14,9 +16,23 @@ export default function OnboardingPreview() {
   const router = useRouter();
   const { data: profile, isLoading: profileLoading } = useProfile();
   const { data: components, isLoading: componentsLoading } = useProfileComponents(profile?.id);
+  const [publishing, startPublish] = useTransition();
+  const [publishError, setPublishError] = useState<string | null>(null);
 
   const isLoading = profileLoading || componentsLoading;
   const visible = components?.filter((c) => c.is_visible) ?? [];
+
+  function handlePublish() {
+    setPublishError(null);
+    startPublish(async () => {
+      const { error } = await publishProfileAction();
+      if (error) {
+        setPublishError(error);
+        return;
+      }
+      router.push(routes.editProfile);
+    });
+  }
 
   return (
     <div className="min-h-[100dvh] bg-background flex flex-col">
@@ -68,9 +84,12 @@ export default function OnboardingPreview() {
 
       {/* Footer CTA */}
       {!isLoading && (
-        <div className="fixed bottom-0 left-0 right-0 px-6 pb-8 pt-4 bg-background border-t border-bb-rule">
-          <button onClick={() => router.push(routes.onboardingV2Refine)} className="bb-btn-primary">
-            Customize sections
+        <div className="fixed bottom-0 left-0 right-0 px-6 pb-8 pt-4 bg-background border-t border-bb-rule space-y-3">
+          {publishError && (
+            <p className="font-helvetica text-[10px] text-red-500 text-center">{publishError}</p>
+          )}
+          <button onClick={handlePublish} disabled={publishing} className="bb-btn-primary">
+            {publishing ? 'Publishing…' : 'Publish profile'}
           </button>
         </div>
       )}

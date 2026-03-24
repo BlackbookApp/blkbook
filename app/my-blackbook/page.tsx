@@ -86,9 +86,12 @@ const MyBlackbook = () => {
             {[profile?.role, profile?.location].filter(Boolean).join(' · ')}
           </p>
           {profile?.username && (
-            <p className="font-granjon text-[13px] italic text-bb-muted/60">
-              blkbook.me/{profile.username}
-            </p>
+            <button
+              onClick={() => router.push(routes.publicProfile(profile.username!))}
+              className="font-granjon text-[13px] italic text-bb-muted/60 hover:text-bb-dark transition-colors normal-case"
+            >
+              blkbook.me/p/{profile.username}
+            </button>
           )}
         </motion.div>
 
