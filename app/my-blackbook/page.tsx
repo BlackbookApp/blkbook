@@ -45,7 +45,7 @@ const MyBlackbook = () => {
       icon: SquarePen,
       label: 'Edit profile',
       description: 'Update your profile details',
-      action: () => router.push(routes.editProfileV2),
+      action: () => router.push(routes.editProfile),
     },
   ];
 
