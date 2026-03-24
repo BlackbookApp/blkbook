@@ -81,7 +81,7 @@ function PlatformSelect({
         </svg>
       </div>
       {open && (
-        <div className="absolute top-full left-0 right-0 z-50 bb-dropdown-panel border border-bb-rule mt-1 py-1 max-h-64 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 z-50 bg-bb-cream border border-bb-rule mt-1 py-1 max-h-64 overflow-y-auto shadow-sm">
           {PLATFORM_OPTIONS.map((opt) => (
             <button
               key={opt.value}
