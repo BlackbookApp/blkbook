@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/hooks/use-user';
 import { useIsInVault, useCreateVaultContact } from '@/hooks/use-vault-contacts';
@@ -9,7 +8,6 @@ import { useHasExchanged } from '@/hooks/use-exchanges';
 import { useQueryClient } from '@tanstack/react-query';
 import ExchangeDetailsModal from '@/components/ExchangeDetailsModal';
 import ExchangeAuthModal from './exchange-auth-modal';
-import { ShareProfileModal } from '@/components/share-profile-modal';
 import { routes } from '@/lib/routes';
 import type { SocialLinks } from '@/lib/data/profiles';
 
@@ -42,7 +40,6 @@ export interface ProfileCTAProps {
 
 export function ProfileCTA({
   profileId,
-  profileOwnerId,
   profileFirstName,
   profileUsername,
   profileName,
@@ -54,17 +51,14 @@ export function ProfileCTA({
 }: ProfileCTAProps) {
   const { data: user, isLoading: userLoading } = useUser();
   const isAuthed = !!user;
-  const isOwner = isAuthed && user.id === profileOwnerId;
 
   const { data: inVault } = useIsInVault(profileId);
-  // Only fetch for non-owner authed users; enabled guard in the hook handles the rest
-  const { data: hasExchanged } = useHasExchanged(isAuthed && !isOwner ? profileId : '');
+  const { data: hasExchanged } = useHasExchanged(isAuthed ? profileId : '');
   const { mutateAsync: saveToVault, isPending: addingToVault } = useCreateVaultContact();
   const queryClient = useQueryClient();
 
   const [showExchange, setShowExchange] = useState(false);
   const [showAuthExchange, setShowAuthExchange] = useState(false);
-  const [showShare, setShowShare] = useState(false);
 
   const handleAddToVault = async () => {
     if (inVault) return;
@@ -152,26 +146,6 @@ export function ProfileCTA({
 
   const btn = textOnly ? TEXT_BTN : compact ? COMPACT_BTN : PRIMARY_BTN;
   const secBtn = textOnly ? TEXT_BTN : compact ? COMPACT_BTN : SECONDARY_BTN;
-
-  // Owner CTAs
-  if (isOwner) {
-    return wrap(
-      <>
-        <Button variant="outline" className={btn} onClick={() => setShowShare(true)}>
-          Share Profile
-        </Button>
-        {socialButtons}
-        <Button asChild variant="outline" className={secBtn}>
-          <Link href={routes.editProfile}>Edit Profile</Link>
-        </Button>
-      </>,
-      <ShareProfileModal
-        open={showShare}
-        onClose={() => setShowShare(false)}
-        username={profileUsername}
-      />
-    );
-  }
 
   // Member CTAs
   if (isAuthed) {

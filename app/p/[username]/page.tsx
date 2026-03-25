@@ -4,9 +4,11 @@ import { getProfileByUsername } from '@/lib/data/profiles';
 import { getProfileComponents } from '@/lib/data/components';
 import { ProfileComponentsView } from '@/components/ProfileComponentsView';
 import { extractContactsFromComponents } from '@/components/public-profile/shared/profile-adapters';
+import { BackToAppButton } from '@/components/public-profile/BackToAppButton';
 
 interface Props {
   params: Promise<{ username: string }>;
+  searchParams: Promise<{ from?: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -20,8 +22,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function PublicProfilePage({ params }: Props) {
+export default async function PublicProfilePage({ params, searchParams }: Props) {
   const { username } = await params;
+  const { from } = await searchParams;
 
   const profile = await getProfileByUsername(username);
   if (!profile) notFound();
@@ -32,6 +35,7 @@ export default async function PublicProfilePage({ params }: Props) {
 
   return (
     <div className="min-h-[100dvh] bg-background">
+      {from === 'app' && <BackToAppButton />}
       <ProfileComponentsView
         theme={theme}
         components={profileComponents}

@@ -25,12 +25,6 @@ const EMPTY_BUTTON: ButtonItem = { label: '', url: null, style: 'secondary' };
 
 const PREVIEW_VIEWS = [
   {
-    key: 'owner',
-    label: 'Your view',
-    primary: 'Share Profile',
-    secondary: 'Edit Profile',
-  },
-  {
     key: 'member',
     label: 'Member view',
     primary: 'Add to Vault',
@@ -45,7 +39,7 @@ const PREVIEW_VIEWS = [
 ] as const;
 
 function DynamicPreview() {
-  const [active, setActive] = useState<'owner' | 'member' | 'guest'>('owner');
+  const [active, setActive] = useState<'member' | 'guest'>('member');
   const view = PREVIEW_VIEWS.find((v) => v.key === active)!;
 
   return (
