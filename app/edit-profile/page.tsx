@@ -1,232 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft } from 'lucide-react';
+import { X } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { routes } from '@/lib/routes';
 import { useProfile } from '@/hooks/use-profile';
-import { createClient } from '@/lib/supabase/client';
-import {
-  updateProfileAction,
-  addPortfolioImageAction,
-  removePortfolioImageAction,
-} from '@/app/actions/profiles';
-import { useQueryClient } from '@tanstack/react-query';
-import type {
-  ProfileStyle,
-  ProfilePalette,
-  SocialFields,
-  WorkData,
-} from '@/components/edit-profile/types';
-import { StepStyle } from '@/components/edit-profile/step-style';
-import { StepProfile } from '@/components/edit-profile/step-profile';
-import { StepWork } from '@/components/edit-profile/step-work';
-import { MiniPreview } from '@/components/edit-profile/mini-preview';
-import PublicProfileVisual from '@/components/public-profile/public-profile-visual';
-import PublicProfileEditorial from '@/components/public-profile/public-profile-editorial';
-import type { ProfileTheme } from '@/components/public-profile/public-profile-visual';
-import { profileFromEditState } from '@/components/public-profile/shared/profile-adapters';
+import { useProfileComponents } from '@/hooks/use-profile-components';
+import { EDITOR_MAP } from '@/config/editorMap';
+
+const TOTAL_STEPS = 2;
 
 const EditProfile = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const { data: profile, isLoading } = useProfile();
+  const { data: profile, isLoading: profileLoading } = useProfile();
+  const { data: components = [], isLoading: componentsLoading } = useProfileComponents(profile?.id);
 
   const [step, setStep] = useState(1);
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [showPreview, setShowPreview] = useState(false);
 
-  const [style, setStyle] = useState<ProfileStyle>(null);
-  const [palette, setPalette] = useState<ProfilePalette>(null);
+  const isLoading = profileLoading || componentsLoading;
 
-  const [name, setName] = useState('');
-  const [role, setRole] = useState('');
-  const [location, setLocation] = useState('');
-  const [bio, setBio] = useState('');
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-
-  const [socials, setSocials] = useState<SocialFields>({
-    website: '',
-    instagram: '',
-    tiktok: '',
-    linkedin: '',
-    twitter: '',
-    email: '',
-    phone: '',
-    whatsapp: '',
-  });
-
-  const [work, setWork] = useState<WorkData>({
-    portfolioImages: [],
-    logo: null,
-    testimonials: [{ quote: '', author: '', title: '' }],
-    brandStatement: '',
-    recommendedBy: [],
-  });
-
-  const [removedPortfolioIds, setRemovedPortfolioIds] = useState<string[]>([]);
-  const [logoFile, setLogoFile] = useState<File | null>(null);
-
-  // Pre-fill from DB on mount
-  useEffect(() => {
-    if (!profile) return;
-    setStyle(profile.style ?? null);
-    setPalette(profile.palette ?? null);
-    setName(profile.full_name ?? '');
-    setRole(profile.role ?? '');
-    setLocation(profile.location ?? '');
-    setBio(profile.bio ?? '');
-    setAvatarPreview(profile.avatar_url ?? null);
-    setSocials({
-      website: profile.social_links.website ?? '',
-      instagram: profile.social_links.instagram ?? '',
-      tiktok: profile.social_links.tiktok ?? '',
-      linkedin: profile.social_links.linkedin ?? '',
-      twitter: profile.social_links.twitter ?? '',
-      email: profile.social_links.email ?? '',
-      phone: profile.social_links.phone ?? '',
-      whatsapp: profile.social_links.whatsapp ?? '',
-    });
-    setWork({
-      portfolioImages: profile.portfolio_images.map((img) => ({ id: img.id, url: img.url })),
-      logo: profile.logo_url ?? null,
-      testimonials:
-        profile.testimonials.length > 0
-          ? profile.testimonials.map((t) => ({
-              quote: t.quote,
-              author: t.author ?? '',
-              title: t.title ?? '',
-            }))
-          : [{ quote: '', author: '', title: '' }],
-      brandStatement: profile.brand_statement ?? '',
-      recommendedBy: profile.recommended_by ?? [],
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile?.id]);
-
-  const handleSave = async () => {
-    setIsSaving(true);
-    setSaveError(null);
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user || !profile) {
-      setIsSaving(false);
-      return;
-    }
-
-    try {
-      // 1. Upload avatar if changed
-      let avatarUrl: string | undefined;
-      if (avatarFile) {
-        const ext = avatarFile.name.split('.').pop() ?? 'jpg';
-        const path = `${user.id}/avatar.${ext}`;
-        const { error } = await supabase.storage
-          .from('avatars')
-          .upload(path, avatarFile, { upsert: true });
-        if (error) throw new Error('Failed to upload avatar');
-        const {
-          data: { publicUrl },
-        } = supabase.storage.from('avatars').getPublicUrl(path);
-        avatarUrl = publicUrl;
-        setAvatarPreview(publicUrl);
-      }
-
-      // 2. Upload logo if changed
-      let logoUrl: string | undefined;
-      if (logoFile) {
-        const ext = logoFile.name.split('.').pop() ?? 'png';
-        const path = `${user.id}/logo.${ext}`;
-        const { error } = await supabase.storage
-          .from('portfolio')
-          .upload(path, logoFile, { upsert: true });
-        if (error) throw new Error('Failed to upload logo');
-        const {
-          data: { publicUrl },
-        } = supabase.storage.from('portfolio').getPublicUrl(path);
-        logoUrl = publicUrl;
-        setWork((w) => ({ ...w, logo: publicUrl }));
-      }
-
-      // 3. Upload new portfolio images
-      const newImages = work.portfolioImages.filter((e) => e.file);
-      const existingCount = work.portfolioImages.filter((e) => !e.file).length;
-      const uploadedUrls: string[] = [];
-      for (let i = 0; i < newImages.length; i++) {
-        const entry = newImages[i];
-        if (!entry.file) continue;
-        const ext = entry.file.name.split('.').pop() ?? 'jpg';
-        const path = `${user.id}/portfolio-${Date.now()}-${i}.${ext}`;
-        const { error } = await supabase.storage
-          .from('portfolio')
-          .upload(path, entry.file, { upsert: false });
-        if (error) throw new Error('Failed to upload portfolio image');
-        const {
-          data: { publicUrl },
-        } = supabase.storage.from('portfolio').getPublicUrl(path);
-        await addPortfolioImageAction(profile.id, publicUrl, existingCount + i);
-        uploadedUrls.push(publicUrl);
-      }
-      if (uploadedUrls.length > 0) {
-        let newIdx = 0;
-        setWork((w) => ({
-          ...w,
-          portfolioImages: w.portfolioImages.map((e) =>
-            e.file ? { ...e, url: uploadedUrls[newIdx++], file: undefined } : e
-          ),
-        }));
-      }
-
-      // 4. Delete removed portfolio images
-      for (const id of removedPortfolioIds) {
-        await removePortfolioImageAction(profile.id, id);
-      }
-
-      // 5. Update profile fields
-      const socialLinks = Object.fromEntries(
-        Object.entries({
-          website: socials.website,
-          instagram: socials.instagram,
-          tiktok: socials.tiktok,
-          linkedin: socials.linkedin,
-          twitter: socials.twitter,
-          email: socials.email,
-          phone: socials.phone,
-          whatsapp: socials.whatsapp,
-        }).filter(([, v]) => v !== '')
-      );
-
-      await updateProfileAction({
-        full_name: name || null,
-        role: role || null,
-        location: location || null,
-        bio: bio || null,
-        ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
-        social_links: socialLinks,
-        style: style ?? undefined,
-        palette: palette ?? undefined,
-        brand_statement: work.brandStatement || null,
-        logo_url: logoUrl ?? (work.logo && !work.logo.startsWith('blob:') ? work.logo : null),
-        testimonials: work.testimonials
-          .filter((t) => t.quote.trim())
-          .map((t) => ({ quote: t.quote, author: t.author || null, title: t.title || null })),
-        recommended_by: work.recommendedBy,
-      });
-
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
-
-      router.push(routes.myBlackbook);
-    } catch (err) {
-      setSaveError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
-    } finally {
-      setIsSaving(false);
-    }
-  };
+  const heroComponent = components.find((c) => c.type === 'profile_hero_centered');
+  const otherComponents = components.filter((c) => c.type !== 'profile_hero_centered');
 
   if (isLoading) {
     return (
@@ -236,67 +32,9 @@ const EditProfile = () => {
     );
   }
 
-  if (showPreview) {
-    const profileTheme: ProfileTheme = palette === 'noir' ? 'noir' : 'blanc';
-    const {
-      profile: previewProfile,
-      portfolio: previewPortfolio,
-      testimonials: previewTestimonials,
-    } = profileFromEditState({ name, bio, role, location, avatarPreview, socials, work });
-
-    return (
-      <div className="relative">
-        {style === 'editorial' ? (
-          <PublicProfileEditorial
-            theme={profileTheme}
-            profile={previewProfile}
-            portfolio={previewPortfolio}
-            testimonials={previewTestimonials}
-            profileStyle="editorial"
-            isPreview={true}
-          />
-        ) : (
-          <PublicProfileVisual
-            theme={profileTheme}
-            profile={previewProfile}
-            portfolio={previewPortfolio}
-            testimonials={previewTestimonials}
-            profileStyle="visual"
-            isPreview={true}
-          />
-        )}
-
-        {/* Floating header */}
-        <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-          <div className="max-w-md mx-auto px-6 bb-safe-top-8 flex items-center justify-between pointer-events-auto">
-            <Logo />
-            <button
-              onClick={() => setShowPreview(false)}
-              className="text-muted-foreground/50 hover:text-foreground transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        {/* Fixed bottom CTA */}
-        <div className="fixed bottom-0 left-0 right-0 z-50" data-pg-theme={profileTheme}>
-          <div className="max-w-md mx-auto px-6 pt-12 pb-8 flex flex-col items-center gap-3 bg-gradient-to-t from-[var(--pg-bg)] via-[var(--pg-bg)/80] to-transparent">
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="pg-btn-primary disabled:opacity-50 w-full"
-            >
-              {isSaving ? 'Saving…' : 'Save profile'}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background">
+      {/* Header */}
       <div className="flex items-center justify-between px-6 pt-8">
         <Logo />
         <button
@@ -308,88 +46,115 @@ const EditProfile = () => {
         </button>
       </div>
 
+      {/* Step indicator */}
       <div className="flex justify-center mt-2">
         <span className="font-helvetica text-[10px] tracking-[0.2em] text-bb-muted/40 font-light">
-          Step {step} of 3
+          Step {step} of {TOTAL_STEPS}
         </span>
       </div>
       <div className="px-6 mt-3">
         <div className="w-full h-[2px] bg-border/30 overflow-hidden">
           <motion.div
             className="h-full bg-foreground"
-            initial={{ width: 0 }}
-            animate={{ width: `${(step / 3) * 100}%` }}
+            initial={false}
+            animate={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
           />
         </div>
       </div>
 
+      {/* Steps */}
       <AnimatePresence mode="wait">
         {step === 1 && (
-          <StepStyle
+          <motion.div
             key="step1"
-            style={style}
-            setStyle={setStyle}
-            palette={palette}
-            setPalette={setPalette}
-            onContinue={() => setStep(2)}
-            onPreview={(type) =>
-              router.push(
-                type === 'visual' ? routes.previewTemplateVisual : routes.previewTemplateEditorial
-              )
-            }
-          />
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -24 }}
+            transition={{ duration: 0.25 }}
+            className="flex-1 flex flex-col px-6 pt-8 pb-32"
+          >
+            <h2 className="font-granjon text-2xl mb-1">Your profile</h2>
+            <p className="font-helvetica text-[11px] text-bb-muted mb-8">
+              Name, photo and intro line.
+            </p>
+
+            {heroComponent ? (
+              <EDITOR_MAP.profile_hero_centered.component component={heroComponent} />
+            ) : (
+              <p className="font-helvetica text-[11px] text-bb-muted">
+                No profile hero found. Add one from the component library.
+              </p>
+            )}
+
+            <div className="fixed bottom-0 left-0 right-0 px-6 pb-8 pt-4 bg-gradient-to-t from-background via-background/80 to-transparent">
+              <div className="max-w-md mx-auto">
+                <button className="bb-btn-primary" onClick={() => setStep(2)}>
+                  Continue
+                </button>
+              </div>
+            </div>
+          </motion.div>
         )}
+
         {step === 2 && (
-          <StepProfile
+          <motion.div
             key="step2"
-            name={name}
-            setName={setName}
-            role={role}
-            setRole={setRole}
-            location={location}
-            setLocation={setLocation}
-            bio={bio}
-            setBio={setBio}
-            avatarFile={avatarFile}
-            setAvatarFile={setAvatarFile}
-            avatarPreview={avatarPreview}
-            setAvatarPreview={setAvatarPreview}
-            socials={socials}
-            setSocials={setSocials}
-            onContinue={() => setStep(3)}
-            onSkip={() => setStep(3)}
-          />
-        )}
-        {step === 3 && (
-          <StepWork
-            key="step3"
-            work={work}
-            setWork={setWork}
-            removedPortfolioIds={removedPortfolioIds}
-            setRemovedPortfolioIds={setRemovedPortfolioIds}
-            logoFile={logoFile}
-            setLogoFile={setLogoFile}
-            onFinish={() => setShowPreview(true)}
-          />
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -24 }}
+            transition={{ duration: 0.25 }}
+            className="flex-1 flex flex-col px-6 pt-8 pb-32"
+          >
+            <h2 className="font-granjon text-2xl mb-1">Your content</h2>
+            <p className="font-helvetica text-[11px] text-bb-muted mb-8">
+              Edit each section below. Changes save automatically.
+            </p>
+
+            {otherComponents.length === 0 ? (
+              <p className="font-helvetica text-[11px] text-bb-muted">
+                No additional components yet.
+              </p>
+            ) : (
+              <div className="space-y-10">
+                {otherComponents.map((component) => {
+                  const entry = EDITOR_MAP[component.type as keyof typeof EDITOR_MAP];
+                  if (!entry) return null;
+                  const EditorComponent = entry.component;
+                  return (
+                    <div key={component.id}>
+                      <div className="mb-4">
+                        <p className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-bb-muted">
+                          {entry.label}
+                        </p>
+                        <p className="font-helvetica text-[11px] text-bb-muted mt-0.5">
+                          {entry.description}
+                        </p>
+                      </div>
+                      <EditorComponent component={component} />
+                      <div className="h-px bg-bb-rule mt-10" />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            <div className="fixed bottom-0 left-0 right-0 px-6 pb-8 pt-4 bg-gradient-to-t from-background via-background/80 to-transparent">
+              <div className="max-w-md mx-auto flex flex-col gap-3">
+                <button className="bb-btn-primary" onClick={() => router.push(routes.myBlackbook)}>
+                  Done
+                </button>
+                <button
+                  className="font-helvetica text-[11px] tracking-[0.1em] text-bb-muted/50 hover:text-foreground transition-colors text-center"
+                  onClick={() => setStep(1)}
+                >
+                  Back
+                </button>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-
-      {isSaving && (
-        <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50">
-          <p className="blackbook-label">Saving…</p>
-        </div>
-      )}
-
-      {saveError && (
-        <div className="fixed bottom-6 left-0 right-0 z-50 px-6">
-          <div className="max-w-md mx-auto bg-destructive/10 border border-destructive/30 rounded-lg px-4 py-3">
-            <p className="text-[11px] text-destructive text-center">{saveError}</p>
-          </div>
-        </div>
-      )}
-
-      {step === 1 && (style || palette) && <MiniPreview style={style} palette={palette} />}
     </div>
   );
 };

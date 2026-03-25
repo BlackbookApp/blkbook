@@ -23,5 +23,7 @@ export const routes = {
   requestAccess: '/request-access',
   requestAccessStatus: (id: string) => `/request-access/status?id=${id}`,
   adminRequests: '/admin/requests',
+  adminResetProfile: '/admin/reset-profile',
   vcardDownload: (username: string) => `/api/vcard/${username}`,
+  onboarding: '/onboarding',
 } as const;

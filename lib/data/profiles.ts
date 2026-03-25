@@ -61,18 +61,25 @@ export async function getMyProfile(): Promise<Profile | null> {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('*, portfolio_images(id, url, position)')
+    .select('*, portfolio_images(id, url, position), profile_components(type, data)')
     .eq('user_id', user.id)
     .single();
 
   if (error) return null;
 
-  const { portfolio_images, ...rest } = data as typeof data & {
+  const { portfolio_images, profile_components, ...rest } = data as typeof data & {
     portfolio_images: PortfolioImage[];
+    profile_components: { type: string; data: Record<string, unknown> }[];
   };
+
+  const hero = (profile_components ?? []).find(
+    (c: { type: string; data: Record<string, unknown> }) => c.type === 'profile_hero_centered'
+  );
+  const heroLocation = (hero?.data?.location as string | null | undefined) ?? null;
 
   return {
     ...rest,
+    location: heroLocation,
     social_links: (rest.social_links as SocialLinks) ?? {},
     testimonials: (rest.testimonials as TestimonialEntry[]) ?? [],
     recommended_by: (rest.recommended_by as string[]) ?? [],
@@ -115,6 +122,31 @@ export async function createProfile(
     invited_by: invitedBy,
     username,
   });
+}
+
+/** Bypasses is_published filter — use only in server-side test/admin contexts. */
+export async function getProfileByUsernameAdmin(username: string): Promise<Profile | null> {
+  const { data, error } = await adminClient
+    .from('profiles')
+    .select('*, portfolio_images(id, url, position)')
+    .eq('username', username)
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  const { portfolio_images, ...rest } = data as typeof data & {
+    portfolio_images: PortfolioImage[];
+  };
+
+  return {
+    ...rest,
+    social_links: (rest.social_links as SocialLinks) ?? {},
+    testimonials: (rest.testimonials as TestimonialEntry[]) ?? [],
+    recommended_by: (rest.recommended_by as string[]) ?? [],
+    portfolio_images: (portfolio_images ?? []).sort(
+      (a: PortfolioImage, b: PortfolioImage) => a.position - b.position
+    ),
+  } as Profile;
 }
 
 export async function getProfileByUsername(username: string): Promise<Profile | null> {
@@ -172,6 +204,25 @@ export async function updateProfile(updates: ProfileUpdate): Promise<{ error: st
     .eq('user_id', user.id);
 
   return { error: error?.message ?? null };
+}
+
+export async function resetProfileComplete(
+  profileId: string,
+  userId: string
+): Promise<{ error: string | null }> {
+  const { error: profileError } = await adminClient
+    .from('profiles')
+    .update({ profile_complete: false, updated_at: new Date().toISOString() })
+    .eq('id', profileId)
+    .eq('user_id', userId);
+  if (profileError) return { error: profileError.message };
+
+  const { error: authError } = await adminClient.auth.admin.updateUserById(userId, {
+    user_metadata: { profile_complete: false },
+  });
+  if (authError) return { error: authError.message };
+
+  return { error: null };
 }
 
 export async function addPortfolioImage(

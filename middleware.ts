@@ -11,15 +11,10 @@ const PUBLIC_ROUTES = [
   '/request-access',
   '/p',
   '/api/vcard',
+  '/test-profile-components',
 ];
 const AUTH_ONLY_ROUTES = ['/login', '/signup']; // redirect to /my-blackbook if already authed
-const ONBOARDING_EXEMPT = [
-  '/create-profile',
-  '/profile-preview',
-  '/paywall',
-  '/auth/callback',
-  '/api',
-];
+const ONBOARDING_EXEMPT = ['/onboarding', '/paywall', '/auth/callback', '/api'];
 
 function isPublic(pathname: string) {
   return PUBLIC_ROUTES.some((r) => pathname === r || pathname.startsWith(r + '/'));
@@ -68,12 +63,19 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Authenticated users who haven't completed onboarding → redirect to /create-profile
+  // Completed users visiting onboarding → redirect to my-blackbook
+  if (user && user.user_metadata?.profile_complete && pathname.startsWith('/onboarding')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/my-blackbook';
+    return NextResponse.redirect(url);
+  }
+
+  // Authenticated users who haven't completed onboarding → redirect to /onboarding
   if (user && !user.user_metadata?.profile_complete) {
     const isExempt = ONBOARDING_EXEMPT.some((r) => pathname === r || pathname.startsWith(r + '/'));
     if (!isExempt && !isPublic(pathname)) {
       const url = request.nextUrl.clone();
-      url.pathname = '/create-profile';
+      url.pathname = '/onboarding';
       return NextResponse.redirect(url);
     }
   }
