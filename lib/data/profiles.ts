@@ -61,18 +61,25 @@ export async function getMyProfile(): Promise<Profile | null> {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('*, portfolio_images(id, url, position)')
+    .select('*, portfolio_images(id, url, position), profile_components(type, data)')
     .eq('user_id', user.id)
     .single();
 
   if (error) return null;
 
-  const { portfolio_images, ...rest } = data as typeof data & {
+  const { portfolio_images, profile_components, ...rest } = data as typeof data & {
     portfolio_images: PortfolioImage[];
+    profile_components: { type: string; data: Record<string, unknown> }[];
   };
+
+  const hero = (profile_components ?? []).find(
+    (c: { type: string; data: Record<string, unknown> }) => c.type === 'profile_hero_centered'
+  );
+  const heroLocation = (hero?.data?.location as string | null | undefined) ?? null;
 
   return {
     ...rest,
+    location: heroLocation,
     social_links: (rest.social_links as SocialLinks) ?? {},
     testimonials: (rest.testimonials as TestimonialEntry[]) ?? [],
     recommended_by: (rest.recommended_by as string[]) ?? [],
