@@ -28,7 +28,7 @@ const SignUpContent = () => {
       if ('error' in result) {
         setError(result.error);
       } else {
-        router.push(routes.createProfile);
+        router.push(routes.onboarding);
       }
     });
   };

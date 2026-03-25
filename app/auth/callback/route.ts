@@ -51,5 +51,5 @@ export async function GET(request: NextRequest) {
     await markInviteUsed(inviteCode, user.id);
   }
 
-  return NextResponse.redirect(`${origin}${routes.createProfile}`);
+  return NextResponse.redirect(`${origin}${routes.onboarding}`);
 }

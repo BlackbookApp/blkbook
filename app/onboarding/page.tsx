@@ -258,7 +258,7 @@ export default function OnboardingV2() {
         setSaveError(error);
         return;
       }
-      router.push(routes.myBlackbook);
+      router.push(routes.paywall);
       return;
     }
 
