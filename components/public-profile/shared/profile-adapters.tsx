@@ -181,10 +181,9 @@ export function buildSocialStatItems(items: RawSocialStatItem[]): ResolvedSocial
 export function extractContactsFromComponents(
   components: { type: string; data: unknown }[]
 ): SocialLinks {
-  const socialStat = components.find((c) => c.type === 'social_stat');
-  if (!socialStat) return {};
-
-  const items = (socialStat.data as { items?: RawSocialStatItem[] })?.items ?? [];
+  const items = components
+    .filter((c) => c.type === 'social_stat')
+    .flatMap((c) => (c.data as { items?: RawSocialStatItem[] })?.items ?? []);
   const result: SocialLinks = {};
 
   for (const item of items) {
