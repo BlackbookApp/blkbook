@@ -199,6 +199,25 @@ export async function updateProfile(updates: ProfileUpdate): Promise<{ error: st
   return { error: error?.message ?? null };
 }
 
+export async function resetProfileComplete(
+  profileId: string,
+  userId: string
+): Promise<{ error: string | null }> {
+  const { error: profileError } = await adminClient
+    .from('profiles')
+    .update({ profile_complete: false, updated_at: new Date().toISOString() })
+    .eq('id', profileId)
+    .eq('user_id', userId);
+  if (profileError) return { error: profileError.message };
+
+  const { error: authError } = await adminClient.auth.admin.updateUserById(userId, {
+    user_metadata: { profile_complete: false },
+  });
+  if (authError) return { error: authError.message };
+
+  return { error: null };
+}
+
 export async function addPortfolioImage(
   profileId: string,
   url: string,

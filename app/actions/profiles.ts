@@ -7,6 +7,7 @@ import {
   addPortfolioImage,
   removePortfolioImage,
   getProfileUsername,
+  resetProfileComplete,
 } from '@/lib/data/profiles';
 import { createClient } from '@/lib/supabase/server';
 import type { Profile, ProfileUpdate } from '@/lib/data/profiles';
@@ -38,6 +39,13 @@ export async function removePortfolioImageAction(
 
 export async function getProfileUsernameAction(profileId: string): Promise<string | null> {
   return getProfileUsername(profileId);
+}
+
+export async function resetProfileCompleteAction(
+  profileId: string,
+  userId: string
+): Promise<{ error: string | null }> {
+  return resetProfileComplete(profileId, userId);
 }
 
 export async function publishProfileAction(): Promise<{ error: string | null }> {

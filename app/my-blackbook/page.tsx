@@ -38,7 +38,7 @@ const MyBlackbook = () => {
       description: 'See exactly what others see',
       action: () =>
         profile?.username
-          ? router.push(routes.publicProfile(profile.username))
+          ? router.push(routes.publicProfile(profile.username) + '?from=app')
           : router.push(routes.profilePreview),
     },
     {
