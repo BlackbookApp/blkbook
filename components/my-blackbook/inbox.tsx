@@ -3,126 +3,107 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
-import { motion } from 'framer-motion';
-import { useExchanges, useAcceptExchange } from '@/hooks/use-exchanges';
-import type { Exchange, SharedFields } from '@/lib/data/exchanges';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, X } from 'lucide-react';
+import { useExchanges, useAcceptExchange, useDeclineExchange } from '@/hooks/use-exchanges';
+import type { Exchange } from '@/lib/data/exchanges';
 import { routes } from '@/lib/routes';
-import { Text } from '@/components/ui/text';
 
-function ContactLine({ fields }: { fields: SharedFields }) {
-  const parts: string[] = [];
-  // For guests, show the raw contact string; for members, show individual fields
-  if (fields.contact) parts.push(fields.contact);
-  if (fields.email) parts.push(fields.email);
-  if (fields.phone) parts.push(fields.phone);
-
-  if (parts.length === 0) return null;
-  return (
-    <Text variant="label" color="muted" className="leading-relaxed">
-      {parts.join(' · ')}
-    </Text>
-  );
-}
-
-function ExtraLinks({ fields }: { fields: SharedFields }) {
-  const items: { label: string; value: string }[] = [];
-  if (fields.instagram) items.push({ label: 'IG', value: fields.instagram });
-  if (fields.website) items.push({ label: 'Web', value: fields.website });
-  if (fields.location) items.push({ label: '', value: fields.location });
-  if (items.length === 0) return null;
-  return (
-    <Text variant="label-micro" className="text-bb-muted/60 mt-0.5 leading-relaxed">
-      {items.map(({ label, value }) => (label ? `${label}: ${value}` : value)).join(' · ')}
-    </Text>
-  );
-}
-
-function RequestCard({ exchange }: { exchange: Exchange }) {
-  const { mutate: accept, isPending, isSuccess } = useAcceptExchange();
+function RequestCard({ exchange, index }: { exchange: Exchange; index: number }) {
+  const { mutate: accept, isPending: isAccepting, isSuccess: isAccepted } = useAcceptExchange();
+  const { mutate: decline, isPending: isDeclining } = useDeclineExchange();
   const fields = exchange.initiator_shared_fields;
   const isMember = !!exchange.initiator_profile_id;
 
+  const metaParts: string[] = [];
+  if (fields.role) metaParts.push(fields.role);
+  if (fields.location) metaParts.push(fields.location);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      layout
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="border-b border-border/50 py-5"
+      exit={{ opacity: 0, x: -20, transition: { duration: 0.25 } }}
+      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
+      className="border-b border-bb-rule/60 py-5"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3 min-w-0">
-          {/* Avatar */}
+      <div className="flex items-start gap-4">
+        {/* Portrait */}
+        <div className="flex-shrink-0 w-14 h-[68px] overflow-hidden border border-bb-rule bg-bb-rule/20">
           {fields.photo_url && (
-            <div className="flex-shrink-0 w-9 h-9 rounded-full overflow-hidden bg-border/40 mt-0.5">
-              <Image
-                src={fields.photo_url}
-                alt={fields.name}
-                width={36}
-                height={36}
-                className="object-cover w-full h-full"
-              />
-            </div>
+            <Image
+              src={fields.photo_url}
+              alt={fields.name}
+              width={56}
+              height={68}
+              className="w-full h-full object-cover"
+            />
           )}
-
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              {exchange.status === 'pending' && (
-                <span className="w-1.5 h-1.5 rounded-full bg-bb-dark flex-shrink-0" />
-              )}
-              <Text variant="h3" color="dark" className="truncate">
-                {fields.name}
-              </Text>
-            </div>
-
-            {fields.role && (
-              <Text variant="note" className="mb-0.5">
-                {fields.role}
-              </Text>
-            )}
-
-            <ContactLine fields={fields} />
-            <ExtraLinks fields={fields} />
-
-            {exchange.initiator_note && (
-              <Text variant="note" className="text-bb-muted/80 mt-1.5 line-clamp-2">
-                &ldquo;{exchange.initiator_note}&rdquo;
-              </Text>
-            )}
-
-            <div className="flex items-center gap-3 mt-2">
-              <Text variant="label-micro" className="text-bb-muted/50">
-                {formatDistanceToNow(new Date(exchange.created_at), { addSuffix: true })}
-              </Text>
-              {isMember && fields.username && (
-                <Link
-                  href={routes.publicProfile(fields.username)}
-                  className="font-helvetica text-[10px] text-bb-muted/50 uppercase tracking-[0.08em] underline underline-offset-2 hover:text-bb-dark transition-colors"
-                >
-                  View profile
-                </Link>
-              )}
-            </div>
-          </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => !isSuccess && accept(exchange.id)}
-          disabled={isPending || isSuccess}
-          className={`flex-shrink-0 px-3 py-2 border transition-colors ${
-            isSuccess
-              ? 'border-bb-dark/20 cursor-default'
-              : 'border-bb-dark hover:bg-bb-dark hover:text-bb-cream'
-          }`}
-        >
-          <Text
-            variant="label-micro"
-            as="span"
-            className={isSuccess ? 'text-bb-muted' : 'text-bb-dark'}
-          >
-            {isSuccess ? 'Accepted' : isPending ? '…' : 'Accept'}
-          </Text>
-        </button>
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <h3 className="font-granjon font-light text-[16px] text-bb-dark leading-tight mb-0.5">
+                {fields.name}
+              </h3>
+              {metaParts.length > 0 && (
+                <p className="font-helvetica text-[10px] uppercase tracking-[0.08em] text-bb-muted">
+                  {metaParts.join(' · ')}
+                </p>
+              )}
+            </div>
+            <span className="font-helvetica text-[10px] text-bb-muted/50 flex-shrink-0 mt-0.5">
+              {formatDistanceToNow(new Date(exchange.created_at))}
+            </span>
+          </div>
+
+          {exchange.initiator_note && (
+            <p className="mt-2 font-granjon italic text-[12px] text-bb-muted/70 line-clamp-2">
+              &ldquo;{exchange.initiator_note}&rdquo;
+            </p>
+          )}
+
+          {isMember && fields.username && (
+            <Link
+              href={routes.publicProfile(fields.username)}
+              className="font-helvetica text-[10px] text-bb-muted/50 uppercase tracking-[0.08em] underline underline-offset-2 hover:text-bb-dark transition-colors mt-1.5 inline-block"
+            >
+              View profile
+            </Link>
+          )}
+
+          {/* Actions */}
+          <div className="flex items-center gap-2 mt-3">
+            <button
+              type="button"
+              onClick={() => !isAccepted && accept(exchange.id)}
+              disabled={isAccepting || isAccepted}
+              className={`flex items-center gap-1.5 px-4 py-2 border transition-colors ${
+                isAccepted
+                  ? 'border-bb-rule text-bb-muted cursor-default'
+                  : 'border-bb-dark text-bb-dark hover:bg-bb-dark/5'
+              }`}
+            >
+              <Check className="w-3 h-3" strokeWidth={2} />
+              {isAccepted ? 'Accepted' : isAccepting ? '…' : 'Accept'}
+            </button>
+
+            {!isAccepted && (
+              <button
+                type="button"
+                onClick={() => decline(exchange.id)}
+                disabled={isDeclining}
+                className="flex items-center gap-1.5 px-4 py-2 border border-bb-rule text-bb-muted hover:bg-bb-rule/30 transition-colors disabled:opacity-50"
+              >
+                <X className="w-3 h-3" strokeWidth={2} />
+                {isDeclining ? '…' : 'Decline'}
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     </motion.div>
   );
@@ -134,35 +115,43 @@ export function Inbox() {
 
   if (isLoading) {
     return (
-      <div className="pt-8 space-y-5">
+      <div className="flex-1 overflow-y-auto">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="border-b border-border/50 py-5 space-y-2 animate-pulse">
-            <div className="h-4 w-32 bg-border rounded" />
-            <div className="h-3 w-24 bg-border/60 rounded" />
+          <div key={i} className="border-b border-bb-rule/60 py-5 flex gap-4 animate-pulse">
+            <div className="flex-shrink-0 w-14 h-[68px] bg-bb-rule/40" />
+            <div className="flex-1 space-y-2 pt-1">
+              <div className="h-4 w-32 bg-bb-rule/60 rounded-sm" />
+              <div className="h-3 w-24 bg-bb-rule/40 rounded-sm" />
+            </div>
           </div>
         ))}
       </div>
     );
   }
 
-  if (pending.length === 0) {
-    return (
-      <div className="pt-16 text-center">
-        <Text variant="h3" color="muted">
-          No requests yet
-        </Text>
-        <Text variant="note" className="text-bb-muted/60 mt-1">
-          Exchange requests from your profile visitors will appear here.
-        </Text>
-      </div>
-    );
-  }
-
   return (
-    <div className="pt-2">
-      {pending.map((exchange) => (
-        <RequestCard key={exchange.id} exchange={exchange} />
-      ))}
+    <div className="flex-1 overflow-y-auto pb-6">
+      <AnimatePresence mode="popLayout">
+        {pending.map((exchange, index) => (
+          <RequestCard key={exchange.id} exchange={exchange} index={index} />
+        ))}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {pending.length === 0 && (
+          <motion.div
+            className="flex flex-col items-center justify-center py-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <p className="font-granjon italic text-[18px] text-bb-muted/40">All caught up</p>
+            <p className="font-helvetica text-[11px] uppercase tracking-[0.1em] text-bb-muted/30 mt-1">
+              No pending requests
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
