@@ -15,6 +15,8 @@ export function useProfileComponents(profileId: string | undefined) {
 
 export function useInvalidateProfileComponents() {
   const queryClient = useQueryClient();
-  return (profileId: string) =>
+  return (profileId: string) => {
     queryClient.invalidateQueries({ queryKey: ['profile-components', profileId] });
+    queryClient.invalidateQueries({ queryKey: ['profile'] });
+  };
 }
