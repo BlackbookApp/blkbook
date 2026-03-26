@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Eye, SquarePen, Share2, ChevronRight } from 'lucide-react';
+import { Eye, SquarePen, Share2, Settings, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Logo from '@/components/Logo';
 import BottomNav from '@/components/BottomNav';
@@ -46,6 +46,12 @@ const MyBlackbook = () => {
       label: 'Edit profile',
       description: 'Update your profile details',
       action: () => router.push(routes.editProfile),
+    },
+    {
+      icon: Settings,
+      label: 'Settings',
+      description: 'Account, notifications & preferences',
+      action: () => router.push(routes.settings),
     },
   ];
 
