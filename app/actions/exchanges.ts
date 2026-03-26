@@ -3,6 +3,7 @@
 import {
   performExchange,
   acceptExchange,
+  declineExchange,
   createGuestExchange,
   getMyExchanges,
   getHasExchanged,
@@ -15,6 +16,10 @@ export async function performExchangeAction(input: PerformExchangeInput): Promis
 
 export async function acceptExchangeAction(exchangeId: string): Promise<void> {
   return acceptExchange(exchangeId);
+}
+
+export async function declineExchangeAction(exchangeId: string): Promise<void> {
+  return declineExchange(exchangeId);
 }
 
 /**

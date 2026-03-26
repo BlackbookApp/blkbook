@@ -84,48 +84,52 @@ export function ProfileCTA({
   if (userLoading) return null;
 
   // Social link buttons — only shown in the full-width (non-compact, non-textOnly) block
-  const socialButtons =
-    !compact && !textOnly ? (
-      <>
-        {(socialLinks.email || socialLinks.website || socialLinks.whatsapp) &&
-          (() => {
-            const items = [
-              socialLinks.email && { label: 'EMAIL', href: `mailto:${socialLinks.email}` },
-              socialLinks.website && { label: 'WEBSITE', href: socialLinks.website },
-              socialLinks.whatsapp && {
-                label: 'WHATSAPP',
-                href: `https://wa.me/${socialLinks.whatsapp.replace(/\D/g, '')}`,
-              },
-            ].filter(Boolean) as { label: string; href: string }[];
+  const SOCIAL_LINK_MAP: Array<{
+    key: keyof SocialLinks;
+    label: string;
+    href: (v: string) => string;
+  }> = [
+    { key: 'email', label: 'EMAIL', href: (v) => `mailto:${v}` },
+    { key: 'website', label: 'WEBSITE', href: (v) => (v.startsWith('http') ? v : `https://${v}`) },
+    {
+      key: 'linkedin',
+      label: 'LINKEDIN',
+      href: (v) => (v.startsWith('http') ? v : `https://linkedin.com/in/${v}`),
+    },
+    {
+      key: 'instagram',
+      label: 'INSTAGRAM',
+      href: (v) => (v.startsWith('http') ? v : `https://instagram.com/${v}`),
+    },
+    { key: 'whatsapp', label: 'WHATSAPP', href: (v) => `https://wa.me/${v.replace(/\D/g, '')}` },
+  ];
 
-            // Render pairs of 2 in a grid, last one full-width if odd
-            const rows: React.ReactNode[] = [];
-            for (let i = 0; i < items.length; i += 2) {
-              const pair = items.slice(i, i + 2);
-              if (pair.length === 2) {
-                rows.push(
-                  <div key={i} className="grid grid-cols-2 gap-2">
-                    {pair.map((item) => (
-                      <Button key={item.label} asChild variant="outline" className={SECONDARY_BTN}>
-                        <a href={item.href} target="_blank" rel="noopener noreferrer">
-                          {item.label}
-                        </a>
-                      </Button>
-                    ))}
-                  </div>
-                );
-              } else {
-                rows.push(
-                  <Button key={pair[0].label} asChild variant="outline" className={SECONDARY_BTN}>
-                    <a href={pair[0].href} target="_blank" rel="noopener noreferrer">
-                      {pair[0].label}
-                    </a>
-                  </Button>
-                );
-              }
-            }
-            return <>{rows}</>;
-          })()}
+  const socialItems = SOCIAL_LINK_MAP.flatMap(({ key, label, href }) => {
+    const value = socialLinks[key];
+    return value ? [{ label, href: href(value) }] : [];
+  });
+
+  const socialButtons =
+    !compact && !textOnly && socialItems.length > 0 ? (
+      <>
+        {socialItems.map((item, i) =>
+          i % 2 === 0 ? (
+            <div key={i} className={socialItems[i + 1] ? 'grid grid-cols-2 gap-2' : undefined}>
+              <Button asChild variant="outline" className={SECONDARY_BTN}>
+                <a href={item.href} target="_blank" rel="noopener noreferrer">
+                  {item.label}
+                </a>
+              </Button>
+              {socialItems[i + 1] && (
+                <Button asChild variant="outline" className={SECONDARY_BTN}>
+                  <a href={socialItems[i + 1].href} target="_blank" rel="noopener noreferrer">
+                    {socialItems[i + 1].label}
+                  </a>
+                </Button>
+              )}
+            </div>
+          ) : null
+        )}
       </>
     ) : null;
 

@@ -86,7 +86,17 @@ export async function createGuestExchange(
   return data as boolean;
 }
 
-/** Fetch exchanges where current user is the recipient */
+/** Recipient declines a pending exchange */
+export async function declineExchange(exchangeId: string): Promise<void> {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('exchanges')
+    .update({ status: 'declined' })
+    .eq('id', exchangeId);
+  if (error) throw error;
+}
+
+/** Fetch pending exchanges where current user is the recipient */
 export async function getMyExchanges(): Promise<Exchange[]> {
   const supabase = await createClient();
   const {
@@ -105,6 +115,7 @@ export async function getMyExchanges(): Promise<Exchange[]> {
     .from('exchanges')
     .select('*')
     .eq('recipient_profile_id', profile.id)
+    .eq('status', 'pending')
     .order('created_at', { ascending: false });
   if (error) throw error;
   return (data ?? []) as Exchange[];

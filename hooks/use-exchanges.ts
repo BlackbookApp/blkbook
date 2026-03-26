@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getMyExchangesAction,
   acceptExchangeAction,
+  declineExchangeAction,
   getHasExchangedAction,
 } from '@/app/actions/exchanges';
 import type { Exchange } from '@/lib/data/exchanges';
@@ -23,6 +24,16 @@ export function useAcceptExchange() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['exchanges'] });
       queryClient.invalidateQueries({ queryKey: ['vault-contacts'] });
+    },
+  });
+}
+
+export function useDeclineExchange() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (exchangeId: string) => declineExchangeAction(exchangeId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exchanges'] });
     },
   });
 }
