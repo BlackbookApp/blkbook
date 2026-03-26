@@ -1,12 +1,23 @@
 import type { NextConfig } from 'next';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+/* eslint-disable @typescript-eslint/no-require-imports */
+const defaultCache = require('next-pwa/cache');
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: false,
   skipWaiting: true,
   buildExcludes: [/app-build-manifest\.json$/],
   disable: process.env.NODE_ENV === 'development',
+  runtimeCaching: [
+    // Pass all Supabase requests directly to the network — never intercept.
+    // iOS Safari fails cross-origin POSTs (RPC calls) when the service worker
+    // doesn't have an explicit handler for them.
+    {
+      urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
+      handler: 'NetworkOnly',
+    },
+    ...defaultCache,
+  ],
 });
 
 const nextConfig: NextConfig = {

@@ -69,7 +69,7 @@ export function ProfileComponentsView({ components, profileView, theme = 'blanc'
   return (
     <ProfileViewProvider value={profileView}>
       {/* Fixed logo */}
-      <div className="fixed top-0 left-0 z-50 pt-6 pl-6">
+      <div className="fixed top-0 left-0 z-50 bb-safe-top-6 pl-6">
         <span className="font-granjon font-normal text-[12px] tracking-[0.15em] uppercase text-bb-muted">
           BLKBOOK
         </span>
