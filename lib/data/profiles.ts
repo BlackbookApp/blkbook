@@ -75,10 +75,16 @@ export async function getMyProfile(): Promise<Profile | null> {
   const hero = (profile_components ?? []).find(
     (c: { type: string; data: Record<string, unknown> }) => c.type === 'profile_hero_centered'
   );
+  const heroName = (hero?.data?.name as string | null | undefined) ?? null;
+  const heroAvatarUrl = (hero?.data?.image_url as string | null | undefined) ?? null;
+  const heroTagline = (hero?.data?.tagline as string | null | undefined) ?? null;
   const heroLocation = (hero?.data?.location as string | null | undefined) ?? null;
 
   return {
     ...rest,
+    full_name: heroName ?? rest.full_name,
+    avatar_url: heroAvatarUrl ?? rest.avatar_url,
+    role: heroTagline ?? rest.role,
     location: heroLocation,
     social_links: (rest.social_links as SocialLinks) ?? {},
     testimonials: (rest.testimonials as TestimonialEntry[]) ?? [],

@@ -40,6 +40,7 @@ export interface ProfileCTAProps {
 
 export function ProfileCTA({
   profileId,
+  profileOwnerId,
   profileFirstName,
   profileUsername,
   profileName,
@@ -50,7 +51,8 @@ export function ProfileCTA({
   textOnly = false,
 }: ProfileCTAProps) {
   const { data: user, isLoading: userLoading } = useUser();
-  const isAuthed = !!user;
+  const isOwner = !!user && user.id === profileOwnerId;
+  const isAuthed = !!user && !isOwner;
 
   const { data: inVault } = useIsInVault(profileId);
   const { data: hasExchanged } = useHasExchanged(isAuthed ? profileId : '');

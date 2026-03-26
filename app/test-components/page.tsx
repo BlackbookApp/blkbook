@@ -14,6 +14,7 @@ const ALL_TYPES = Object.keys(ALL_COMPONENT_SAMPLES) as ComponentType[];
 // Stable fake component objects — IDs prefixed with "test-" so patchComponentData is a no-op
 const TEST_COMPONENTS: ProfileComponent[] = ALL_TYPES.map((type, i) => ({
   id: `test-${type}`,
+  profile_id: 'test-profile',
   type,
   data: ALL_COMPONENT_SAMPLES[type],
   position: (i + 1) * 1000,

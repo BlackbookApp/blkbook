@@ -12,6 +12,7 @@ interface QuoteBlockData {
 
 interface ProfileComponent {
   id: string;
+  profile_id: string;
   data: unknown;
 }
 

@@ -6,6 +6,7 @@ import type { ComponentType, RoleType } from '@/config/roleSchemas';
 
 export interface ProfileComponent {
   id: string;
+  profile_id: string;
   type: ComponentType;
   data: unknown;
   position: number;
@@ -19,7 +20,7 @@ export async function getProfileComponents(profileId: string): Promise<ProfileCo
 
   const { data, error } = await supabase
     .from('profile_components')
-    .select('id, type, data, position, ai_generated, is_predefined, is_visible')
+    .select('id, profile_id, type, data, position, ai_generated, is_predefined, is_visible')
     .eq('profile_id', profileId)
     .order('position', { ascending: true });
 
@@ -43,7 +44,7 @@ export async function updateComponentVisibility(
 export async function getProfileComponentsAdmin(profileId: string): Promise<ProfileComponent[]> {
   const { data, error } = await adminClient
     .from('profile_components')
-    .select('id, type, data, position, ai_generated, is_predefined, is_visible')
+    .select('id, profile_id, type, data, position, ai_generated, is_predefined, is_visible')
     .eq('profile_id', profileId)
     .order('position', { ascending: true });
 

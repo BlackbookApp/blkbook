@@ -26,4 +26,5 @@ export const routes = {
   adminResetProfile: '/admin/reset-profile',
   vcardDownload: (username: string) => `/api/vcard/${username}`,
   onboarding: '/onboarding',
+  settings: '/settings',
 } as const;

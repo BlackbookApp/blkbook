@@ -80,6 +80,20 @@ export async function loginAction(formData: FormData): Promise<LoginActionResult
   return { success: true };
 }
 
+export type UpdatePasswordActionResult = { success: true } | { error: string };
+
+export async function updatePasswordAction(
+  newPassword: string
+): Promise<UpdatePasswordActionResult> {
+  if (newPassword.length < 8) {
+    return { error: 'Password must be at least 8 characters' };
+  }
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
 export async function logoutAction(): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();
