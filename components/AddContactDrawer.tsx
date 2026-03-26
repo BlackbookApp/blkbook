@@ -93,7 +93,7 @@ const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
             ].map(({ field, label, placeholder, required }, index) => (
               <div key={field}>
                 {index > 0 && <div className="h-px bg-border/50" />}
-                <div className="py-3 flex items-center gap-4">
+                <div className="py-4 flex items-center gap-6">
                   <span className="font-helvetica text-[10px] uppercase tracking-[0.12em] text-bb-muted w-16 shrink-0">
                     {label}
                   </span>
@@ -103,7 +103,7 @@ const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
                     onChange={handleChange(field)}
                     placeholder={placeholder}
                     required={required}
-                    className="flex-1 bg-transparent font-helvetica text-[13px] font-light text-foreground placeholder:text-foreground/30 outline-none"
+                    className="flex-1 bg-transparent font-granjon text-[15px] italic tracking-[-0.025em] text-foreground placeholder:text-foreground/30 outline-none"
                   />
                 </div>
                 {field === 'name' && nameError && (
@@ -122,7 +122,7 @@ const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
                 onChange={handleChange('notes')}
                 placeholder="Context, how you met..."
                 rows={3}
-                className="w-full bg-transparent font-helvetica text-[13px] font-light text-foreground placeholder:text-foreground/30 outline-none resize-none"
+                className="w-full bg-transparent font-granjon text-[15px] italic tracking-[-0.025em] text-foreground placeholder:text-foreground/30 outline-none resize-none"
               />
             </div>
 

@@ -40,18 +40,28 @@ const MyBlackbook = () => {
         profile?.username
           ? router.push(routes.publicProfile(profile.username))
           : router.push(routes.profilePreview),
+      disabled: false,
     },
     {
       icon: SquarePen,
       label: 'Edit profile',
       description: 'Update your profile details',
       action: () => router.push(routes.editProfile),
+      disabled: false,
+    },
+    {
+      icon: Share2,
+      label: 'Share profile',
+      description: 'Copy link or share your card',
+      action: () => setShowShare(true),
+      disabled: !profile?.username,
     },
     {
       icon: Settings,
       label: 'Settings',
       description: 'Account, notifications & preferences',
       action: () => router.push(routes.settings),
+      disabled: false,
     },
   ];
 
@@ -116,7 +126,8 @@ const MyBlackbook = () => {
               <button
                 key={item.label}
                 onClick={item.action}
-                className="w-full flex items-center gap-4 py-5 group border-b border-border/30"
+                disabled={item.disabled}
+                className="w-full flex items-center gap-4 py-5 group border-b border-border/30 disabled:opacity-40"
               >
                 <div className="w-11 h-11 flex items-center justify-center shrink-0 rounded-full border border-bb-rule">
                   <Icon
@@ -136,28 +147,6 @@ const MyBlackbook = () => {
               </button>
             );
           })}
-
-          <button
-            onClick={() => setShowShare(true)}
-            disabled={!profile?.username}
-            className="w-full flex items-center gap-4 py-5 group border-b border-border/30 disabled:opacity-40"
-          >
-            <div className="w-11 h-11 flex items-center justify-center shrink-0 rounded-full border border-bb-rule">
-              <Share2
-                className="w-[17px] h-[17px] text-bb-dark/70 group-hover:text-bb-dark transition-colors"
-                strokeWidth={1.4}
-              />
-            </div>
-            <div className="flex-1 text-left">
-              <p className="font-granjon text-[15px] leading-tight mb-0.5 text-bb-dark">
-                Share profile
-              </p>
-              <p className="font-helvetica text-[11px] font-light text-bb-muted">
-                Copy link or share your card
-              </p>
-            </div>
-            <ChevronRight className="w-4 h-4 shrink-0 text-bb-muted/40" strokeWidth={1.2} />
-          </button>
         </motion.div>
 
         {/* Invitations */}
