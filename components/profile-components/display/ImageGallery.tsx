@@ -27,7 +27,7 @@ export function ImageGallery({ data }: { data: ImageGalleryData }) {
   return (
     <div className="grid grid-cols-2 gap-2">
       {data.images.map((img, i) => (
-        <div key={i} className="border border-bb-rule overflow-hidden aspect-square">
+        <div key={i} className="border border-bb-rule overflow-hidden aspect-[3/4]">
           {img.url ? (
             <img
               src={img.url}
