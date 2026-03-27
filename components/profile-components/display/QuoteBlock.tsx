@@ -22,7 +22,9 @@ export function QuoteBlock({ data }: { data: QuoteBlockData }) {
 
   return (
     <div className="text-center px-4">
-      <p className="font-granjon italic text-[15px] leading-relaxed text-foreground">{data.text}</p>
+      <p className="font-granjon italic text-[15px] leading-relaxed text-foreground">
+        &ldquo;{data.text}&ldquo;
+      </p>
       {data.attributed && (
         <p className="font-granjon text-[11px] uppercase tracking-[0.12em] text-bb-muted mt-2">
           — {data.attributed}
