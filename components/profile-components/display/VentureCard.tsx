@@ -33,6 +33,10 @@ export function VentureCard({ data }: { data: VentureCardData }) {
 
   return (
     <div className="space-y-8">
+      <p className="text-[10px] tracking-[0.2em] uppercase mb-8 font-helvetica text-[#888] font-light">
+        Ventures
+      </p>
+
       {data.items.map((item, i) => (
         <div key={i} className={cn('border-l pl-5', i === 0 ? 'border-bb-dark' : 'border-bb-rule')}>
           <div className="flex items-baseline justify-between mb-1">
@@ -51,7 +55,7 @@ export function VentureCard({ data }: { data: VentureCardData }) {
             </p>
           )}
           {item.description && (
-            <p className="font-granjon text-[13px] leading-[1.8] tracking-tight mb-2 text-bb-muted">
+            <p className="font-granjon text-[13px] leading-[1.8] tracking-tight mb-2 text-[#555]">
               {item.description}
             </p>
           )}

@@ -27,7 +27,9 @@ export function RecognitionList({ data }: { data: RecognitionListData }) {
 
   return (
     <div>
-      <p className="font-helvetica text-[10px] uppercase text-bb-muted mb-2">Recognition</p>
+      <p className="font-helvetica text-[10px] tracking-[0.2em] uppercase text-bb-muted mb-2">
+        Recognition
+      </p>
       <div className="h-px bg-bb-rule mb-4" />
       <div className="space-y-3">
         {data.items.map((item, i) => (
