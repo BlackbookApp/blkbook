@@ -27,4 +27,5 @@ export const routes = {
   vcardDownload: (username: string) => `/api/vcard/${username}`,
   onboarding: '/onboarding',
   settings: '/settings',
+  scanQr: '/scan-qr',
 } as const;

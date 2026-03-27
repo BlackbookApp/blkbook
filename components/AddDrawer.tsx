@@ -1,28 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { PenLine } from 'lucide-react';
+import { PenLine, QrCode } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { Text } from '@/components/ui/text';
 import AddContactDrawer from '@/components/AddContactDrawer';
+import { routes } from '@/lib/routes';
 
 interface AddDrawerProps {
   children: React.ReactNode;
 }
 
 const addOptions = [
-  // {
-  //   id: 'scan-card',
-  //   icon: Camera,
-  //   label: 'Scan Card',
-  //   description: 'Capture details with your camera',
-  // },
-  // {
-  //   id: 'scan-qr',
-  //   icon: QrCode,
-  //   label: 'Scan QR',
-  //   description: 'Scan a Blackbook QR code',
-  // },
+  {
+    id: 'scan-qr',
+    icon: QrCode,
+    label: 'Scan QR',
+    description: 'Scan a Blackbook QR code',
+  },
   {
     id: 'quick-add',
     icon: PenLine,
@@ -38,6 +34,7 @@ const addOptions = [
 ];
 
 const AddDrawer = ({ children }: AddDrawerProps) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [addContactOpen, setAddContactOpen] = useState(false);
 
@@ -45,6 +42,9 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
     if (option.id === 'quick-add') {
       setOpen(false);
       setAddContactOpen(true);
+    } else if (option.id === 'scan-qr') {
+      setOpen(false);
+      router.push(routes.scanQr);
     }
   };
 
