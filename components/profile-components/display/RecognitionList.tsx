@@ -34,7 +34,7 @@ export function RecognitionList({ data }: { data: RecognitionListData }) {
       <div className="space-y-3">
         {data.items.map((item, i) => (
           <div key={i} className="flex items-baseline justify-between">
-            <p className="font-granjon text-[14px] tracking-tight text-foreground">{item.title}</p>
+            <p className="font-granjon text-[14px] tracking-tight text-[#555]">{item.title}</p>
             {item.year && (
               <span className="font-helvetica text-[10px] text-bb-muted ml-4 shrink-0">
                 {item.year}
