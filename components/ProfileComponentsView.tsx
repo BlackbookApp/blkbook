@@ -66,6 +66,9 @@ export function ProfileComponentsView({ components, profileView, theme = 'blanc'
     (c) => c.is_visible && (DATA_EXEMPT.has(c.type) || hasData(c.data as Record<string, unknown>))
   );
 
+  const hero = visible.find((c) => c.type === 'profile_hero_centered');
+  const sections = visible.filter((c) => c.type !== 'profile_hero_centered');
+
   return (
     <ProfileViewProvider value={profileView}>
       {/* Fixed logo */}
@@ -75,31 +78,40 @@ export function ProfileComponentsView({ components, profileView, theme = 'blanc'
         </span>
       </div>
 
-      <div className="max-w-md mx-auto px-6 pt-28 pb-10 space-y-8" data-pg-theme={theme}>
-        {visible.map((component) => {
-          const entry = DISPLAY_MAP[component.type as ComponentType];
-          if (!entry) return null;
-          const Display = entry.component;
+      <div className="max-w-md mx-auto px-6 pt-28 pb-10" data-pg-theme={theme}>
+        {/* Hero — no divider, no py-10 */}
+        {hero &&
+          (() => {
+            const entry = DISPLAY_MAP[hero.type as ComponentType];
+            if (!entry) return null;
+            const Display = entry.component;
+            return <Display key={hero.id} data={hero.data} />;
+          })()}
 
-          if (component.type === 'profile_hero_centered') {
-            return <Display key={component.id} data={component.data} />;
-          }
+        {/* Sections — py-10 each */}
+        <div>
+          {sections.map((component) => {
+            const entry = DISPLAY_MAP[component.type as ComponentType];
+            if (!entry) return null;
+            const Display = entry.component;
+            return (
+              <ScrollReveal key={component.id}>
+                <div className="py-10">
+                  <Display data={component.data} />
+                </div>
+              </ScrollReveal>
+            );
+          })}
 
-          return (
-            <ScrollReveal key={component.id}>
-              <Display data={component.data} />
-            </ScrollReveal>
-          );
-        })}
-
-        {/* Footer */}
-        <ScrollReveal margin="0px">
-          <div className="text-center pb-8">
-            <span className="font-granjon font-normal text-[18px] tracking-[0.15em] uppercase">
-              BLKBOOK
-            </span>
-          </div>
-        </ScrollReveal>
+          {/* Footer */}
+          <ScrollReveal margin="0px">
+            <div className="py-10 text-center">
+              <span className="font-granjon font-normal text-[18px] tracking-[0.15em] uppercase">
+                BLKBOOK
+              </span>
+            </div>
+          </ScrollReveal>
+        </div>
       </div>
     </ProfileViewProvider>
   );

@@ -33,7 +33,7 @@ export function VentureCard({ data }: { data: VentureCardData }) {
 
   return (
     <div className="space-y-8">
-      <p className="text-[10px] tracking-[0.2em] uppercase mb-8 font-helvetica text-[#888] font-light">
+      <p className="text-[10px] tracking-[0.2em] uppercase mb-5 font-helvetica text-[#888] ">
         Ventures
       </p>
 

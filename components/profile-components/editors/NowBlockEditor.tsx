@@ -2,7 +2,6 @@
 
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Textarea } from '@/components/ui/textarea';
-import { Text } from '@/components/ui/text';
 
 interface NowBlockData {
   text: string | null;
@@ -20,9 +19,6 @@ export function NowBlockEditor({ component }: { component: ProfileComponent }) {
   return (
     <div className="space-y-4">
       <div>
-        <Text variant="label-micro" as="label" className="block mb-1">
-          Currently
-        </Text>
         <Textarea
           placeholder="What are you currently focused on?"
           value={localData.text ?? ''}

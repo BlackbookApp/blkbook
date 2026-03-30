@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
-import { Text } from '@/components/ui/text';
 import { X } from 'lucide-react';
 
 interface ButtonItem {
@@ -119,9 +118,6 @@ export function ActionButtonsSecondaryEditor({ component }: { component: Profile
               </button>
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Label
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Label"
@@ -130,9 +126,6 @@ export function ActionButtonsSecondaryEditor({ component }: { component: Profile
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                URL
-              </Text>
               <Input
                 variant="primary"
                 placeholder="URL (optional)"

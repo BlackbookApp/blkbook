@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -9,8 +9,11 @@ import { routes } from '@/lib/routes';
 import { useProfile } from '@/hooks/use-profile';
 import { useProfileComponents } from '@/hooks/use-profile-components';
 import { EDITOR_MAP } from '@/config/editorMap';
+import { StepButtons } from '@/components/edit-profile/step-buttons';
+import { StepContent } from '@/components/edit-profile/step-content';
+import { updateProfileAction } from '@/app/actions/profiles';
 
-const TOTAL_STEPS = 2;
+const TOTAL_STEPS = 3;
 
 const EditProfile = () => {
   const router = useRouter();
@@ -18,11 +21,31 @@ const EditProfile = () => {
   const { data: components = [], isLoading: componentsLoading } = useProfileComponents(profile?.id);
 
   const [step, setStep] = useState(1);
+  const [selectedButtons, setSelectedButtons] = useState<string[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (profile?.cta_buttons) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedButtons(profile.cta_buttons);
+    }
+  }, [profile?.cta_buttons]);
 
   const isLoading = profileLoading || componentsLoading;
 
   const heroComponent = components.find((c) => c.type === 'profile_hero_centered');
-  const otherComponents = components.filter((c) => c.type !== 'profile_hero_centered');
+  const socialStatComponent = components.find((c) => c.type === 'social_stat');
+  const otherComponents = components.filter(
+    (c) => c.type !== 'profile_hero_centered' && c.type !== 'social_stat'
+  );
+
+  const handleButtonsContinue = async (validButtons: string[]) => {
+    setIsSaving(true);
+    setSelectedButtons(validButtons);
+    await updateProfileAction({ cta_buttons: validButtons });
+    setIsSaving(false);
+    setStep(3);
+  };
 
   if (isLoading) {
     return (
@@ -104,6 +127,28 @@ const EditProfile = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -24 }}
             transition={{ duration: 0.25 }}
+            className="flex-1 flex flex-col min-h-0"
+          >
+            {socialStatComponent && (
+              <StepButtons
+                socialStatComponent={socialStatComponent}
+                selectedButtons={selectedButtons}
+                onSelect={setSelectedButtons}
+                onContinue={handleButtonsContinue}
+                onBack={() => setStep(1)}
+                isSaving={isSaving}
+              />
+            )}
+          </motion.div>
+        )}
+
+        {step === 3 && (
+          <motion.div
+            key="step3"
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -24 }}
+            transition={{ duration: 0.25 }}
             className="flex-1 flex flex-col px-6 pt-8 pb-32"
           >
             <h2 className="font-granjon text-2xl mb-1">Your content</h2>
@@ -111,33 +156,7 @@ const EditProfile = () => {
               Edit each section below. Changes save automatically.
             </p>
 
-            {otherComponents.length === 0 ? (
-              <p className="font-helvetica text-[11px] text-bb-muted">
-                No additional components yet.
-              </p>
-            ) : (
-              <div className="space-y-10">
-                {otherComponents.map((component) => {
-                  const entry = EDITOR_MAP[component.type as keyof typeof EDITOR_MAP];
-                  if (!entry) return null;
-                  const EditorComponent = entry.component;
-                  return (
-                    <div key={component.id}>
-                      <div className="mb-4">
-                        <p className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-bb-muted">
-                          {entry.label}
-                        </p>
-                        <p className="font-helvetica text-[11px] text-bb-muted mt-0.5">
-                          {entry.description}
-                        </p>
-                      </div>
-                      <EditorComponent component={component} />
-                      <div className="h-px bg-bb-rule mt-10" />
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            <StepContent components={otherComponents} />
 
             <div className="fixed bottom-0 left-0 right-0 px-6 pb-8 pt-4 bg-gradient-to-t from-background via-background/80 to-transparent">
               <div className="max-w-md mx-auto flex flex-col gap-3">
@@ -146,7 +165,7 @@ const EditProfile = () => {
                 </button>
                 <button
                   className="font-helvetica text-[11px] tracking-[0.1em] text-bb-muted/50 hover:text-foreground transition-colors text-center"
-                  onClick={() => setStep(1)}
+                  onClick={() => setStep(2)}
                 >
                   Back
                 </button>

@@ -51,8 +51,8 @@ export function ImageUpload({
               alt=""
               className={cn('w-full h-full', fit === 'contain' ? 'object-contain' : 'object-cover')}
             />
-            {/* Overlay on hover */}
-            <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 hover:opacity-100 transition-opacity bg-foreground/10">
+            {/* Overlay: always visible on mobile, hover-only on desktop */}
+            <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-100 sm:opacity-0 sm:hover:opacity-100 transition-opacity bg-foreground/10">
               <button
                 onClick={() => fileRef.current?.click()}
                 className="w-8 h-8 flex items-center justify-center bg-background/90 border border-bb-rule"

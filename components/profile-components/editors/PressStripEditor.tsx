@@ -2,7 +2,6 @@
 
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
-import { Text } from '@/components/ui/text';
 import { X } from 'lucide-react';
 
 interface PressItem {
@@ -58,9 +57,6 @@ export function PressStripEditor({ component }: { component: ProfileComponent })
               </button>
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Publication
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Publication name"
@@ -69,9 +65,6 @@ export function PressStripEditor({ component }: { component: ProfileComponent })
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Logo URL
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Image URL (optional)"
@@ -80,9 +73,6 @@ export function PressStripEditor({ component }: { component: ProfileComponent })
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                URL
-              </Text>
               <Input
                 variant="primary"
                 placeholder="URL (optional)"

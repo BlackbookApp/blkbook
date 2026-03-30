@@ -32,6 +32,8 @@ export interface ProfileCTAProps {
   profileRole?: string | null;
   profilePhotoUrl?: string | null;
   socialLinks: SocialLinks;
+  /** Which social link keys to show as buttons. null/empty = no social buttons. */
+  ctaButtons?: string[] | null;
   /** Renders a 2-column grid of outline buttons (used under the hero photo) */
   compact?: boolean;
   /** Renders text-only inline buttons (used directly under the hero, visual style) */
@@ -47,6 +49,7 @@ export function ProfileCTA({
   profileRole,
   profilePhotoUrl,
   socialLinks,
+  ctaButtons,
   compact = false,
   textOnly = false,
 }: ProfileCTAProps) {
@@ -92,6 +95,7 @@ export function ProfileCTA({
     href: (v: string) => string;
   }> = [
     { key: 'email', label: 'EMAIL', href: (v) => `mailto:${v}` },
+    { key: 'phone', label: 'PHONE', href: (v) => `tel:${v}` },
     { key: 'website', label: 'WEBSITE', href: (v) => (v.startsWith('http') ? v : `https://${v}`) },
     {
       key: 'linkedin',
@@ -106,13 +110,17 @@ export function ProfileCTA({
     { key: 'whatsapp', label: 'WHATSAPP', href: (v) => `https://wa.me/${v.replace(/\D/g, '')}` },
   ];
 
-  const socialItems = SOCIAL_LINK_MAP.flatMap(({ key, label, href }) => {
-    const value = socialLinks[key];
-    return value ? [{ label, href: href(value) }] : [];
-  });
+  const socialItems = (() => {
+    if (compact || textOnly || !ctaButtons || ctaButtons.length === 0) return [];
+    return SOCIAL_LINK_MAP.flatMap(({ key, label, href }) => {
+      if (!ctaButtons.includes(key)) return [];
+      const value = socialLinks[key];
+      return value ? [{ label, href: href(value) }] : [];
+    });
+  })();
 
   const socialButtons =
-    !compact && !textOnly && socialItems.length > 0 ? (
+    socialItems.length > 0 ? (
       <>
         {socialItems.map((item, i) =>
           i % 2 === 0 ? (

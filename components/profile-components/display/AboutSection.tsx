@@ -13,7 +13,9 @@ export function AboutSection({ data }: { data: AboutSectionData }) {
   return (
     <div>
       <button onClick={() => setExpanded((v) => !v)} className="flex items-center w-full gap-3">
-        <span className="font-granjon text-[10px] text-bb-muted shrink-0">About</span>
+        <span className="font-helvetica text-[10px] uppercase tracking-wide text-bb-muted shrink-0">
+          About
+        </span>
         <div className="flex-1 h-px bg-bb-rule" />
         <span className="font-helvetica font-light text-bb-muted text-[16px] leading-none">
           {expanded ? '−' : '+'}

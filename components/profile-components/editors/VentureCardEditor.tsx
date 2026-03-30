@@ -3,7 +3,6 @@
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Text } from '@/components/ui/text';
 import { X } from 'lucide-react';
 
 interface VentureItem {
@@ -71,9 +70,6 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
               </button>
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Name
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Name"
@@ -82,9 +78,6 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Years
-              </Text>
               <Input
                 variant="primary"
                 placeholder="e.g. 2020 – 2024"
@@ -93,9 +86,6 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Role
-              </Text>
               <Input
                 variant="primary"
                 placeholder="e.g. Co-Founder & CEO"
@@ -104,9 +94,6 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Description
-              </Text>
               <Textarea
                 placeholder="Description"
                 value={item.description ?? ''}
@@ -115,9 +102,6 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Detail
-              </Text>
               <Input
                 variant="primary"
                 placeholder="e.g. AI · Early stage · Stealth"
@@ -126,9 +110,6 @@ export function VentureCardEditor({ component }: { component: ProfileComponent }
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                URL
-              </Text>
               <Input
                 variant="primary"
                 placeholder="URL"

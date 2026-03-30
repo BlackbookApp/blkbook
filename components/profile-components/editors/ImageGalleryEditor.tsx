@@ -3,7 +3,6 @@
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { Text } from '@/components/ui/text';
 import { X } from 'lucide-react';
 
 interface ImageItem {
@@ -58,9 +57,6 @@ export function ImageGalleryEditor({ component }: { component: ProfileComponent 
               </button>
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Image
-              </Text>
               <ImageUpload
                 value={img.url}
                 onChange={(url) => updateImage(i, { url })}
@@ -74,9 +70,6 @@ export function ImageGalleryEditor({ component }: { component: ProfileComponent 
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Caption
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Caption (optional)"

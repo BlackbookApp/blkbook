@@ -3,7 +3,6 @@
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { Text } from '@/components/ui/text';
 
 interface LogoData {
   url: string | null;
@@ -23,9 +22,6 @@ export function LogoEditor({ component }: { component: ProfileComponent }) {
     <div className="space-y-4">
       <div className="space-y-6">
         <div>
-          <Text variant="label-micro" as="label" className="block mb-1">
-            Logo
-          </Text>
           <ImageUpload
             value={localData.url}
             onChange={(url) => onChange({ ...localData, url })}
@@ -40,9 +36,6 @@ export function LogoEditor({ component }: { component: ProfileComponent }) {
           />
         </div>
         <div>
-          <Text variant="label-micro" as="label" className="block mb-1">
-            Label
-          </Text>
           <Input
             variant="primary"
             placeholder="Shown if no image"
