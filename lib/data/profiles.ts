@@ -48,6 +48,7 @@ export interface Profile {
   invite_code: string;
   invites_remaining: number;
   username: string | null;
+  cta_buttons: string[] | null;
   created_at: string;
   updated_at: string;
 }

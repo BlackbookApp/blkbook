@@ -216,7 +216,6 @@ const ExchangeDetailsModal = ({
                     value={form.name}
                     onChange={set('name')}
                     onBlur={blur('name')}
-                    autoFocus
                     className={`font-granjon text-bb-dark w-full bg-white outline-none border px-4 py-3.5 text-[15px] italic tracking-[0.01em] placeholder:text-bb-muted/40 ${fieldErrors.name ? 'border-destructive' : 'border-bb-rule'}`}
                     placeholder="Full name"
                   />

@@ -3,7 +3,6 @@
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Text } from '@/components/ui/text';
 import { X } from 'lucide-react';
 
 interface ExperienceItem {
@@ -72,9 +71,6 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
               </button>
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Role / Title
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Role / title"
@@ -83,9 +79,6 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Company
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Company"
@@ -95,9 +88,6 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Text variant="label-micro" as="label" className="block mb-1">
-                  Start
-                </Text>
                 <Input
                   variant="primary"
                   placeholder="e.g. Jan 2020"
@@ -106,9 +96,6 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
                 />
               </div>
               <div>
-                <Text variant="label-micro" as="label" className="block mb-1">
-                  End
-                </Text>
                 <Input
                   variant="primary"
                   placeholder="or leave blank"
@@ -118,9 +105,6 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
               </div>
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Type
-              </Text>
               <Input
                 variant="primary"
                 placeholder="e.g. Full-time"
@@ -129,9 +113,6 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Location
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Location (optional)"
@@ -140,9 +121,6 @@ export function ExperienceTimelineEditor({ component }: { component: ProfileComp
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Description
-              </Text>
               <Textarea
                 placeholder="Description (optional)"
                 value={item.description ?? ''}

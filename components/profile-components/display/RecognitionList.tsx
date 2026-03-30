@@ -27,7 +27,7 @@ export function RecognitionList({ data }: { data: RecognitionListData }) {
 
   return (
     <div>
-      <p className="font-helvetica text-[10px] tracking-[0.2em] uppercase text-bb-muted mb-2">
+      <p className="font-helvetica text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
         Recognition
       </p>
       <div className="h-px bg-bb-rule mb-4" />

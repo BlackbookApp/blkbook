@@ -3,7 +3,6 @@
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Text } from '@/components/ui/text';
 
 interface QuoteBlockData {
   text: string | null;
@@ -23,9 +22,6 @@ export function QuoteBlockEditor({ component }: { component: ProfileComponent })
     <div className="space-y-4">
       <div className="space-y-6">
         <div>
-          <Text variant="label-micro" as="label" className="block mb-1">
-            Quote
-          </Text>
           <Textarea
             placeholder="Quote text"
             value={localData.text ?? ''}
@@ -34,9 +30,6 @@ export function QuoteBlockEditor({ component }: { component: ProfileComponent })
           />
         </div>
         <div>
-          <Text variant="label-micro" as="label" className="block mb-1">
-            Attribution
-          </Text>
           <Input
             variant="primary"
             placeholder="Attribution"

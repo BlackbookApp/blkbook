@@ -4,7 +4,6 @@ import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { Text } from '@/components/ui/text';
 import { X } from 'lucide-react';
 
 interface ImageItem {
@@ -51,9 +50,6 @@ export function ImagePortfolioEditor({ component }: { component: ProfileComponen
           Text after first image
         </span>
         <div>
-          <Text variant="label-micro" as="label" className="block mb-1">
-            Quote
-          </Text>
           <Textarea
             placeholder="Quote or note (optional)"
             value={localData.text ?? ''}
@@ -62,9 +58,6 @@ export function ImagePortfolioEditor({ component }: { component: ProfileComponen
           />
         </div>
         <div>
-          <Text variant="label-micro" as="label" className="block mb-1">
-            Attribution
-          </Text>
           <Input
             variant="primary"
             placeholder="Attribution (optional)"
@@ -88,9 +81,6 @@ export function ImagePortfolioEditor({ component }: { component: ProfileComponen
               </button>
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Image
-              </Text>
               <ImageUpload
                 value={img.url}
                 onChange={(url) => updateImage(i, { url })}
@@ -104,9 +94,6 @@ export function ImagePortfolioEditor({ component }: { component: ProfileComponen
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Caption
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Caption (optional)"

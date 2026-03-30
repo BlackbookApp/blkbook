@@ -2,7 +2,6 @@
 
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Textarea } from '@/components/ui/textarea';
-import { Text } from '@/components/ui/text';
 
 interface TopBioData {
   text: string | null;
@@ -20,9 +19,6 @@ export function TopBioEditor({ component }: { component: ProfileComponent }) {
   return (
     <div className="space-y-4">
       <div>
-        <Text variant="label-micro" as="label" className="block mb-1">
-          Bio
-        </Text>
         <Textarea
           placeholder="Write a short bio…"
           value={localData.text ?? ''}

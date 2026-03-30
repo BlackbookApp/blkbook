@@ -20,8 +20,13 @@ export function TopBio({ data }: { data: TopBioData }) {
   }
 
   return (
-    <p className="font-granjon text-[14px] leading-[1.35] tracking-tight text-foreground">
-      {data.text}
-    </p>
+    <div className="space-y-8">
+      <p className="font-helvetica text-[10px] tracking-[0.2em] uppercase text-[#888] mb-5">
+        About
+      </p>
+      <p className="font-granjon text-[14px] leading-[1.35] tracking-tight text-foreground">
+        {data.text}
+      </p>
+    </div>
   );
 }

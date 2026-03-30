@@ -48,6 +48,7 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
           profileRole: profile.role,
           profilePhotoUrl: profile.avatar_url,
           socialLinks: extractContactsFromComponents(profileComponents),
+          ctaButtons: profile.cta_buttons,
         }}
       />
     </div>

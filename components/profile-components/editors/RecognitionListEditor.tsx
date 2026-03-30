@@ -2,7 +2,6 @@
 
 import { useComponentEditor } from '@/hooks/use-component-editor';
 import { Input } from '@/components/ui/input';
-import { Text } from '@/components/ui/text';
 import { X } from 'lucide-react';
 
 interface RecognitionItem {
@@ -58,9 +57,6 @@ export function RecognitionListEditor({ component }: { component: ProfileCompone
               </button>
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Title
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Title / award name"
@@ -69,9 +65,6 @@ export function RecognitionListEditor({ component }: { component: ProfileCompone
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                Year
-              </Text>
               <Input
                 variant="primary"
                 placeholder="Year (optional)"
@@ -80,9 +73,6 @@ export function RecognitionListEditor({ component }: { component: ProfileCompone
               />
             </div>
             <div>
-              <Text variant="label-micro" as="label" className="block mb-1">
-                URL
-              </Text>
               <Input
                 variant="primary"
                 placeholder="URL (optional)"
