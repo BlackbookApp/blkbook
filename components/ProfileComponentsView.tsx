@@ -90,13 +90,19 @@ export function ProfileComponentsView({ components, profileView, theme = 'blanc'
 
         {/* Sections — py-10 each */}
         <div>
-          {sections.map((component) => {
+          {sections.map((component, i) => {
             const entry = DISPLAY_MAP[component.type as ComponentType];
             if (!entry) return null;
             const Display = entry.component;
+            const prevType = sections[i - 1]?.type;
+            const nextType = sections[i + 1]?.type;
+            const tightTop =
+              component.type === 'action_buttons_secondary' && prevType === 'social_stat';
+            const tightBottom =
+              component.type === 'social_stat' && nextType === 'action_buttons_secondary';
             return (
               <ScrollReveal key={component.id}>
-                <div className="py-10">
+                <div className={tightTop ? 'pt-8 pb-10' : tightBottom ? 'py-10 pb-0' : 'py-10'}>
                   <Display data={component.data} />
                 </div>
               </ScrollReveal>
