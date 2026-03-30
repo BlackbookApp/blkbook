@@ -25,6 +25,7 @@ export const routes = {
   adminRequests: '/admin/requests',
   adminResetProfile: '/admin/reset-profile',
   vcardDownload: (username: string) => `/api/vcard/${username}`,
+  walletPass: (username: string) => `/api/wallet/pass/${username}`,
   onboarding: '/onboarding',
   settings: '/settings',
   scanQr: '/scan-qr',

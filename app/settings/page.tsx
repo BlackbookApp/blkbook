@@ -8,9 +8,11 @@ import Logo from '@/components/Logo';
 import { updatePasswordAction, logoutAction } from '@/app/actions/auth';
 import { Input } from '@/components/ui/input';
 import { routes } from '@/lib/routes';
+import { useProfile } from '@/hooks/use-profile';
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { data: profile } = useProfile();
 
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [newPassword, setNewPassword] = useState('');
@@ -160,6 +162,26 @@ export default function SettingsPage() {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Apple Wallet row */}
+        {profile?.username && (
+          <div className="border-b border-bb-rule">
+            <a
+              href={routes.walletPass(profile.username)}
+              className="w-full flex items-center justify-between py-5 group"
+            >
+              <div className="text-left">
+                <p className="font-granjon text-[15px] leading-tight mb-0.5 text-bb-dark">
+                  Add to Apple Wallet
+                </p>
+                <p className="font-helvetica text-[11px] font-light text-bb-muted">
+                  Download your Blackbook card
+                </p>
+              </div>
+              <ChevronLeft className="w-4 h-4 text-bb-muted/40 rotate-180" strokeWidth={1.2} />
+            </a>
+          </div>
+        )}
 
         {/* Sign out row */}
         <div className="border-b border-bb-rule">
