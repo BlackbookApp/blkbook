@@ -26,7 +26,7 @@ function getModelDir(): string {
     formatVersion: 1,
     passTypeIdentifier: process.env.APPLE_PASS_TYPE_ID!,
     teamIdentifier: process.env.APPLE_TEAM_ID!,
-    organizationName: 'Blackbook',
+    organizationName: 'BLKBOOK.',
     description: 'Blackbook Contact Card',
     generic: {
       primaryFields: [],
@@ -70,7 +70,7 @@ function passSerialNumber(profile: Profile): string {
 }
 
 export async function generateAppleWalletPass(profile: Profile): Promise<Buffer> {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://blackbook.me';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://blkbook.me';
   const links = profile.social_links ?? {};
 
   const backFields: { key: string; label: string; value: string }[] = [];
@@ -110,7 +110,7 @@ export async function generateAppleWalletPass(profile: Profile): Promise<Buffer>
       backgroundColor: 'rgb(14,14,13)',
       foregroundColor: 'rgb(250,250,249)',
       labelColor: 'rgb(184,180,174)',
-      logoText: 'Blackbook',
+      logoText: 'BLKBOOK',
     }
   );
 
