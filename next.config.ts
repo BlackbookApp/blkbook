@@ -21,6 +21,7 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ['passkit-generator', 'node-forge'],
   images: {
     remotePatterns: [
       // Local Supabase Storage
