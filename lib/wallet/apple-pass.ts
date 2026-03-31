@@ -1,6 +1,7 @@
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
+import crypto from 'crypto';
 import { PKPass } from 'passkit-generator';
 import type { Profile } from '@/lib/data/profiles';
 
@@ -12,7 +13,7 @@ const ICON_PLACEHOLDER_B64 =
 let cachedModelDir: string | null = null;
 
 function getModelDir(): string {
-  if (cachedModelDir) return cachedModelDir;
+  if (cachedModelDir && fs.existsSync(cachedModelDir)) return cachedModelDir;
 
   const dir = path.join(os.tmpdir(), 'BlackbookContact.pass');
   fs.mkdirSync(dir, { recursive: true });
@@ -40,17 +41,36 @@ function getModelDir(): string {
   return dir;
 }
 
-function getCerts() {
+let cachedCerts: ReturnType<typeof buildCerts> | null = null;
+
+function buildCerts() {
   return {
     wwdr: Buffer.from(process.env.APPLE_WWDR_CERT!, 'base64'),
     signerCert: Buffer.from(process.env.APPLE_SIGNER_CERT!, 'base64'),
     signerKey: Buffer.from(process.env.APPLE_SIGNER_KEY!, 'base64'),
-    signerKeyPassphrase: process.env.APPLE_PASS_PHRASE!,
+    ...(process.env.APPLE_PASS_PHRASE && { signerKeyPassphrase: process.env.APPLE_PASS_PHRASE }),
   };
 }
 
+function getCerts() {
+  if (!cachedCerts) cachedCerts = buildCerts();
+  return cachedCerts;
+}
+
+function passSerialNumber(profile: Profile): string {
+  const content = JSON.stringify({
+    username: profile.username,
+    full_name: profile.full_name,
+    role: profile.role,
+    location: profile.location,
+    avatar_url: profile.avatar_url,
+    social_links: profile.social_links,
+  });
+  return crypto.createHash('sha256').update(content).digest('hex').slice(0, 32);
+}
+
 export async function generateAppleWalletPass(profile: Profile): Promise<Buffer> {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://blackbook.me';
   const links = profile.social_links ?? {};
 
   const backFields: { key: string; label: string; value: string }[] = [];
@@ -86,7 +106,7 @@ export async function generateAppleWalletPass(profile: Profile): Promise<Buffer>
       certificates: getCerts(),
     },
     {
-      serialNumber: profile.username!,
+      serialNumber: passSerialNumber(profile),
       backgroundColor: 'rgb(14,14,13)',
       foregroundColor: 'rgb(250,250,249)',
       labelColor: 'rgb(184,180,174)',
@@ -107,7 +127,7 @@ export async function generateAppleWalletPass(profile: Profile): Promise<Buffer>
   pass.setBarcodes({
     message: `${appUrl}/p/${profile.username}`,
     format: 'PKBarcodeFormatQR',
-    messageEncoding: 'iso-8859-1',
+    messageEncoding: 'utf-8',
   });
 
   if (profile.avatar_url) {

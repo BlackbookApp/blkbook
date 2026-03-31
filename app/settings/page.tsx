@@ -14,6 +14,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const { data: profile } = useProfile();
 
+  const [isIOS] = useState(() => /iPhone|iPad|iPod/i.test(navigator.userAgent));
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -164,10 +165,12 @@ export default function SettingsPage() {
         </div>
 
         {/* Apple Wallet row */}
-        {profile?.username && (
+        {isIOS && profile?.username && (
           <div className="border-b border-bb-rule">
-            <a
-              href={routes.walletPass(profile.username)}
+            <button
+              onClick={() => {
+                window.location.href = routes.walletPass(profile.username!);
+              }}
               className="w-full flex items-center justify-between py-5 group"
             >
               <div className="text-left">
@@ -179,7 +182,7 @@ export default function SettingsPage() {
                 </p>
               </div>
               <ChevronLeft className="w-4 h-4 text-bb-muted/40 rotate-180" strokeWidth={1.2} />
-            </a>
+            </button>
           </div>
         )}
 
