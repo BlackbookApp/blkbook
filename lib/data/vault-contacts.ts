@@ -10,6 +10,8 @@ export interface VaultContact {
   email: string | null;
   phone: string | null;
   instagram: string | null;
+  tiktok: string | null;
+  youtube: string | null;
   website: string | null;
   notes: string | null;
   photo_url: string | null;

@@ -29,8 +29,6 @@ const MyBlackbook = () => {
   const { invitesUsed } = useInvite();
   const [showShare, setShowShare] = useState(false);
 
-  console.log(profile);
-
   const actions = [
     {
       icon: Eye,

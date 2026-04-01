@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import type { SocialLinks } from '@/lib/data/profiles';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -22,6 +23,7 @@ const EditProfile = () => {
 
   const [step, setStep] = useState(1);
   const [selectedButtons, setSelectedButtons] = useState<string[]>([]);
+  const [contacts, setContacts] = useState<SocialLinks>({});
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -30,6 +32,13 @@ const EditProfile = () => {
       setSelectedButtons(profile.cta_buttons);
     }
   }, [profile?.cta_buttons]);
+
+  useEffect(() => {
+    if (profile?.social_links) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setContacts(profile.social_links);
+    }
+  }, [profile?.social_links]);
 
   const isLoading = profileLoading || componentsLoading;
 
@@ -42,7 +51,7 @@ const EditProfile = () => {
   const handleButtonsContinue = async (validButtons: string[]) => {
     setIsSaving(true);
     setSelectedButtons(validButtons);
-    await updateProfileAction({ cta_buttons: validButtons });
+    await updateProfileAction({ cta_buttons: validButtons, social_links: contacts });
     setIsSaving(false);
     setStep(3);
   };
@@ -132,6 +141,8 @@ const EditProfile = () => {
             {socialStatComponent && (
               <StepButtons
                 socialStatComponent={socialStatComponent}
+                contacts={contacts}
+                onContactsChange={setContacts}
                 selectedButtons={selectedButtons}
                 onSelect={setSelectedButtons}
                 onContinue={handleButtonsContinue}

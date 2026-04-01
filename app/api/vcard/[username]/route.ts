@@ -22,11 +22,7 @@ export async function GET(_req: Request, { params }: Params) {
     const url = links.website.startsWith('http') ? links.website : `https://${links.website}`;
     lines.push(`URL:${url}`);
   }
-  if (links.instagram)
-    lines.push(`X-SOCIALPROFILE;type=instagram:@${links.instagram.replace(/^@/, '')}`);
-  if (links.twitter) lines.push(`X-SOCIALPROFILE;type=twitter:@${links.twitter.replace(/^@/, '')}`);
   if (links.linkedin) lines.push(`X-SOCIALPROFILE;type=linkedin:${links.linkedin}`);
-  if (links.tiktok) lines.push(`X-SOCIALPROFILE;type=tiktok:@${links.tiktok.replace(/^@/, '')}`);
   if (profile.avatar_url) lines.push(`PHOTO;VALUE=URI:${profile.avatar_url}`);
 
   lines.push('END:VCARD');
