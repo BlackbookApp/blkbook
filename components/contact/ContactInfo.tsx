@@ -16,6 +16,18 @@ export function ContactInfo({ contact }: ContactInfoProps) {
       href: `https://instagram.com/${contact.instagram?.replace('@', '')}`,
       external: true,
     },
+    {
+      label: 'TikTok',
+      value: contact.tiktok,
+      href: `https://tiktok.com/@${contact.tiktok?.replace('@', '')}`,
+      external: true,
+    },
+    {
+      label: 'YouTube',
+      value: contact.youtube,
+      href: `https://youtube.com/@${contact.youtube?.replace('@', '')}`,
+      external: true,
+    },
   ].filter((f) => !!f.value);
 
   if (fields.length === 0) return null;

@@ -10,38 +10,18 @@ import {
   TikTokIcon,
   YouTubeIcon,
   LinkedInIcon,
-  TwitterIcon,
   GlobeIcon,
   MailIcon,
   PhoneIcon,
-  WhatsAppIcon,
 } from './social-icons';
 import type { SocialEntry } from './social-block';
 import type { ComponentType } from 'react';
 
 const iconClass = 'text-[var(--pg-muted-fg)] w-3 h-3';
 
-/** Build SocialEntry[] from profile social_links */
+/** Build SocialEntry[] from profile social_links (contacts) */
 export function buildSocials(links: SocialLinks): SocialEntry[] {
   const socials: SocialEntry[] = [];
-
-  if (links.instagram) {
-    const handle = links.instagram.replace(/^@/, '');
-    socials.push({
-      icon: <InstagramIcon className={iconClass} />,
-      href: `https://instagram.com/${handle}`,
-      label: `@${handle}`,
-    });
-  }
-
-  if (links.tiktok) {
-    const handle = links.tiktok.replace(/^@/, '');
-    socials.push({
-      icon: <TikTokIcon className={iconClass} />,
-      href: `https://tiktok.com/@${handle}`,
-      label: `@${handle}`,
-    });
-  }
 
   if (links.linkedin) {
     socials.push({
@@ -50,15 +30,6 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
         ? links.linkedin
         : `https://linkedin.com/in/${links.linkedin}`,
       label: 'LinkedIn',
-    });
-  }
-
-  if (links.twitter) {
-    const handle = links.twitter.replace(/^@/, '');
-    socials.push({
-      icon: <TwitterIcon className={iconClass} />,
-      href: `https://x.com/${handle}`,
-      label: `@${handle}`,
     });
   }
 
@@ -81,17 +52,7 @@ export function buildSocials(links: SocialLinks): SocialEntry[] {
   return socials;
 }
 
-export const KNOWN_PLATFORMS = [
-  'instagram',
-  'tiktok',
-  'youtube',
-  'linkedin',
-  'twitter',
-  'website',
-  'email',
-  'phone',
-  'whatsapp',
-] as const;
+export const KNOWN_PLATFORMS = ['instagram', 'tiktok', 'youtube'] as const;
 export type KnownPlatform = (typeof KNOWN_PLATFORMS)[number];
 
 export interface RawSocialStatItem {
@@ -134,74 +95,9 @@ export function buildSocialStatItems(items: RawSocialStatItem[]): ResolvedSocial
         count: item.count,
       };
     }
-    if (p === 'linkedin') {
-      return {
-        Icon: LinkedInIcon,
-        url: handle
-          ? handle.startsWith('http')
-            ? handle
-            : `https://linkedin.com/in/${handle}`
-          : null,
-        count: item.count,
-      };
-    }
-    if (p === 'twitter' || p === 'x') {
-      return {
-        Icon: TwitterIcon,
-        url: handle ? `https://x.com/${handle}` : null,
-        count: item.count,
-      };
-    }
-    if (p === 'website') {
-      return {
-        Icon: GlobeIcon,
-        url: handle ? (handle.startsWith('http') ? handle : `https://${handle}`) : null,
-        count: item.count,
-      };
-    }
-    if (p === 'email') {
-      return { Icon: MailIcon, url: handle ? `mailto:${handle}` : null, count: item.count };
-    }
-    if (p === 'phone') {
-      return { Icon: PhoneIcon, url: handle ? `tel:${handle}` : null, count: item.count };
-    }
-    if (p === 'whatsapp') {
-      return {
-        Icon: WhatsAppIcon,
-        url: handle ? `https://wa.me/${handle.replace(/\D/g, '')}` : null,
-        count: item.count,
-      };
-    }
     // Custom platform — pass URL through, use globe icon
     return { Icon: GlobeIcon, url: item.url, count: null };
   });
-}
-
-/** Extract SocialLinks from the social_stat component in a profile's component list */
-export function extractContactsFromComponents(
-  components: { type: string; data: unknown }[]
-): SocialLinks {
-  const items = components
-    .filter((c) => c.type === 'social_stat')
-    .flatMap((c) => (c.data as { items?: RawSocialStatItem[] })?.items ?? []);
-  const result: SocialLinks = {};
-
-  for (const item of items) {
-    const p = item.platform.toLowerCase();
-    const value = item.handle?.replace(/^@/, '');
-    if (!value) continue;
-    if (p === 'email') result.email = value;
-    else if (p === 'phone') result.phone = value;
-    else if (p === 'whatsapp') result.whatsapp = value;
-    else if (p === 'website')
-      result.website = value.startsWith('http') ? value : `https://${value}`;
-    else if (p === 'instagram') result.instagram = value;
-    else if (p === 'tiktok') result.tiktok = value;
-    else if (p === 'linkedin') result.linkedin = value;
-    else if (p === 'twitter' || p === 'x') result.twitter = value;
-  }
-
-  return result;
 }
 
 export interface PublicProfileProps {

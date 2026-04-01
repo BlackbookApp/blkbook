@@ -220,6 +220,7 @@ export type Database = {
           data: Json;
           id: string;
           is_predefined: boolean;
+          is_visible: boolean;
           position: number;
           profile_id: string | null;
           type: string;
@@ -231,6 +232,7 @@ export type Database = {
           data?: Json;
           id?: string;
           is_predefined?: boolean;
+          is_visible?: boolean;
           position?: number;
           profile_id?: string | null;
           type: string;
@@ -242,6 +244,7 @@ export type Database = {
           data?: Json;
           id?: string;
           is_predefined?: boolean;
+          is_visible?: boolean;
           position?: number;
           profile_id?: string | null;
           type?: string;
@@ -263,6 +266,7 @@ export type Database = {
           bio: string | null;
           brand_statement: string | null;
           created_at: string | null;
+          cta_buttons: string[] | null;
           full_name: string | null;
           id: string;
           invite_code: string;
@@ -289,6 +293,7 @@ export type Database = {
           bio?: string | null;
           brand_statement?: string | null;
           created_at?: string | null;
+          cta_buttons?: string[] | null;
           full_name?: string | null;
           id?: string;
           invite_code?: string;
@@ -315,6 +320,7 @@ export type Database = {
           bio?: string | null;
           brand_statement?: string | null;
           created_at?: string | null;
+          cta_buttons?: string[] | null;
           full_name?: string | null;
           id?: string;
           invite_code?: string;
@@ -432,6 +438,7 @@ export type Database = {
           data: Json;
           id: string;
           is_predefined: boolean;
+          is_visible: boolean;
           position: number;
           profile_id: string | null;
           type: string;

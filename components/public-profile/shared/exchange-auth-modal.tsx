@@ -5,11 +5,18 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '@/hooks/use-user';
 import { useProfile } from '@/hooks/use-profile';
+import { useProfileComponents } from '@/hooks/use-profile-components';
 import { performExchangeAction } from '@/app/actions/exchanges';
 import { useQueryClient } from '@tanstack/react-query';
 import type { SocialLinks } from '@/lib/data/profiles';
 import type { SharedFields } from '@/lib/data/exchanges';
 import { Text } from '@/components/ui/text';
+
+interface ProfileSocials {
+  instagram?: string | null;
+  tiktok?: string | null;
+  youtube?: string | null;
+}
 
 interface ExchangeAuthModalProps {
   open: boolean;
@@ -20,18 +27,30 @@ interface ExchangeAuthModalProps {
   profileRole?: string | null;
   profilePhotoUrl?: string | null;
   socialLinks: SocialLinks;
+  profileSocials?: ProfileSocials;
 }
 
-type FieldKey = 'role' | 'photo_url' | 'email' | 'phone' | 'instagram' | 'website' | 'location';
+type FieldKey =
+  | 'role'
+  | 'photo_url'
+  | 'email'
+  | 'phone'
+  | 'website'
+  | 'location'
+  | 'instagram'
+  | 'tiktok'
+  | 'youtube';
 
 const FIELDS: { key: FieldKey; label: string }[] = [
   { key: 'role', label: 'Role' },
   { key: 'photo_url', label: 'Photo' },
   { key: 'email', label: 'Email' },
   { key: 'phone', label: 'Phone' },
-  { key: 'instagram', label: 'Instagram' },
   { key: 'website', label: 'Website' },
   { key: 'location', label: 'Location' },
+  { key: 'instagram', label: 'Instagram' },
+  { key: 'tiktok', label: 'TikTok' },
+  { key: 'youtube', label: 'YouTube' },
 ];
 
 export default function ExchangeAuthModal({
@@ -43,10 +62,20 @@ export default function ExchangeAuthModal({
   profileRole,
   profilePhotoUrl,
   socialLinks,
+  profileSocials,
 }: ExchangeAuthModalProps) {
   const { data: user } = useUser();
   const { data: myProfile } = useProfile();
+  const { data: myComponents } = useProfileComponents(myProfile?.id);
   const queryClient = useQueryClient();
+
+  // Extract my social handles from my social_stat component
+  const mySocialStat = myComponents?.find((c) => c.type === 'social_stat');
+  const mySocialItems =
+    (mySocialStat?.data as { items?: Array<{ platform: string; handle?: string }> } | undefined)
+      ?.items ?? [];
+  const getMySocial = (platform: string) =>
+    mySocialItems.find((i) => i.platform.toLowerCase() === platform)?.handle || null;
 
   // Map field key → current value from my profile
   const fieldValues: Record<FieldKey, string | null | undefined> = {
@@ -54,15 +83,17 @@ export default function ExchangeAuthModal({
     photo_url: myProfile?.avatar_url,
     email: myProfile?.social_links?.email,
     phone: myProfile?.social_links?.phone,
-    instagram: myProfile?.social_links?.instagram,
     website: myProfile?.social_links?.website,
     location: myProfile?.location,
+    instagram: getMySocial('instagram'),
+    tiktok: getMySocial('tiktok'),
+    youtube: getMySocial('youtube'),
   };
 
   // All fields that have a value are selected by default
   const [selected, setSelected] = useState<Set<FieldKey>>(() => new Set());
 
-  // Re-initialise when profile loads
+  // Re-initialise when profile or components load
   useEffect(() => {
     if (!myProfile) return;
     const defaults = new Set<FieldKey>();
@@ -71,7 +102,7 @@ export default function ExchangeAuthModal({
     }
     setSelected(defaults);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [myProfile?.id]);
+  }, [myProfile?.id, myComponents]);
 
   const toggle = (key: FieldKey) => {
     setSelected((prev) => {
@@ -122,6 +153,8 @@ export default function ExchangeAuthModal({
     if (selected.has('phone') && fieldValues.phone) fields.phone = fieldValues.phone;
     if (selected.has('instagram') && fieldValues.instagram)
       fields.instagram = fieldValues.instagram;
+    if (selected.has('tiktok') && fieldValues.tiktok) fields.tiktok = fieldValues.tiktok;
+    if (selected.has('youtube') && fieldValues.youtube) fields.youtube = fieldValues.youtube;
     if (selected.has('website') && fieldValues.website) fields.website = fieldValues.website;
     if (selected.has('location') && fieldValues.location) fields.location = fieldValues.location;
     return fields;
@@ -139,7 +172,9 @@ export default function ExchangeAuthModal({
         recipientPhotoUrl: profilePhotoUrl,
         recipientEmail: socialLinks.email,
         recipientPhone: socialLinks.phone,
-        recipientInstagram: socialLinks.instagram,
+        recipientInstagram: profileSocials?.instagram,
+        recipientTiktok: profileSocials?.tiktok,
+        recipientYoutube: profileSocials?.youtube,
         recipientWebsite: socialLinks.website,
         initiatorFields: buildInitiatorFields(),
         note: note || undefined,

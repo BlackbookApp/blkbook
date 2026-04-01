@@ -57,6 +57,8 @@ const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
         email: email || null,
         phone: phone || null,
         instagram: instagram || null,
+        tiktok: null,
+        youtube: null,
         website: null,
         notes: notes || null,
         photo_url: null,

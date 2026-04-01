@@ -2,6 +2,7 @@
 
 import {
   buildSocialStatItems,
+  KNOWN_PLATFORMS,
   type RawSocialStatItem,
 } from '@/components/public-profile/shared/profile-adapters';
 
@@ -24,7 +25,10 @@ export function SocialStat({ data }: { data: SocialStatData }) {
     return <EmptyState message="Add your social following" />;
   }
 
-  const resolved = buildSocialStatItems(data.items);
+  const allowed = KNOWN_PLATFORMS as readonly string[];
+  const resolved = buildSocialStatItems(
+    data.items.filter((i) => allowed.includes(i.platform.toLowerCase()))
+  );
 
   return (
     <div className="flex flex-wrap justify-center items-center gap-8">

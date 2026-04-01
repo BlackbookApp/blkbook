@@ -32,6 +32,7 @@ export interface ProfileCTAProps {
   profileRole?: string | null;
   profilePhotoUrl?: string | null;
   socialLinks: SocialLinks;
+  profileSocials?: { instagram?: string | null; tiktok?: string | null; youtube?: string | null };
   /** Which social link keys to show as buttons. null/empty = no social buttons. */
   ctaButtons?: string[] | null;
   /** Renders a 2-column grid of outline buttons (used under the hero photo) */
@@ -49,6 +50,7 @@ export function ProfileCTA({
   profileRole,
   profilePhotoUrl,
   socialLinks,
+  profileSocials,
   ctaButtons,
   compact = false,
   textOnly = false,
@@ -76,7 +78,9 @@ export function ProfileCTA({
         city: null,
         email: socialLinks.email ?? null,
         phone: socialLinks.phone ?? null,
-        instagram: socialLinks.instagram ?? null,
+        instagram: profileSocials?.instagram ?? null,
+        tiktok: profileSocials?.tiktok ?? null,
+        youtube: profileSocials?.youtube ?? null,
         website: socialLinks.website ?? null,
         notes: null,
       },
@@ -101,11 +105,6 @@ export function ProfileCTA({
       key: 'linkedin',
       label: 'LINKEDIN',
       href: (v) => (v.startsWith('http') ? v : `https://linkedin.com/in/${v}`),
-    },
-    {
-      key: 'instagram',
-      label: 'INSTAGRAM',
-      href: (v) => (v.startsWith('http') ? v : `https://instagram.com/${v}`),
     },
     { key: 'whatsapp', label: 'WHATSAPP', href: (v) => `https://wa.me/${v.replace(/\D/g, '')}` },
   ];
@@ -192,6 +191,7 @@ export function ProfileCTA({
         profileRole={profileRole}
         profilePhotoUrl={profilePhotoUrl}
         socialLinks={socialLinks}
+        profileSocials={profileSocials}
       />
     );
   }

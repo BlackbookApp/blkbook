@@ -5,8 +5,6 @@ import crypto from 'crypto';
 import { PKPass } from 'passkit-generator';
 import type { Profile } from '@/lib/data/profiles';
 
-// Minimal 1×1 PNG placeholder — replace with actual Blackbook icon
-// Recommended sizes: icon.png 29×29, icon@2x.png 58×58
 const ICON_PLACEHOLDER_B64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
 
@@ -69,7 +67,16 @@ function passSerialNumber(profile: Profile): string {
   return crypto.createHash('sha256').update(content).digest('hex').slice(0, 32);
 }
 
-export async function generateAppleWalletPass(profile: Profile): Promise<Buffer> {
+interface ProfileSocials {
+  instagram?: string | null;
+  tiktok?: string | null;
+  youtube?: string | null;
+}
+
+export async function generateAppleWalletPass(
+  profile: Profile,
+  socials?: ProfileSocials
+): Promise<Buffer> {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://blkbook.me';
   const links = profile.social_links ?? {};
 
@@ -79,26 +86,26 @@ export async function generateAppleWalletPass(profile: Profile): Promise<Buffer>
   if (links.website) backFields.push({ key: 'website', label: 'Website', value: links.website });
   if (links.linkedin)
     backFields.push({ key: 'linkedin', label: 'LinkedIn', value: links.linkedin });
-  if (links.instagram)
+  if (links.whatsapp)
+    backFields.push({ key: 'whatsapp', label: 'WhatsApp', value: links.whatsapp });
+  if (socials?.instagram)
     backFields.push({
       key: 'instagram',
       label: 'Instagram',
-      value: `@${links.instagram.replace(/^@/, '')}`,
+      value: `@${socials.instagram.replace(/^@/, '')}`,
     });
-  if (links.twitter)
-    backFields.push({
-      key: 'twitter',
-      label: 'Twitter',
-      value: `@${links.twitter.replace(/^@/, '')}`,
-    });
-  if (links.tiktok)
+  if (socials?.tiktok)
     backFields.push({
       key: 'tiktok',
       label: 'TikTok',
-      value: `@${links.tiktok.replace(/^@/, '')}`,
+      value: `@${socials.tiktok.replace(/^@/, '')}`,
     });
-  if (links.whatsapp)
-    backFields.push({ key: 'whatsapp', label: 'WhatsApp', value: links.whatsapp });
+  if (socials?.youtube)
+    backFields.push({
+      key: 'youtube',
+      label: 'YouTube',
+      value: `@${socials.youtube.replace(/^@/, '')}`,
+    });
 
   const pass = await PKPass.from(
     {
@@ -119,6 +126,11 @@ export async function generateAppleWalletPass(profile: Profile): Promise<Buffer>
   if (profile.role) pass.secondaryFields.push({ key: 'role', label: 'Role', value: profile.role });
   if (profile.location)
     pass.secondaryFields.push({ key: 'location', label: 'Location', value: profile.location });
+
+  if (links.email) pass.auxiliaryFields.push({ key: 'email', label: 'Email', value: links.email });
+  if (links.phone) pass.auxiliaryFields.push({ key: 'phone', label: 'Phone', value: links.phone });
+  if (links.website)
+    pass.auxiliaryFields.push({ key: 'website', label: 'Website', value: links.website });
 
   for (const field of backFields) {
     pass.backFields.push(field);

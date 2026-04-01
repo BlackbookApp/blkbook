@@ -10,6 +10,8 @@ export interface SharedFields {
   email?: string | null;
   phone?: string | null;
   instagram?: string | null;
+  tiktok?: string | null;
+  youtube?: string | null;
   website?: string | null;
   location?: string | null;
   /** Guest-only: raw "email or phone" string */
@@ -35,6 +37,8 @@ export interface PerformExchangeInput {
   recipientEmail?: string | null;
   recipientPhone?: string | null;
   recipientInstagram?: string | null;
+  recipientTiktok?: string | null;
+  recipientYoutube?: string | null;
   recipientWebsite?: string | null;
   initiatorFields: SharedFields;
   note?: string;
@@ -51,6 +55,8 @@ export async function performExchange(input: PerformExchangeInput): Promise<void
     p_recipient_email: input.recipientEmail ?? null,
     p_recipient_phone: input.recipientPhone ?? null,
     p_recipient_instagram: input.recipientInstagram ?? null,
+    p_recipient_tiktok: input.recipientTiktok ?? null,
+    p_recipient_youtube: input.recipientYoutube ?? null,
     p_recipient_website: input.recipientWebsite ?? null,
     p_initiator_fields: input.initiatorFields,
     p_note: input.note ?? null,

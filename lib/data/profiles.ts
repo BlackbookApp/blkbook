@@ -3,10 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { adminClient } from '@/lib/supabase/admin';
 
 export interface SocialLinks {
-  instagram?: string;
-  tiktok?: string;
   linkedin?: string;
-  twitter?: string;
   website?: string;
   email?: string;
   phone?: string;

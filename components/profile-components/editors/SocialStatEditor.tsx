@@ -30,12 +30,6 @@ const PLATFORM_OPTIONS: { value: KnownPlatform; label: string; placeholder: stri
   { value: 'instagram', label: 'Instagram', placeholder: '@yourhandle' },
   { value: 'tiktok', label: 'TikTok', placeholder: '@yourhandle' },
   { value: 'youtube', label: 'YouTube', placeholder: '@yourchannel' },
-  { value: 'linkedin', label: 'LinkedIn', placeholder: 'yourname' },
-  { value: 'twitter', label: 'Twitter / X', placeholder: '@yourhandle' },
-  { value: 'website', label: 'Website', placeholder: 'yoursite.com' },
-  { value: 'email', label: 'Email', placeholder: 'hello@you.com' },
-  { value: 'phone', label: 'Phone', placeholder: '+44 7700 000000' },
-  { value: 'whatsapp', label: 'WhatsApp', placeholder: '+44 7700 000000' },
 ];
 
 function PlatformSelect({

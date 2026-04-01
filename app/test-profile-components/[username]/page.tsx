@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import { getProfileByUsernameAdmin } from '@/lib/data/profiles';
 import { getProfileComponentsAdmin } from '@/lib/data/components';
 import { ProfileComponentsView } from '@/components/ProfileComponentsView';
-import { extractContactsFromComponents } from '@/components/public-profile/shared/profile-adapters';
 
 interface Props {
   params: Promise<{ username: string }>;
@@ -15,6 +14,15 @@ export default async function TestProfileComponentsPage({ params }: Props) {
   if (!profile) notFound();
 
   const components = await getProfileComponentsAdmin(profile.id);
+
+  const socialStatItems =
+    (
+      components.find((c) => c.type === 'social_stat')?.data as
+        | { items?: Array<{ platform: string; handle?: string }> }
+        | undefined
+    )?.items ?? [];
+  const getSocial = (p: string) =>
+    socialStatItems.find((i) => i.platform.toLowerCase() === p)?.handle ?? null;
 
   const theme = profile.palette === 'noir' ? 'noir' : 'blanc';
 
@@ -31,7 +39,12 @@ export default async function TestProfileComponentsPage({ params }: Props) {
           profileName: profile.full_name ?? '',
           profileRole: profile.role,
           profilePhotoUrl: profile.avatar_url,
-          socialLinks: extractContactsFromComponents(components),
+          socialLinks: profile.social_links,
+          profileSocials: {
+            instagram: getSocial('instagram'),
+            tiktok: getSocial('tiktok'),
+            youtube: getSocial('youtube'),
+          },
         }}
       />
     </div>
