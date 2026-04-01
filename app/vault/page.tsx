@@ -13,6 +13,7 @@ export default function VaultPage() {
   const [search, setSearch] = useState('');
   const { data: contacts = [], isLoading } = useVaultContacts();
   const [linkedInPrefill, setLinkedInPrefill] = useState<LinkedInPrefill | null>(() => {
+    if (typeof window === 'undefined') return null;
     const raw = localStorage.getItem('linkedin_prefill');
     if (!raw) return null;
     localStorage.removeItem('linkedin_prefill');
