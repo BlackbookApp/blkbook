@@ -15,6 +15,7 @@ export default function SettingsPage() {
   const { data: profile } = useProfile();
 
   const [isIOS] = useState(() => /iPhone|iPad|iPod/i.test(navigator.userAgent));
+  const [isWalletLoading, setIsWalletLoading] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -169,19 +170,44 @@ export default function SettingsPage() {
           <div className="border-b border-bb-rule">
             <button
               onClick={() => {
+                setIsWalletLoading(true);
                 window.location.href = routes.walletPass(profile.username!);
+                setTimeout(() => setIsWalletLoading(false), 5000);
               }}
-              className="w-full flex items-center justify-between py-5 group"
+              disabled={isWalletLoading}
+              className="w-full flex items-center justify-between py-5 group disabled:opacity-50"
             >
               <div className="text-left">
                 <p className="font-granjon text-[15px] leading-tight mb-0.5 text-bb-dark">
                   Add to Apple Wallet
                 </p>
                 <p className="font-helvetica text-[11px] font-light text-bb-muted">
-                  Download your Blackbook card
+                  {isWalletLoading ? 'Preparing your card…' : 'Download your Blackbook card'}
                 </p>
               </div>
-              <ChevronLeft className="w-4 h-4 text-bb-muted/40 rotate-180" strokeWidth={1.2} />
+              {isWalletLoading ? (
+                <svg
+                  className="w-4 h-4 text-bb-muted/40 animate-spin"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+              ) : (
+                <ChevronLeft className="w-4 h-4 text-bb-muted/40 rotate-180" strokeWidth={1.2} />
+              )}
             </button>
           </div>
         )}

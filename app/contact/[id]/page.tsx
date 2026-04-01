@@ -136,6 +136,27 @@ const ContactDetail = () => {
           </a>
         )}
 
+        {contact.linkedin_url && (
+          <a
+            href={contact.linkedin_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between w-full py-4 border-b border-border mb-6 group"
+          >
+            <div>
+              <p className="font-helvetica text-[11px] font-normal uppercase tracking-[0.12em] mb-1.5 text-bb-muted">
+                LinkedIn
+              </p>
+              <p className="font-granjon text-[14px] italic font-normal tracking-tight text-bb-dark">
+                {contact.linkedin_url.replace('https://www.linkedin.com/in/', 'in/')}
+              </p>
+            </div>
+            <span className="font-helvetica text-[10px] uppercase tracking-[0.12em] text-bb-muted group-hover:text-bb-dark transition-colors">
+              View →
+            </span>
+          </a>
+        )}
+
         <ContactNotes notes={contact.notes} onAddNote={handleAddNote} />
 
         <button

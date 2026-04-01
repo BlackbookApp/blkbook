@@ -15,6 +15,7 @@ export interface VaultContact {
   website: string | null;
   notes: string | null;
   photo_url: string | null;
+  linkedin_url: string | null;
   profile_id?: string | null;
   created_at: string;
   updated_at: string;
@@ -87,6 +88,24 @@ export async function isProfileInVault(profileId: string): Promise<boolean> {
     .eq('user_id', user.id)
     .eq('profile_id', profileId);
   return (count ?? 0) > 0;
+}
+
+export async function getVaultContactByLinkedinUrl(
+  linkedinUrl: string
+): Promise<VaultContact | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+  const { data, error } = await supabase
+    .from('vault_contacts')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('linkedin_url', linkedinUrl)
+    .maybeSingle();
+  if (error) throw error;
+  return data ?? null;
 }
 
 export async function deleteVaultContact(id: string): Promise<void> {

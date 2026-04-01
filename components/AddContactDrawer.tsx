@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { z } from 'zod';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { useCreateVaultContact } from '@/hooks/use-vault-contacts';
+import type { LinkedInPrefill } from '@/app/actions/linkedin';
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -20,17 +21,18 @@ type FormData = z.infer<typeof schema>;
 interface AddContactDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  prefillData?: LinkedInPrefill | null;
 }
 
-const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
+const AddContactDrawer = ({ open, onOpenChange, prefillData }: AddContactDrawerProps) => {
   const [form, setForm] = useState<FormData>({
-    name: '',
-    role: '',
-    city: '',
-    email: '',
+    name: prefillData?.name ?? '',
+    role: prefillData?.role ?? '',
+    city: prefillData?.city ?? '',
+    email: prefillData?.email ?? '',
     phone: '',
     instagram: '',
-    notes: '',
+    notes: prefillData?.notes ?? '',
   });
   const [nameError, setNameError] = useState('');
   const { mutate: createContact, isPending } = useCreateVaultContact();
@@ -59,9 +61,10 @@ const AddContactDrawer = ({ open, onOpenChange }: AddContactDrawerProps) => {
         instagram: instagram || null,
         tiktok: null,
         youtube: null,
-        website: null,
+        website: prefillData?.website ?? null,
         notes: notes || null,
-        photo_url: null,
+        photo_url: prefillData?.photo_url ?? null,
+        linkedin_url: prefillData?.linkedin_url ?? null,
       },
       {
         onSuccess: () => {
