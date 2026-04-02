@@ -167,12 +167,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
     now_block: {
       text: "Building Arcline's go-to-market in the US. Looking for enterprise design partners. Reading everything about pricing strategy.",
     },
-    social_stat: {
-      items: [
-        { platform: 'LinkedIn', handle: null, count: '12K', url: null },
-        { platform: 'X', handle: null, count: '8.4K', url: null },
-      ],
-    },
     action_buttons_secondary: {
       buttons: [
         { label: 'Schedule a call', url: null, style: 'primary' },
@@ -220,9 +214,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
       text: 'London-based photographer working across fashion, portraiture, and documentary. Known for quiet tension and natural light. Represented by CLM.',
     },
     logo: { url: null, label: null },
-    social_stat: {
-      items: [{ platform: 'Instagram', handle: null, count: '48K', url: null }],
-    },
     action_buttons_secondary: {
       buttons: [
         { label: 'Book a shoot', url: null, style: 'primary' },
@@ -259,9 +250,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
         { name: 'Netflix', logo_url: null },
         { name: 'Calvin Klein', logo_url: null },
       ],
-    },
-    social_stat: {
-      items: [{ platform: 'Instagram', handle: null, count: '124K', url: null }],
     },
     action_buttons_secondary: {
       buttons: [
@@ -323,9 +311,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
       text: 'I believe operational excellence is a competitive advantage. I work at the intersection of strategy, people, and execution.',
     },
     logo: { url: null, label: 'Meridian Financial' },
-    social_stat: {
-      items: [{ platform: 'LinkedIn', handle: null, count: '31K', url: null }],
-    },
     action_buttons_secondary: {
       buttons: [
         { label: 'Connect on LinkedIn', url: null, style: 'primary' },
@@ -359,12 +344,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
       text: "Taking on two new brand projects for Q2. Teaching a summer intensive at SVA. Finishing a type specimen for a custom typeface I've been drawing for three years.",
     },
     logo: { url: null, label: null },
-    social_stat: {
-      items: [
-        { platform: 'Instagram', handle: null, count: '22K', url: null },
-        { platform: 'Dribbble', handle: null, count: '15K', url: null },
-      ],
-    },
     action_buttons_secondary: {
       buttons: [
         { label: 'Start a project', url: null, style: 'primary' },
@@ -397,12 +376,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
       text: 'Three listings coming to market in April. Actively working with buyers in Tribeca and the West Village. Available for private consultations.',
     },
     logo: { url: null, label: null },
-    social_stat: {
-      items: [
-        { platform: 'Instagram', handle: null, count: '9.2K', url: null },
-        { platform: 'LinkedIn', handle: null, count: '4.1K', url: null },
-      ],
-    },
     action_buttons_secondary: {
       buttons: [
         { label: 'Schedule a consultation', url: null, style: 'primary' },
