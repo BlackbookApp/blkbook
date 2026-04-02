@@ -41,9 +41,13 @@ export async function createGuestExchangeAction(
       .eq('id', recipientProfileId)
       .maybeSingle();
     if (profile) {
-      sendGuestExchangeEmail(guestEmail, initiatorFields.name, profile).catch((err) =>
-        console.error('[exchange-email]', err)
-      );
+      try {
+        await sendGuestExchangeEmail(guestEmail, initiatorFields.name, profile);
+      } catch (err) {
+        console.error('[exchange-email] FAILED:', JSON.stringify(err));
+      }
+    } else {
+      console.error('[exchange-email] profile not found for id:', recipientProfileId);
     }
   }
   return created;
