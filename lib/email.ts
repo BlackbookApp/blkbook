@@ -11,8 +11,7 @@ export async function sendGuestExchangeEmail(
   const templateId = process.env.RESEND_EXCHANGE_TEMPLATE_ID;
   const fromAddress = process.env.EMAIL_FROM_ADDRESS;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
-  // const to = process.env.NODE_ENV === 'production' ? guestEmail : 'delivered+exchange@resend.dev';
-  const to = guestEmail;
+  const to = process.env.NODE_ENV === 'production' ? guestEmail : 'delivered+exchange@resend.dev';
   if (!templateId || !fromAddress) return;
 
   const when = new Date().toLocaleDateString('en-US', {
@@ -21,23 +20,26 @@ export async function sendGuestExchangeEmail(
     year: 'numeric',
   });
 
-  await resend.emails.send({
+  const variables = {
+    when,
+    name: guestName,
+    email: profile.social_links?.email ?? '',
+    full_name: profile.full_name ?? '',
+    role: profile.role ?? '',
+    vcard_url: profile.username ? `${appUrl}/api/vcard/${profile.username}` : '',
+    profile_url: profile.username ? `${appUrl}/p/${profile.username}` : '',
+  };
+
+  console.log('[exchange-email] to:', to, 'template:', templateId, 'variables:', variables);
+
+  const result = await resend.emails.send({
     from: fromAddress,
     to,
     subject: `${profile.full_name ?? 'Your contact'} on Blackbook`,
-    template: {
-      id: templateId,
-      variables: {
-        when,
-        email: profile.social_links?.email ?? '',
-        name: guestName,
-        full_name: profile.full_name ?? '',
-        role: profile.role ?? '',
-        vcard_url: profile.username ? `${appUrl}/api/vcard/${profile.username}` : '',
-        profile_url: profile.username ? `${appUrl}/p/${profile.username}` : '',
-      },
-    },
+    template: { id: templateId, variables },
   });
+
+  console.log('[exchange-email] result:', result);
 }
 
 export async function sendRequestReceivedEmail(email: string, firstName: string): Promise<void> {
