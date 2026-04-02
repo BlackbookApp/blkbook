@@ -1,27 +1,57 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { QRScanner } from '@/components/qr-scanner/QRScanner';
 import { routes } from '@/lib/routes';
 import { toast } from '@/hooks/use-toast';
+import { fetchLinkedInProfile, getVaultContactByLinkedinUrlAction } from '@/app/actions/linkedin';
 
 const PROFILE_PATTERN = /\/p\/([^/?#]+)/;
+const LINKEDIN_PATTERN = /linkedin\.com\/in\/([^/?#]+)/;
 
 export default function ScanQrPage() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleDetected = useCallback(
-    (data: string) => {
-      const match = data.match(PROFILE_PATTERN);
-      if (match) {
-        router.replace(routes.publicProfile(match[1]));
-      } else {
-        toast({ title: 'Not a Blackbook QR code', variant: 'destructive' });
-        // scanner stays open — detection loop resets via key or re-mount not needed;
-        // the onDetected guard in QRScanner only fires once, so we need to allow retry
+    async (data: string) => {
+      // Blackbook profile QR
+      const bbMatch = data.match(PROFILE_PATTERN);
+      if (bbMatch) {
+        router.replace(routes.publicProfile(bbMatch[1]));
+        return;
       }
+
+      // LinkedIn QR
+      const liMatch = data.match(LINKEDIN_PATTERN);
+      if (liMatch) {
+        const linkedinUrl = `https://www.linkedin.com/in/${liMatch[1]}`;
+        setLoading(true);
+        try {
+          // Dedup check
+          const existing = await getVaultContactByLinkedinUrlAction(linkedinUrl);
+          if (existing) {
+            toast({
+              title: 'Already in vault',
+              description: `${existing.name} is already saved.`,
+            });
+            router.replace(routes.contact(existing.id));
+            return;
+          }
+
+          const prefill = await fetchLinkedInProfile(linkedinUrl);
+          localStorage.setItem('linkedin_prefill', JSON.stringify(prefill));
+          router.replace(routes.vault);
+        } catch {
+          toast({ title: 'Could not fetch LinkedIn profile', variant: 'destructive' });
+          setLoading(false);
+        }
+        return;
+      }
+
+      toast({ title: 'Not a Blackbook or LinkedIn QR code', variant: 'destructive' });
     },
     [router]
   );
@@ -31,6 +61,17 @@ export default function ScanQrPage() {
       toast({ title: 'Camera not supported on this device', variant: 'destructive' });
     }
   }, []);
+
+  if (loading) {
+    return (
+      <div className="blackbook-container bg-black flex flex-col items-center justify-center gap-4">
+        <Loader2 className="w-8 h-8 text-white/60 animate-spin" strokeWidth={1.4} />
+        <p className="font-helvetica text-[11px] font-light tracking-widest uppercase text-white/60">
+          Fetching LinkedIn profile…
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="blackbook-container bg-black flex flex-col">
@@ -52,7 +93,7 @@ export default function ScanQrPage() {
       {/* Footer hint */}
       <div className="shrink-0 flex items-center justify-center py-6">
         <p className="font-helvetica text-[10px] font-light text-white/40 tracking-widest uppercase">
-          Point at a Blackbook QR code
+          Point at a Blackbook or LinkedIn QR code
         </p>
       </div>
     </div>

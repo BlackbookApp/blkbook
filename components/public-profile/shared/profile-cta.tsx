@@ -83,6 +83,7 @@ export function ProfileCTA({
         youtube: profileSocials?.youtube ?? null,
         website: socialLinks.website ?? null,
         notes: null,
+        linkedin_url: null,
       },
       {
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['vault-in', profileId] }),
