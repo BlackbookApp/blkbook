@@ -9,6 +9,8 @@ import {
   getHasExchanged,
 } from '@/lib/data/exchanges';
 import type { PerformExchangeInput, SharedFields } from '@/lib/data/exchanges';
+import { adminClient } from '@/lib/supabase/admin';
+import { sendGuestExchangeEmail } from '@/lib/email';
 
 export async function performExchangeAction(input: PerformExchangeInput): Promise<void> {
   return performExchange(input);
@@ -28,9 +30,23 @@ export async function declineExchangeAction(exchangeId: string): Promise<void> {
 export async function createGuestExchangeAction(
   recipientProfileId: string,
   initiatorFields: Pick<SharedFields, 'name' | 'contact'>,
-  note?: string
+  note?: string,
+  guestEmail?: string
 ): Promise<boolean> {
-  return createGuestExchange(recipientProfileId, initiatorFields, note);
+  const created = await createGuestExchange(recipientProfileId, initiatorFields, note);
+  if (created && guestEmail) {
+    const { data: profile } = await adminClient
+      .from('profiles')
+      .select('*')
+      .eq('id', recipientProfileId)
+      .maybeSingle();
+    if (profile) {
+      sendGuestExchangeEmail(guestEmail, initiatorFields.name, profile).catch((err) =>
+        console.error('[exchange-email]', err)
+      );
+    }
+  }
+  return created;
 }
 
 export async function getMyExchangesAction() {
