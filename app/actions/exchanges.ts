@@ -46,6 +46,8 @@ export async function createGuestExchangeAction(
       } catch (err) {
         console.error('[exchange-email] FAILED:', JSON.stringify(err));
       }
+    } else {
+      console.error('[exchange-email] profile not found for id:', recipientProfileId);
     }
   }
   return created;

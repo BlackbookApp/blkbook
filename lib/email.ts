@@ -32,14 +32,27 @@ export async function sendGuestExchangeEmail(
 
   console.log('[exchange-email] to:', to, 'template:', templateId, 'variables:', variables);
 
-  const result = await resend.emails.send({
-    from: fromAddress,
-    to,
-    subject: `${profile.full_name ?? 'Your contact'} on Blackbook`,
-    template: { id: templateId, variables },
-  });
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const { data, error } = await resend.emails.send({
+      from: fromAddress,
+      to,
+      subject: `${profile.full_name ?? 'Your contact'} on Blackbook`,
+      template: { id: templateId, variables },
+    });
 
-  console.log('[exchange-email] result:', result);
+    if (!error) {
+      console.log('[exchange-email] sent:', data?.id, 'attempt:', attempt);
+      return;
+    }
+
+    console.warn('[exchange-email] attempt', attempt, 'failed:', error);
+    lastError = error;
+
+    if (attempt < 3) await new Promise((r) => setTimeout(r, attempt * 1000));
+  }
+
+  throw lastError;
 }
 
 export async function sendRequestReceivedEmail(email: string, firstName: string): Promise<void> {
