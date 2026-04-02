@@ -88,7 +88,8 @@ const ExchangeDetailsModal = ({
       const inserted = await createGuestExchangeAction(
         profileId,
         { name: form.name.trim(), contact },
-        form.note.trim() || undefined
+        form.note.trim() || undefined,
+        form.email.trim()
       );
       if (!inserted) {
         setAlreadySent(true);

@@ -1,6 +1,44 @@
 import { Resend } from 'resend';
+import type { Profile } from '@/lib/data/profiles';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function sendGuestExchangeEmail(
+  guestEmail: string,
+  guestName: string,
+  profile: Profile
+): Promise<void> {
+  const templateId = process.env.RESEND_EXCHANGE_TEMPLATE_ID;
+  const fromAddress = process.env.EMAIL_FROM_ADDRESS;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+  // const to = process.env.NODE_ENV === 'production' ? guestEmail : 'delivered+exchange@resend.dev';
+  const to = guestEmail;
+  if (!templateId || !fromAddress) return;
+
+  const when = new Date().toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+  await resend.emails.send({
+    from: fromAddress,
+    to,
+    subject: `${profile.full_name ?? 'Your contact'} on Blackbook`,
+    template: {
+      id: templateId,
+      variables: {
+        when,
+        email: profile.social_links?.email ?? '',
+        name: guestName,
+        full_name: profile.full_name ?? '',
+        role: profile.role ?? '',
+        vcard_url: profile.username ? `${appUrl}/api/vcard/${profile.username}` : '',
+        profile_url: profile.username ? `${appUrl}/p/${profile.username}` : '',
+      },
+    },
+  });
+}
 
 export async function sendRequestReceivedEmail(email: string, firstName: string): Promise<void> {
   const templateId = process.env.RESEND_ACCESS_REQUEST_TEMPLATE_ID;
