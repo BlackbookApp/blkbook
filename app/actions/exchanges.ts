@@ -42,7 +42,7 @@ export async function createGuestExchangeAction(
       .maybeSingle();
     if (profile) {
       sendGuestExchangeEmail(guestEmail, initiatorFields.name, profile).catch((err) =>
-        console.error('[exchange-email]', err)
+        console.error('[exchange-email] FAILED:', JSON.stringify(err))
       );
     }
   }
