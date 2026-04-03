@@ -13,4 +13,3 @@ export { AboutSection } from './AboutSection';
 export { NowBlock } from './NowBlock';
 export { Logo } from './Logo';
 export { SocialStat } from './SocialStat';
-export { ActionButtonsSecondary } from './ActionButtonsSecondary';

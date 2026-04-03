@@ -114,15 +114,6 @@ export const COMPONENT_SCHEMAS = {
       })
     ),
   }),
-  action_buttons_secondary: z.object({
-    buttons: z.array(
-      z.object({
-        label: z.string(),
-        url: z.string().url().nullable(),
-        style: z.enum(['primary', 'secondary']).nullable(),
-      })
-    ),
-  }),
 };
 
 import type { RoleType } from './roleSchemas';
@@ -167,12 +158,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
     now_block: {
       text: "Building Arcline's go-to-market in the US. Looking for enterprise design partners. Reading everything about pricing strategy.",
     },
-    action_buttons_secondary: {
-      buttons: [
-        { label: 'Schedule a call', url: null, style: 'primary' },
-        { label: 'View deck', url: null, style: 'secondary' },
-      ],
-    },
   },
   photographer: {
     quote_block: {
@@ -214,12 +199,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
       text: 'London-based photographer working across fashion, portraiture, and documentary. Known for quiet tension and natural light. Represented by CLM.',
     },
     logo: { url: null, label: null },
-    action_buttons_secondary: {
-      buttons: [
-        { label: 'Book a shoot', url: null, style: 'primary' },
-        { label: 'View portfolio', url: null, style: 'secondary' },
-      ],
-    },
   },
   talent: {
     quote_block: {
@@ -249,12 +228,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
         { name: 'HBO', logo_url: null },
         { name: 'Netflix', logo_url: null },
         { name: 'Calvin Klein', logo_url: null },
-      ],
-    },
-    action_buttons_secondary: {
-      buttons: [
-        { label: 'Contact representation', url: null, style: 'primary' },
-        { label: 'View reel', url: null, style: 'secondary' },
       ],
     },
   },
@@ -311,12 +284,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
       text: 'I believe operational excellence is a competitive advantage. I work at the intersection of strategy, people, and execution.',
     },
     logo: { url: null, label: 'Meridian Financial' },
-    action_buttons_secondary: {
-      buttons: [
-        { label: 'Connect on LinkedIn', url: null, style: 'primary' },
-        { label: 'Download CV', url: null, style: 'secondary' },
-      ],
-    },
   },
   designer: {
     quote_block: {
@@ -344,12 +311,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
       text: "Taking on two new brand projects for Q2. Teaching a summer intensive at SVA. Finishing a type specimen for a custom typeface I've been drawing for three years.",
     },
     logo: { url: null, label: null },
-    action_buttons_secondary: {
-      buttons: [
-        { label: 'Start a project', url: null, style: 'primary' },
-        { label: 'View work', url: null, style: 'secondary' },
-      ],
-    },
   },
   realtor: {
     quote_block: {
@@ -376,12 +337,6 @@ export const ROLE_COMPONENT_SAMPLES: Record<RoleType, Partial<Record<ComponentTy
       text: 'Three listings coming to market in April. Actively working with buyers in Tribeca and the West Village. Available for private consultations.',
     },
     logo: { url: null, label: null },
-    action_buttons_secondary: {
-      buttons: [
-        { label: 'Schedule a consultation', url: null, style: 'primary' },
-        { label: 'View listings', url: null, style: 'secondary' },
-      ],
-    },
   },
 };
 
@@ -544,12 +499,6 @@ export const ALL_COMPONENT_SAMPLES: Record<ComponentType, unknown> = {
       },
     ],
   },
-  action_buttons_secondary: {
-    buttons: [
-      { label: 'Schedule a call', url: 'https://cal.com/alexrivera', style: 'primary' },
-      { label: 'View work', url: 'https://alexrivera.com', style: 'secondary' },
-    ],
-  },
 };
 
 export const COMPONENT_DEFAULTS: Record<ComponentType, unknown> = {
@@ -568,5 +517,4 @@ export const COMPONENT_DEFAULTS: Record<ComponentType, unknown> = {
   now_block: { text: null },
   logo: { url: null, label: null },
   social_stat: { items: [] },
-  action_buttons_secondary: { buttons: [] },
 };

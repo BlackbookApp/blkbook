@@ -16,7 +16,6 @@ import {
   NowBlockEditor,
   LogoEditor,
   SocialStatEditor,
-  ActionButtonsSecondaryEditor,
 } from '@/components/profile-components/editors';
 
 interface EditorMapEntry {
@@ -100,10 +99,5 @@ export const EDITOR_MAP: Record<ComponentType, EditorMapEntry> = {
     label: 'Social stats',
     description: 'Your platform reach.',
     component: SocialStatEditor,
-  },
-  action_buttons_secondary: {
-    label: 'Action buttons',
-    description: 'Links and CTAs.',
-    component: ActionButtonsSecondaryEditor,
   },
 };

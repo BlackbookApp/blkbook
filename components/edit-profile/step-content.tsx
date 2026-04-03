@@ -24,7 +24,6 @@ const EXAMPLE_COPY: Partial<Record<ComponentType, string>> = {
   now_block: '"Writing a book on design systems. Based in Lisbon until June."',
   logo: '"Your studio or personal brand mark, displayed prominently."',
   social_stat: '"120k on Instagram · 45k on LinkedIn · 8k newsletter subscribers."',
-  action_buttons_secondary: '"Book a call · Download portfolio · Visit studio site."',
 };
 
 interface StepContentProps {

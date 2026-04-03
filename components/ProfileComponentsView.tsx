@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ProfileViewProvider } from '@/contexts/profile-view-context';
+import { ProfileCTA } from '@/components/public-profile/shared/profile-cta';
 import { DISPLAY_MAP } from '@/config/displayMap';
 import type { ProfileComponent } from '@/lib/data/components';
 import type { ProfileViewContextValue } from '@/contexts/profile-view-context';
@@ -61,9 +62,10 @@ function hasData(data: Record<string, unknown>): boolean {
 }
 
 export function ProfileComponentsView({ components, profileView, theme = 'blanc' }: Props) {
-  const DATA_EXEMPT = new Set(['profile_hero_centered', 'action_buttons_secondary']);
   const visible = components.filter(
-    (c) => c.is_visible && (DATA_EXEMPT.has(c.type) || hasData(c.data as Record<string, unknown>))
+    (c) =>
+      c.is_visible &&
+      (c.type === 'profile_hero_centered' || hasData(c.data as Record<string, unknown>))
   );
 
   const hero = visible.find((c) => c.type === 'profile_hero_centered');
@@ -94,20 +96,27 @@ export function ProfileComponentsView({ components, profileView, theme = 'blanc'
             const entry = DISPLAY_MAP[component.type as ComponentType];
             if (!entry) return null;
             const Display = entry.component;
-            const prevType = sections[i - 1]?.type;
             const nextType = sections[i + 1]?.type;
-            const tightTop =
-              component.type === 'action_buttons_secondary' && prevType === 'social_stat';
-            const tightBottom =
-              component.type === 'social_stat' && nextType === 'action_buttons_secondary';
+            const tightBottom = component.type === 'social_stat' && nextType === undefined;
             return (
               <ScrollReveal key={component.id}>
-                <div className={tightTop ? 'pt-8 pb-10' : tightBottom ? 'py-10 pb-0' : 'py-10'}>
+                <div className={tightBottom ? 'py-10 pb-0' : 'py-10'}>
                   <Display data={component.data} />
                 </div>
               </ScrollReveal>
             );
           })}
+
+          {/* ProfileCTA — always last, tight top when preceded by social_stat */}
+          <ScrollReveal>
+            <div
+              className={
+                sections[sections.length - 1]?.type === 'social_stat' ? 'pt-8 pb-10' : 'py-10'
+              }
+            >
+              <ProfileCTA {...profileView} />
+            </div>
+          </ScrollReveal>
 
           {/* Footer */}
           <ScrollReveal margin="0px">
