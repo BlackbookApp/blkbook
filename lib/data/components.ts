@@ -56,7 +56,7 @@ export async function insertComponentsForProfile(
   profileId: string,
   types: ComponentType[],
   role: RoleType,
-  mode: 'ai' | 'manual',
+  mode: 'ai',
   heroData: { name: string; tagline: string | null; avatarUrl: string | null }
 ): Promise<{ error: string | null }> {
   const supabase = await createClient();

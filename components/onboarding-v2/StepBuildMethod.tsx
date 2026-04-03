@@ -1,6 +1,6 @@
 'use client';
 
-import { Sparkles, PenLine } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { RoleType } from '@/config/roleSchemas';
 import type { BuildMethod } from './types';
@@ -26,12 +26,6 @@ const OPTIONS: MethodOption[] = [
     title: (role) => `Craft my ${role} profile for me`,
     description:
       "Share a link, upload a screenshot, or paste text — we'll extract the content and build your profile.",
-  },
-  {
-    key: 'manual',
-    icon: <PenLine className="w-4 h-4" />,
-    title: () => 'Build it myself',
-    description: 'Start from an empty profile and fill in each section at your own pace.',
   },
 ];
 
