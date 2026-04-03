@@ -46,6 +46,7 @@ export interface Profile {
   invites_remaining: number;
   username: string | null;
   cta_buttons: string[] | null;
+  has_seen_tour: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -189,6 +190,10 @@ export async function getProfileUsername(profileId: string): Promise<string | nu
 
 export async function publishProfile(): Promise<{ error: string | null }> {
   return updateProfile({ is_published: true });
+}
+
+export async function markTourSeen(): Promise<{ error: string | null }> {
+  return updateProfile({ has_seen_tour: true });
 }
 
 export type ProfileUpdate = Partial<
