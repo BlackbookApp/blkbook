@@ -1,6 +1,6 @@
 import type { RoleType } from '@/config/roleSchemas';
 
-export type BuildMethod = 'ai' | 'manual';
+export type BuildMethod = 'ai';
 
 export interface OnboardingState {
   roleType: RoleType | null;

@@ -15,8 +15,7 @@ export type ComponentType =
   | 'about_section'
   | 'now_block'
   | 'logo'
-  | 'social_stat'
-  | 'action_buttons_secondary';
+  | 'social_stat';
 
 export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
   founder: [
@@ -27,7 +26,6 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
     'recognition_list',
     'now_block',
     'social_stat',
-    'action_buttons_secondary',
   ],
   photographer: [
     'profile_hero_centered',
@@ -40,7 +38,6 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
     'about_section',
     'logo',
     'social_stat',
-    'action_buttons_secondary',
   ],
   talent: [
     'profile_hero_centered',
@@ -50,7 +47,6 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
     'image_gallery',
     'client_list',
     'social_stat',
-    'action_buttons_secondary',
   ],
   corporate: [
     'profile_hero_centered',
@@ -61,7 +57,6 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
     'about_section',
     'logo',
     'social_stat',
-    'action_buttons_secondary',
   ],
   designer: [
     'profile_hero_centered',
@@ -73,7 +68,6 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
     'now_block',
     'logo',
     'social_stat',
-    'action_buttons_secondary',
   ],
   realtor: [
     'profile_hero_centered',
@@ -85,7 +79,6 @@ export const ROLE_SCHEMAS: Record<RoleType, ComponentType[]> = {
     'now_block',
     'logo',
     'social_stat',
-    'action_buttons_secondary',
   ],
 };
 

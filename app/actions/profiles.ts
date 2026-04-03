@@ -4,6 +4,7 @@ import {
   getMyProfile,
   updateProfile,
   publishProfile,
+  markTourSeen,
   addPortfolioImage,
   removePortfolioImage,
   getProfileUsername,
@@ -46,6 +47,10 @@ export async function resetProfileCompleteAction(
   userId: string
 ): Promise<{ error: string | null }> {
   return resetProfileComplete(profileId, userId);
+}
+
+export async function markTourSeenAction(): Promise<{ error: string | null }> {
+  return markTourSeen();
 }
 
 export async function publishProfileAction(): Promise<{ error: string | null }> {

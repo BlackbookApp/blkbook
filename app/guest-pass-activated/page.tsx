@@ -39,7 +39,7 @@ const GuestPassActivated = () => {
             className="space-y-3"
           >
             <button
-              onClick={() => router.push('/walkthrough')}
+              onClick={() => router.push('/vault')}
               className="w-full h-[52px] bg-foreground text-background uppercase tracking-[0.12em] text-[11px] font-normal [font-family:'Helvetica_Neue','Helvetica',sans-serif] shadow-[0_2px_8px_-2px_hsl(var(--foreground)/0.25)] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay"
             >
               Explore My Blackbook

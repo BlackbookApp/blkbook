@@ -65,7 +65,7 @@ const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
             if (item.key === 'add') {
               return (
                 <AddDrawer key={item.key}>
-                  <button className={itemClass}>
+                  <button className={itemClass} data-tour="nav-add">
                     <Text variant={'nav'} as="span" className={getNavClassName(false)}>
                       {item.label}
                     </Text>
@@ -77,6 +77,7 @@ const BottomNav = ({ theme = 'dark' }: BottomNavProps) => {
             return (
               <button
                 key={item.key}
+                data-tour={`nav-${item.key}`}
                 onClick={() => item.path && router.push(item.path)}
                 className={`${itemClass}  relative`}
               >

@@ -8,7 +8,7 @@ import type { RoleType } from '@/config/roleSchemas';
 
 export async function saveOnboardingAction(params: {
   roleType: RoleType;
-  buildMethod: 'ai' | 'manual';
+  buildMethod: 'ai';
   fullName: string;
   roleTitle: string;
   avatarUrl: string | null;

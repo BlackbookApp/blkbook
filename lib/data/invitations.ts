@@ -15,6 +15,19 @@ export interface Invitation {
 }
 
 export async function getInviteByCode(code: string): Promise<Invitation | null> {
+  if (process.env.NODE_ENV !== 'production' && code === 'DEV') {
+    return {
+      id: 'dev',
+      code: 'DEV',
+      inviter_id: null,
+      invitee_email: null,
+      used_by: null,
+      used_at: null,
+      expires_at: new Date(Date.now() + 86400000).toISOString(),
+      created_at: new Date().toISOString(),
+    };
+  }
+
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('invitations')

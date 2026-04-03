@@ -6,12 +6,20 @@ import BottomNav from '@/components/BottomNav';
 import VaultSearchBar from '@/components/VaultSearchBar';
 import { VaultContactList } from '@/components/vault/VaultContactList';
 import { useVaultContacts } from '@/hooks/use-vault-contacts';
+import { useProfile } from '@/hooks/use-profile';
+import { useQueryClient } from '@tanstack/react-query';
 import AddContactDrawer from '@/components/AddContactDrawer';
+import VaultOnboarding from '@/components/VaultOnboarding';
+import { markTourSeenAction } from '@/app/actions/profiles';
 import type { LinkedInPrefill } from '@/app/actions/linkedin';
 
 export default function VaultPage() {
   const [search, setSearch] = useState('');
   const { data: contacts = [], isLoading } = useVaultContacts();
+  const { data: profile } = useProfile();
+  const queryClient = useQueryClient();
+  const [tourDismissed, setTourDismissed] = useState(false);
+  const showTour = !tourDismissed && !!profile && !profile.has_seen_tour;
   const [linkedInPrefill, setLinkedInPrefill] = useState<LinkedInPrefill | null>(() => {
     if (typeof window === 'undefined') return null;
     const raw = localStorage.getItem('linkedin_prefill');
@@ -37,6 +45,16 @@ export default function VaultPage() {
       <VaultContactList contacts={contacts} search={search} isLoading={isLoading} />
 
       <BottomNav />
+
+      {showTour && (
+        <VaultOnboarding
+          onComplete={async () => {
+            setTourDismissed(true);
+            await markTourSeenAction();
+            queryClient.invalidateQueries({ queryKey: ['profile'] });
+          }}
+        />
+      )}
 
       {linkedInPrefill && (
         <AddContactDrawer

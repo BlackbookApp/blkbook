@@ -60,12 +60,7 @@ const STEPS: Array<{
     subtext:
       'We can generate your profile from your existing content, or you can write it yourself.',
     canContinue: (s) => s.buildMethod !== null,
-    continueLabel: (s) =>
-      s.buildMethod === 'ai'
-        ? 'Build my draft'
-        : s.buildMethod === 'manual'
-          ? 'Start building'
-          : 'Continue',
+    continueLabel: (s) => (s.buildMethod === 'ai' ? 'Build my draft' : 'Continue'),
   },
   {
     label: 'Your profile',

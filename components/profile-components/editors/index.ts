@@ -13,4 +13,3 @@ export { AboutSectionEditor } from './AboutSectionEditor';
 export { NowBlockEditor } from './NowBlockEditor';
 export { LogoEditor } from './LogoEditor';
 export { SocialStatEditor } from './SocialStatEditor';
-export { ActionButtonsSecondaryEditor } from './ActionButtonsSecondaryEditor';

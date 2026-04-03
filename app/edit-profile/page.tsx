@@ -40,6 +40,10 @@ const EditProfile = () => {
     }
   }, [profile?.social_links]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [step]);
+
   const isLoading = profileLoading || componentsLoading;
 
   const heroComponent = components.find((c) => c.type === 'profile_hero_centered');
@@ -65,7 +69,7 @@ const EditProfile = () => {
   }
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-background">
+    <div className="edit-profile-flow min-h-[100dvh] flex flex-col bg-background">
       {/* Header */}
       <div className="flex items-center justify-between px-6 pt-8">
         <Logo />

@@ -268,6 +268,7 @@ export type Database = {
           created_at: string | null;
           cta_buttons: string[] | null;
           full_name: string | null;
+          has_seen_tour: boolean;
           id: string;
           invite_code: string;
           invited_by: string | null;
@@ -295,6 +296,7 @@ export type Database = {
           created_at?: string | null;
           cta_buttons?: string[] | null;
           full_name?: string | null;
+          has_seen_tour?: boolean;
           id?: string;
           invite_code?: string;
           invited_by?: string | null;
@@ -322,6 +324,7 @@ export type Database = {
           created_at?: string | null;
           cta_buttons?: string[] | null;
           full_name?: string | null;
+          has_seen_tour?: boolean;
           id?: string;
           invite_code?: string;
           invited_by?: string | null;
@@ -359,15 +362,18 @@ export type Database = {
           email: string | null;
           id: string;
           instagram: string | null;
+          linkedin_url: string | null;
           name: string;
           notes: string | null;
           phone: string | null;
           photo_url: string | null;
           profile_id: string | null;
           role: string | null;
+          tiktok: string | null;
           updated_at: string | null;
           user_id: string;
           website: string | null;
+          youtube: string | null;
         };
         Insert: {
           city?: string | null;
@@ -375,15 +381,18 @@ export type Database = {
           email?: string | null;
           id?: string;
           instagram?: string | null;
+          linkedin_url?: string | null;
           name: string;
           notes?: string | null;
           phone?: string | null;
           photo_url?: string | null;
           profile_id?: string | null;
           role?: string | null;
+          tiktok?: string | null;
           updated_at?: string | null;
           user_id: string;
           website?: string | null;
+          youtube?: string | null;
         };
         Update: {
           city?: string | null;
@@ -391,15 +400,18 @@ export type Database = {
           email?: string | null;
           id?: string;
           instagram?: string | null;
+          linkedin_url?: string | null;
           name?: string;
           notes?: string | null;
           phone?: string | null;
           photo_url?: string | null;
           profile_id?: string | null;
           role?: string | null;
+          tiktok?: string | null;
           updated_at?: string | null;
           user_id?: string;
           website?: string | null;
+          youtube?: string | null;
         };
         Relationships: [
           {
@@ -462,7 +474,9 @@ export type Database = {
           p_recipient_photo_url?: string;
           p_recipient_profile_id: string;
           p_recipient_role?: string;
+          p_recipient_tiktok?: string;
           p_recipient_website?: string;
+          p_recipient_youtube?: string;
         };
         Returns: undefined;
       };

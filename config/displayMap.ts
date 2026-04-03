@@ -15,7 +15,6 @@ import {
   NowBlock,
   Logo,
   SocialStat,
-  ActionButtonsSecondary,
 } from '@/components/profile-components/display';
 
 interface DisplayMapEntry {
@@ -100,10 +99,5 @@ export const DISPLAY_MAP: Record<ComponentType, DisplayMapEntry> = {
     label: 'Social stats',
     description: 'Your platform reach.',
     component: SocialStat,
-  },
-  action_buttons_secondary: {
-    label: 'Action buttons',
-    description: 'Links and CTAs.',
-    component: ActionButtonsSecondary,
   },
 };
