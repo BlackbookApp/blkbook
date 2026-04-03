@@ -16,8 +16,8 @@ const addOptions = [
   {
     id: 'scan-qr',
     icon: QrCode,
-    label: 'Scan a LinkedIn QR Code',
-    description: 'Scan a Blackbook QR code',
+    label: 'Scan QR Code',
+    description: 'Scan a LinkedIn QR Code',
   },
   {
     id: 'quick-add',
