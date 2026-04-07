@@ -21,7 +21,7 @@ const InviteClient = ({ inviteCode, inviterName }: Props) => {
 
   if (!inviteCode) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-6">
+      <div className="min-h-dvh bg-background text-foreground flex flex-col items-center justify-center px-6">
         <Logo />
         <div className="mt-12 text-center max-w-[260px]">
           <p className="text-xs text-muted-foreground leading-relaxed">
@@ -35,7 +35,7 @@ const InviteClient = ({ inviteCode, inviterName }: Props) => {
   const displayName = inviterName ?? 'Someone';
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col relative">
+    <div className="min-h-dvh bg-background text-foreground flex flex-col relative">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

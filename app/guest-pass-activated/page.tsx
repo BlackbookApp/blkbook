@@ -15,7 +15,7 @@ const GuestPassActivated = () => {
       </div>
 
       {/* Centered Content */}
-      <div className="flex-1 flex items-center justify-center px-6 -mt-12">
+      <div className="flex-1 flex items-center justify-center px-6">
         <div className="max-w-xs w-full text-center">
           <motion.div
             initial={{ opacity: 0, y: 6 }}

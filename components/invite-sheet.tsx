@@ -47,10 +47,6 @@ export function InviteSheet({ children }: InviteSheetProps) {
         </SheetHeader>
 
         <div className="max-w-[300px] mx-auto space-y-6">
-          <p className="blackbook-label text-center leading-relaxed">
-            Share a golden ticket. Your guest joins directly — no queue.
-          </p>
-
           <p className="blackbook-label text-center">
             <span className="text-bb-dark font-medium">{invitesRemaining}</span>
             <span className="text-bb-muted"> invitations remaining</span>

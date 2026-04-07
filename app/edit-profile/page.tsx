@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import type { SocialLinks } from '@/lib/data/profiles';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { routes } from '@/lib/routes';
 import { useProfile } from '@/hooks/use-profile';
@@ -74,11 +73,10 @@ const EditProfile = () => {
       <div className="flex items-center justify-between px-6 pt-8">
         <Logo />
         <button
-          onClick={() => router.push(routes.myBlackbook)}
-          className="flex items-center text-muted-foreground/50 hover:text-foreground transition-colors"
-          aria-label="Close"
+          onClick={() => (step === 1 ? router.push(routes.myBlackbook) : setStep(step - 1))}
+          className="font-helvetica text-[11px] font-light tracking-widest uppercase text-muted-foreground/50 hover:text-foreground transition-colors"
         >
-          <X className="w-4 h-4" />
+          BACK
         </button>
       </div>
 
@@ -182,7 +180,7 @@ const EditProfile = () => {
                   className="font-helvetica text-[11px] tracking-[0.1em] text-bb-muted/50 hover:text-foreground transition-colors text-center"
                   onClick={() => setStep(2)}
                 >
-                  Back
+                  BACK
                 </button>
               </div>
             </div>

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '@/components/Logo';
 import { OnboardingProgress } from '@/components/onboarding-v2/OnboardingProgress';
@@ -11,7 +10,6 @@ import { StepHeader } from '@/components/onboarding-v2/StepHeader';
 import { StepRole } from '@/components/onboarding-v2/StepRole';
 import { StepEssentials } from '@/components/onboarding-v2/StepEssentials';
 import { StepPhoto } from '@/components/onboarding-v2/StepPhoto';
-import { StepBuildMethod } from '@/components/onboarding-v2/StepBuildMethod';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EDITOR_MAP } from '@/config/editorMap';
 import { DISPLAY_MAP } from '@/config/displayMap';
@@ -23,6 +21,7 @@ import { routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import type { OnboardingState } from '@/components/onboarding-v2/types';
 import type { RoleType, ComponentType } from '@/config/roleSchemas';
+
 import type { ProfileComponent } from '@/lib/data/components';
 
 const STEPS: Array<{
@@ -53,14 +52,6 @@ const STEPS: Array<{
       'The first thing someone sees when they scan your card. You can skip this and add it later.',
     canContinue: () => true,
     continueLabel: (s) => (s.heroPreview ? 'Continue' : 'Skip for now'),
-  },
-  {
-    label: 'How to build',
-    title: 'How do you want to build it?',
-    subtext:
-      'We can generate your profile from your existing content, or you can write it yourself.',
-    canContinue: (s) => s.buildMethod !== null,
-    continueLabel: (s) => (s.buildMethod === 'ai' ? 'Build my draft' : 'Continue'),
   },
   {
     label: 'Your profile',
@@ -169,19 +160,18 @@ export default function OnboardingV2() {
   const [roleTitle, setRoleTitle] = useState('');
   const [heroFile, setHeroFile] = useState<File | null>(null);
   const [heroPreview, setHeroPreview] = useState<string | null>(null);
-  const [buildMethod, setBuildMethod] = useState<OnboardingState['buildMethod']>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [activeEditId, setActiveEditId] = useState<string | null>(null);
 
   const { data: components, isLoading: componentsLoading } = useProfileComponents(
-    stepIndex >= 4 ? (profileId ?? undefined) : undefined
+    stepIndex >= 3 ? (profileId ?? undefined) : undefined
   );
 
-  const state: OnboardingState = { roleType, fullName, heroPreview, buildMethod };
+  const state: OnboardingState = { roleType, fullName, heroPreview };
   const currentStep = STEPS[stepIndex];
-  const isProfileStep = stepIndex === 4;
+  const isProfileStep = stepIndex === 3;
 
   const effectiveComponents = components;
 
@@ -195,9 +185,9 @@ export default function OnboardingV2() {
   async function handleContinue() {
     setSaveError(null);
 
-    // Step 3 → 4: upload avatar + save onboarding
-    if (stepIndex === 3) {
-      if (!roleType || !buildMethod) return;
+    // Step 2 → 3: upload avatar + save onboarding
+    if (stepIndex === 2) {
+      if (!roleType) return;
       setIsPending(true);
       try {
         let avatarUrl: string | null = null;
@@ -220,7 +210,7 @@ export default function OnboardingV2() {
 
         const { profileId: savedId, error } = await saveOnboardingAction({
           roleType,
-          buildMethod,
+          buildMethod: 'ai',
           fullName,
           roleTitle,
           avatarUrl,
@@ -233,15 +223,15 @@ export default function OnboardingV2() {
 
         setProfileId(savedId);
         await queryClient.invalidateQueries({ queryKey: ['profile-components', savedId] });
-        setStepIndex(4);
+        setStepIndex(3);
       } finally {
         setIsPending(false);
       }
       return;
     }
 
-    // Step 4 → publish
-    if (stepIndex === 4) {
+    // Step 3 → publish
+    if (stepIndex === 3) {
       setActiveEditId(null);
       if (profileId) {
         await queryClient.invalidateQueries({ queryKey: ['profile-components', profileId] });
@@ -275,9 +265,9 @@ export default function OnboardingV2() {
         <Logo />
         <button
           onClick={handleBack}
-          className="text-bb-muted/50 hover:text-foreground transition-colors"
+          className="font-helvetica text-[11px] font-light tracking-widest uppercase text-bb-muted/50 hover:text-foreground transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
+          BACK
         </button>
       </div>
 
@@ -294,8 +284,8 @@ export default function OnboardingV2() {
             transition={{ duration: 0.25 }}
             className="flex-1 flex flex-col overflow-hidden"
           >
-            {/* Steps 0–3 */}
-            {stepIndex <= 3 && (
+            {/* Steps 0–2 */}
+            {stepIndex <= 2 && (
               <div className="flex-1 flex flex-col px-6 pt-8 pb-6 max-w-md mx-auto w-full">
                 <StepHeader
                   label={currentStep.label}
@@ -323,23 +313,10 @@ export default function OnboardingV2() {
                     }}
                   />
                 )}
-
-                {stepIndex === 3 &&
-                  (roleType ? (
-                    <StepBuildMethod
-                      roleType={roleType}
-                      value={buildMethod}
-                      onChange={setBuildMethod}
-                    />
-                  ) : (
-                    <p className="font-helvetica text-[11px] text-bb-muted">
-                      No role selected — please go back and choose one.
-                    </p>
-                  ))}
               </div>
             )}
 
-            {/* Step 4: editable profile preview */}
+            {/* Step 3: editable profile preview */}
             {isProfileStep && (
               <div className="flex-1 overflow-y-auto">
                 {componentsLoading || !effectiveComponents ? (

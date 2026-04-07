@@ -48,7 +48,7 @@ function buildExchangeEmailHtml(vars: {
                                             <p style="margin:0;padding:0;font-size:11px;letter-spacing:0.06em;color:#aaa;font-family:&#x27;HelveticaNeueThin&#x27;, Helvetica, Arial, sans-serif">${vars.when}</p>
                                           </div>
                                           <div style="margin:0;padding:36px 56px 0">
-                                            <p style="margin:0 0 20px;padding:0;font-size:22px;color:#222;line-height:1.6;font-family:&#x27;GranjonItalic&#x27;, Georgia, serif;font-style:italic"><em>It was a pleasure to meet you.</em></p>
+                                            <p style="margin:0 0 20px;padding:0;font-size:16px;color:#222;line-height:1.6;font-family:&#x27;GranjonItalic&#x27;, Georgia, serif;font-style:italic"><em>It was a pleasure to meet you.</em></p>
                                             <p style="margin:0;padding:0;font-size:15px;color:#555;line-height:1.85;font-family:&#x27;GranjonRegular&#x27;, Georgia, serif">As promised, my details are below. Let&#x27;s stay in touch.</p>
                                           </div>
                                           <div style="margin:0;padding:36px 56px">
@@ -65,7 +65,7 @@ function buildExchangeEmailHtml(vars: {
                                             </div>
                                           </div>
                                           <div style="margin:0;padding:8px 56px 48px">
-                                            <p style="margin:0 0 6px;padding:0;font-family:&#x27;GranjonRegular&#x27;, Georgia, serif;font-size:28px;color:#222;letter-spacing:0.1em;text-transform:uppercase">${vars.full_name}</p>
+                                            <p style="margin:0 0 6px;padding:0;font-family:&#x27;GranjonRegular&#x27;, Georgia, serif;font-size:20px;color:#222;letter-spacing:0.1em;text-transform:uppercase">${vars.full_name}</p>
                                             <p style="margin:0;padding:0"><span style="color:#aaaaaa">${vars.role}</span></p>
                                           </div>
                                           <div style="margin:0;padding:20px 56px 28px;border-top:0.5px solid #ede9e2;display:flex;gap:16px">

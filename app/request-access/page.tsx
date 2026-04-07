@@ -29,12 +29,12 @@ export default function RequestAccessPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <div className="px-6 pt-6">
+    <div className="min-h-dvh bg-background text-foreground flex flex-col">
+      <div className="px-6 bb-safe-top-6">
         <Logo />
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-12">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 ">
         <div className="max-w-[300px] w-full">
           <motion.div
             initial={{ opacity: 0, y: 6 }}

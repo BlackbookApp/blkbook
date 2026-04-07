@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, ChevronLeft } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '@/components/Logo';
 import { updateProfileAction } from '@/app/actions/profiles';
@@ -111,9 +111,9 @@ const CreateProfile = () => {
         <Logo />
         <button
           onClick={handleBack}
-          className="flex items-center text-muted-foreground/50 hover:text-foreground transition-colors"
+          className="font-helvetica text-[11px] font-light tracking-widest uppercase text-muted-foreground/50 hover:text-foreground transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
+          BACK
         </button>
       </div>
 
