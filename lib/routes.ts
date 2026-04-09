@@ -29,4 +29,5 @@ export const routes = {
   onboarding: '/onboarding',
   settings: '/settings',
   scanQr: '/scan-qr',
+  scanCard: '/scan-card',
 } as const;
