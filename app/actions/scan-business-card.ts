@@ -44,12 +44,6 @@ export async function scanBusinessCardAction(
   }
 
   try {
-    console.log(
-      '[scan-business-card] Sending image to Gemini 2.5 Flash (base64 size: %d bytes)',
-      base64.length
-    );
-    const t0 = Date.now();
-
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const result = await model.generateContent([
@@ -58,9 +52,6 @@ export async function scanBusinessCardAction(
     ]);
     const text = result.response.text().trim();
 
-    const elapsed = Date.now() - t0;
-    console.log('[scan-business-card] Gemini responded in %dms. Raw text: %s', elapsed, text);
-
     // Strip markdown code fences if model wraps in ```json ... ```
     const json = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
 
@@ -68,21 +59,17 @@ export async function scanBusinessCardAction(
     try {
       parsed = JSON.parse(json);
     } catch {
-      console.error('[scan-business-card] Failed to parse JSON from Gemini response');
       return { error: 'Could not parse response from Gemini' };
     }
 
     const validated = extractedSchema.safeParse(parsed);
     if (!validated.success) {
-      console.error('[scan-business-card] Zod validation failed:', validated.error.flatten());
       return { error: 'Unexpected response shape from Gemini' };
     }
 
-    console.log('[scan-business-card] Extracted fields:', validated.data);
     return { data: validated.data };
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
-    console.error('[scan-business-card] Gemini request threw:', message);
     return { error: `Gemini request failed: ${message}` };
   }
 }

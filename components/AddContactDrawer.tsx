@@ -66,8 +66,9 @@ const AddContactDrawer = ({ open, onOpenChange, prefillData }: AddContactDrawerP
       });
     });
 
-    const hasPartial = Object.values(parsed).some((v) => v === null);
-    if (hasPartial) {
+    const coreFieldsPresent =
+      parsed.name && parsed.role && parsed.city && parsed.email && parsed.phone;
+    if (!coreFieldsPresent) {
       toast({ title: "Some fields couldn't be read — please review" });
     }
   }, [open]);

@@ -34,7 +34,10 @@ export default function ScanCardPage() {
         return;
       }
 
-      if (!prefill.name) {
+      const coreFieldsPresent =
+        prefill.name && prefill.role && prefill.city && prefill.email && prefill.phone;
+
+      if (!coreFieldsPresent && !prefill.name) {
         toast({ title: "Couldn't read a name — please fill it in manually" });
       }
 
