@@ -1,12 +1,9 @@
 import type { RoleType } from '@/config/roleSchemas';
 
-export type BuildMethod = 'ai';
-
 export interface OnboardingState {
   roleType: RoleType | null;
   fullName: string;
   heroPreview: string | null;
-  buildMethod: BuildMethod | null;
 }
 
 export const ROLE_LABELS: Record<RoleType, string> = {

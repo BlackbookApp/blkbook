@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { PenLine, QrCode } from 'lucide-react';
+import { startTransition, useEffect, useState } from 'react';
+import { CreditCard, PenLine, QrCode } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { Text } from '@/components/ui/text';
@@ -18,6 +18,12 @@ const addOptions = [
     icon: QrCode,
     label: 'Scan QR Code',
     description: 'Scan a LinkedIn QR Code',
+  },
+  {
+    id: 'scan-card',
+    icon: CreditCard,
+    label: 'Scan Business Card',
+    description: 'Point camera at a business card',
   },
   {
     id: 'quick-add',
@@ -38,6 +44,18 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
   const [open, setOpen] = useState(false);
   const [addContactOpen, setAddContactOpen] = useState(false);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('openQuickAdd') === 'true') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('openQuickAdd');
+      window.history.replaceState(null, '', url.toString());
+      startTransition(() => {
+        setAddContactOpen(true);
+      });
+    }
+  }, []);
+
   const handleOptionClick = (option: (typeof addOptions)[0]) => {
     if (option.id === 'quick-add') {
       setOpen(false);
@@ -45,6 +63,9 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
     } else if (option.id === 'scan-qr') {
       setOpen(false);
       router.push(routes.scanQr);
+    } else if (option.id === 'scan-card') {
+      setOpen(false);
+      router.push(routes.scanCard);
     }
   };
 

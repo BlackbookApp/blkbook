@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { useProfile } from '@/hooks/use-profile';
 import { updateProfileAction } from '@/app/actions/profiles';
 import { useQueryClient } from '@tanstack/react-query';
@@ -65,9 +65,9 @@ const ProfilePreview = () => {
         <div className="max-w-md mx-auto px-6 pt-8 flex items-center justify-end pointer-events-auto">
           <button
             onClick={() => router.back()}
-            className="text-muted-foreground/50 hover:text-foreground transition-colors"
+            className="font-helvetica text-[11px] font-light tracking-widest uppercase text-muted-foreground/50 hover:text-foreground transition-colors"
           >
-            <ChevronLeft className="w-4 h-4" />
+            BACK
           </button>
         </div>
       </div>

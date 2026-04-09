@@ -99,7 +99,6 @@ function PlatformSelect({
 }
 
 const EMPTY_KNOWN: SocialStatItem = { platform: 'instagram', handle: null, count: null, url: null };
-const EMPTY_CUSTOM: SocialStatItem = { platform: '', handle: null, count: null, url: null };
 
 function isKnown(platform: string) {
   return (KNOWN_PLATFORMS as readonly string[]).includes(platform.toLowerCase());
@@ -122,31 +121,18 @@ export function SocialStatEditor({ component }: { component: ProfileComponent })
     );
   };
 
-  const updateCustom = (index: number, updates: Partial<SocialStatItem>) => {
-    commit(
-      knownItems,
-      customItems.map((item, i) => (i === index ? { ...item, ...updates } : item))
-    );
-  };
-
   const addKnown = () => commit([...knownItems, { ...EMPTY_KNOWN }], customItems);
-  const addCustom = () => commit(knownItems, [...customItems, { ...EMPTY_CUSTOM }]);
 
   const removeKnown = (index: number) =>
     commit(
       knownItems.filter((_, i) => i !== index),
       customItems
     );
-  const removeCustom = (index: number) =>
-    commit(
-      knownItems,
-      customItems.filter((_, i) => i !== index)
-    );
 
   return (
     <div className="space-y-6">
       {/* Known platforms */}
-      <div className="space-y-4">
+      <div className="space-y-4 space-x-2">
         <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">
           Platforms
         </span>
@@ -193,46 +179,6 @@ export function SocialStatEditor({ component }: { component: ProfileComponent })
           className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-bb-muted hover:text-foreground transition-colors"
         >
           + Add platform
-        </button>
-      </div>
-
-      {/* Custom links */}
-      <div className="space-y-4">
-        <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">
-          Custom links
-        </span>
-        {customItems.map((item, i) => (
-          <div key={i} className="space-y-2 border-l border-bb-rule pl-4">
-            <div className="flex items-center justify-between">
-              <span className="font-helvetica text-[9px] uppercase tracking-[0.15em] text-bb-muted">
-                {i + 1}
-              </span>
-              <button
-                onClick={() => removeCustom(i)}
-                className="font-helvetica text-[10px] text-bb-muted/60 hover:text-foreground transition-colors"
-              >
-                <X size={15} />
-              </button>
-            </div>
-            <Input
-              variant="primary"
-              placeholder="Label (e.g. My Blog)"
-              value={item.platform}
-              onChange={(e) => updateCustom(i, { platform: e.target.value })}
-            />
-            <Input
-              variant="primary"
-              placeholder="https://..."
-              value={item.url ?? ''}
-              onChange={(e) => updateCustom(i, { url: e.target.value || null })}
-            />
-          </div>
-        ))}
-        <button
-          onClick={addCustom}
-          className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-bb-muted hover:text-foreground transition-colors"
-        >
-          + Add custom link
         </button>
       </div>
 

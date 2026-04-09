@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { QRScanner } from '@/components/qr-scanner/QRScanner';
 import { routes } from '@/lib/routes';
 import { toast } from '@/hooks/use-toast';
@@ -79,9 +79,9 @@ export default function ScanQrPage() {
       <div className="flex items-center gap-4 px-4 py-4 shrink-0">
         <button
           onClick={() => router.back()}
-          className="p-2 rounded-full text-white/70 hover:text-white transition-colors"
+          className="font-helvetica text-[11px] font-light tracking-widest uppercase text-white/70 hover:text-white transition-colors"
         >
-          <ArrowLeft className="w-5 h-5" strokeWidth={1.4} />
+          BACK
         </button>
         <span className="font-helvetica text-[11px] font-light tracking-widest uppercase text-white/60">
           Scan QR

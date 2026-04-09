@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 import { z } from 'zod';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { useCreateVaultContact } from '@/hooks/use-vault-contacts';
+import { toast } from '@/hooks/use-toast';
 import type { LinkedInPrefill } from '@/app/actions/linkedin';
+import type { BusinessCardPrefill } from '@/app/actions/scan-business-card';
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -34,8 +36,42 @@ const AddContactDrawer = ({ open, onOpenChange, prefillData }: AddContactDrawerP
     instagram: '',
     notes: prefillData?.notes ?? '',
   });
+  const [cardPrefill, setCardPrefill] = useState<BusinessCardPrefill | null>(null);
   const [nameError, setNameError] = useState('');
   const { mutate: createContact, isPending } = useCreateVaultContact();
+
+  useEffect(() => {
+    if (!open) return;
+    const raw = localStorage.getItem('businessCardPrefill');
+    if (!raw) return;
+    localStorage.removeItem('businessCardPrefill');
+
+    let parsed: BusinessCardPrefill;
+    try {
+      parsed = JSON.parse(raw) as BusinessCardPrefill;
+    } catch {
+      return;
+    }
+
+    startTransition(() => {
+      setCardPrefill(parsed);
+      setForm({
+        name: parsed.name ?? '',
+        role: parsed.role ?? '',
+        city: parsed.city ?? '',
+        email: parsed.email ?? '',
+        phone: parsed.phone ?? '',
+        instagram: '',
+        notes: '',
+      });
+    });
+
+    const coreFieldsPresent =
+      parsed.name && parsed.role && parsed.city && parsed.email && parsed.phone;
+    if (!coreFieldsPresent) {
+      toast({ title: "Some fields couldn't be read — please review" });
+    }
+  }, [open]);
 
   const handleChange =
     (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -61,10 +97,10 @@ const AddContactDrawer = ({ open, onOpenChange, prefillData }: AddContactDrawerP
         instagram: instagram || null,
         tiktok: null,
         youtube: null,
-        website: prefillData?.website ?? null,
+        website: prefillData?.website ?? cardPrefill?.website ?? null,
         notes: notes || null,
         photo_url: prefillData?.photo_url ?? null,
-        linkedin_url: prefillData?.linkedin_url ?? null,
+        linkedin_url: prefillData?.linkedin_url ?? cardPrefill?.linkedin_url ?? null,
       },
       {
         onSuccess: () => {
@@ -78,7 +114,7 @@ const AddContactDrawer = ({ open, onOpenChange, prefillData }: AddContactDrawerP
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent
-        className="border-none rounded-none max-h-[90vh] backdrop-blur-[20px] bb-drawer-panel"
+        className="border-none rounded-none max-h-[90dvh] backdrop-blur-[20px] bb-drawer-panel"
         aria-describedby={undefined}
       >
         <DrawerTitle className="sr-only">Quick Add Contact</DrawerTitle>

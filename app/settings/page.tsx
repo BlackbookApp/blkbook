@@ -55,9 +55,9 @@ export default function SettingsPage() {
         <Logo />
         <button
           onClick={() => router.push(routes.myBlackbook)}
-          className="text-bb-muted/50 hover:text-foreground transition-colors"
+          className="font-helvetica text-[11px] font-light tracking-widest uppercase text-bb-muted/50 hover:text-foreground transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
+          BACK
         </button>
       </div>
 
