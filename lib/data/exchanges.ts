@@ -25,6 +25,7 @@ export interface Exchange {
   initiator_note: string | null;
   recipient_profile_id: string;
   recipient_shared_fields: SharedFields | null;
+  recipient_note: string | null;
   status: 'pending' | 'accepted' | 'declined';
   created_at: string;
 }
@@ -73,13 +74,23 @@ export async function acceptExchange(exchangeId: string): Promise<void> {
   if (error) throw error;
 }
 
+/** Save or update the recipient's note on a pending exchange */
+export async function updateExchangeNote(exchangeId: string, note: string): Promise<void> {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('exchanges')
+    .update({ recipient_note: note || null })
+    .eq('id', exchangeId);
+  if (error) throw error;
+}
+
 /**
  * Guest initiates a one-way exchange.
  * Returns true if created, false if deduped (same contact within 24h).
  */
 export async function createGuestExchange(
   recipientProfileId: string,
-  initiatorFields: Pick<SharedFields, 'name' | 'contact'>,
+  initiatorFields: Pick<SharedFields, 'name' | 'contact' | 'email' | 'phone'>,
   note?: string
 ): Promise<boolean> {
   const supabase = await createClient();

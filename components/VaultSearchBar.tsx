@@ -14,11 +14,12 @@ const searchFont: React.CSSProperties = {
 };
 
 const placeholders = [
-  'Who did I meet in Milan?',
-  'The investor from last Tuesday.',
-  'Her name started with S...',
-  'The architect from Zürich.',
-  'Who introduced me to James?',
+  'Search a name, role, location or note...',
+  // 'Who did I meet in Milan?',
+  // 'The investor from last Tuesday.',
+  // 'Her name started with S...',
+  // 'The architect from Zürich.',
+  // 'Who introduced me to James?',
 ];
 
 interface VaultSearchBarProps {

@@ -1,17 +1,28 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X } from 'lucide-react';
 import { useExchanges, useAcceptExchange, useDeclineExchange } from '@/hooks/use-exchanges';
+import { InboxDetailSheet } from './InboxDetailSheet';
 import type { Exchange } from '@/lib/data/exchanges';
 import { routes } from '@/lib/routes';
 
-function RequestCard({ exchange, index }: { exchange: Exchange; index: number }) {
+function RequestCard({
+  exchange,
+  index,
+  onOpen,
+}: {
+  exchange: Exchange;
+  index: number;
+  onOpen: () => void;
+}) {
   const { mutate: accept, isPending: isAccepting, isSuccess: isAccepted } = useAcceptExchange();
   const { mutate: decline, isPending: isDeclining } = useDeclineExchange();
+  // Quick-accept from the card skips the note flow
   const fields = exchange.initiator_shared_fields;
   const isMember = !!exchange.initiator_profile_id;
 
@@ -29,8 +40,12 @@ function RequestCard({ exchange, index }: { exchange: Exchange; index: number })
       className="border-b border-bb-rule/60 py-5"
     >
       <div className="flex items-start gap-4">
-        {/* Portrait */}
-        <div className="flex-shrink-0 w-14 h-[68px] overflow-hidden border border-bb-rule bg-bb-rule/20">
+        {/* Portrait — tapping opens the detail sheet */}
+        <button
+          type="button"
+          onClick={onOpen}
+          className="flex-shrink-0 w-14 h-[68px] overflow-hidden border border-bb-rule bg-bb-rule/20 focus:outline-none"
+        >
           {fields.photo_url && (
             <Image
               src={fields.photo_url}
@@ -40,12 +55,13 @@ function RequestCard({ exchange, index }: { exchange: Exchange; index: number })
               className="w-full h-full object-cover"
             />
           )}
-        </div>
+        </button>
 
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
-            <div>
+            {/* Name / meta — tapping opens the detail sheet */}
+            <button type="button" onClick={onOpen} className="text-left focus:outline-none">
               <h3 className="font-granjon font-light text-[16px] text-bb-dark leading-tight mb-0.5">
                 {fields.name}
               </h3>
@@ -54,7 +70,7 @@ function RequestCard({ exchange, index }: { exchange: Exchange; index: number })
                   {metaParts.join(' · ')}
                 </p>
               )}
-            </div>
+            </button>
             <span className="font-helvetica text-[10px] text-bb-muted/50 flex-shrink-0 mt-0.5">
               {formatDistanceToNow(new Date(exchange.created_at))}
             </span>
@@ -102,6 +118,14 @@ function RequestCard({ exchange, index }: { exchange: Exchange; index: number })
                 {isDeclining ? '…' : 'Decline'}
               </button>
             )}
+
+            <button
+              type="button"
+              onClick={onOpen}
+              className="font-helvetica text-[10px] uppercase tracking-[0.08em] text-bb-muted/50 hover:text-bb-dark transition-colors ml-1"
+            >
+              Review
+            </button>
           </div>
         </div>
       </div>
@@ -111,6 +135,7 @@ function RequestCard({ exchange, index }: { exchange: Exchange; index: number })
 
 export function Inbox() {
   const { data: exchanges = [], isLoading } = useExchanges();
+  const [selectedExchange, setSelectedExchange] = useState<Exchange | null>(null);
   const pending = exchanges.filter((e) => e.status === 'pending');
 
   if (isLoading) {
@@ -130,28 +155,37 @@ export function Inbox() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto pb-6">
-      <AnimatePresence mode="popLayout">
-        {pending.map((exchange, index) => (
-          <RequestCard key={exchange.id} exchange={exchange} index={index} />
-        ))}
-      </AnimatePresence>
+    <>
+      <div className="flex-1 overflow-y-auto pb-6">
+        <AnimatePresence mode="popLayout">
+          {pending.map((exchange, index) => (
+            <RequestCard
+              key={exchange.id}
+              exchange={exchange}
+              index={index}
+              onOpen={() => setSelectedExchange(exchange)}
+            />
+          ))}
+        </AnimatePresence>
 
-      <AnimatePresence>
-        {pending.length === 0 && (
-          <motion.div
-            className="flex flex-col items-center justify-center py-20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <p className="font-granjon italic text-[18px] text-bb-muted/40">All caught up</p>
-            <p className="font-helvetica text-[11px] uppercase tracking-[0.1em] text-bb-muted/30 mt-1">
-              No pending requests
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+        <AnimatePresence>
+          {pending.length === 0 && (
+            <motion.div
+              className="flex flex-col items-center justify-center py-20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <p className="font-granjon italic text-[18px] text-bb-muted/40">All caught up</p>
+              <p className="font-helvetica text-[11px] uppercase tracking-[0.1em] text-bb-muted/30 mt-1">
+                No pending requests
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <InboxDetailSheet exchange={selectedExchange} onClose={() => setSelectedExchange(null)} />
+    </>
   );
 }
