@@ -82,6 +82,8 @@ const MyBlackbook = () => {
                 alt={profile.full_name ?? 'Profile'}
                 width={140}
                 height={170}
+                sizes="140px"
+                priority
                 className="w-full h-full object-cover"
               />
             ) : (
