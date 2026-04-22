@@ -84,10 +84,14 @@ const ExchangeDetailsModal = ({
     setError(null);
     setAlreadySent(false);
     try {
-      const contact = [form.email.trim(), form.phone.trim()].filter(Boolean).join(' / ');
       const inserted = await createGuestExchangeAction(
         profileId,
-        { name: form.name.trim(), contact },
+        {
+          name: form.name.trim(),
+          email: form.email.trim() || undefined,
+          phone: form.phone.trim() || undefined,
+          contact: [form.email.trim(), form.phone.trim()].filter(Boolean).join(' / ') || undefined,
+        },
         form.note.trim() || undefined,
         form.email.trim()
       );

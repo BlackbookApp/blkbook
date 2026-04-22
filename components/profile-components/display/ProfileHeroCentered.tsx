@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useProfileView } from '@/contexts/profile-view-context';
 import { ProfileCTA } from '@/components/public-profile/shared/profile-cta';
@@ -64,15 +65,18 @@ export function ProfileHeroCentered({ data }: { data: ProfileHeroCenteredData })
       {/* Image */}
       {data.image_url ? (
         <motion.div
-          className="w-full aspect-[3/4] border border-bb-rule overflow-hidden"
+          className="relative w-full aspect-[3/4] border border-bb-rule overflow-hidden"
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          <img
+          <Image
             src={data.image_url}
             alt={data.name ?? 'Profile photo'}
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 448px) 100vw, 448px"
+            priority
+            className="object-cover"
           />
         </motion.div>
       ) : (

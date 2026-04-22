@@ -4,6 +4,7 @@ import {
   performExchange,
   acceptExchange,
   declineExchange,
+  updateExchangeNote,
   createGuestExchange,
   getMyExchanges,
   getHasExchanged,
@@ -24,16 +25,21 @@ export async function declineExchangeAction(exchangeId: string): Promise<void> {
   return declineExchange(exchangeId);
 }
 
+export async function updateExchangeNoteAction(exchangeId: string, note: string): Promise<void> {
+  return updateExchangeNote(exchangeId, note);
+}
+
 /**
  * Returns true if the request was created, false if deduped (same contact within 24h).
  */
 export async function createGuestExchangeAction(
   recipientProfileId: string,
-  initiatorFields: Pick<SharedFields, 'name' | 'contact'>,
+  initiatorFields: Pick<SharedFields, 'name' | 'contact' | 'email' | 'phone'>,
   note?: string,
   guestEmail?: string
 ): Promise<boolean> {
   const created = await createGuestExchange(recipientProfileId, initiatorFields, note);
+  console.log(created);
   if (created && guestEmail) {
     const { data: profile } = await adminClient
       .from('profiles')
