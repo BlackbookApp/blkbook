@@ -13,7 +13,7 @@ let cachedModelDir: string | null = null;
 function getModelDir(): string {
   if (cachedModelDir && fs.existsSync(cachedModelDir)) return cachedModelDir;
 
-  const dir = path.join(os.tmpdir(), 'BlackbookContact.pass');
+  const dir = path.join(os.tmpdir(), 'HaizelContact.pass');
   fs.mkdirSync(dir, { recursive: true });
 
   const iconBuf = Buffer.from(ICON_PLACEHOLDER_B64, 'base64');
@@ -24,8 +24,8 @@ function getModelDir(): string {
     formatVersion: 1,
     passTypeIdentifier: process.env.APPLE_PASS_TYPE_ID!,
     teamIdentifier: process.env.APPLE_TEAM_ID!,
-    organizationName: 'BLKBOOK.',
-    description: 'Blackbook Contact Card',
+    organizationName: 'HAIZEL',
+    description: 'Haizel Contact Card',
     generic: {
       primaryFields: [],
       secondaryFields: [],
@@ -77,7 +77,7 @@ export async function generateAppleWalletPass(
   profile: Profile,
   socials?: ProfileSocials
 ): Promise<Buffer> {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://blkbook.me';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.haizel.io';
   const links = profile.social_links ?? {};
 
   const backFields: { key: string; label: string; value: string }[] = [];
@@ -117,7 +117,7 @@ export async function generateAppleWalletPass(
       backgroundColor: 'rgb(14,14,13)',
       foregroundColor: 'rgb(250,250,249)',
       labelColor: 'rgb(184,180,174)',
-      logoText: 'BLKBOOK',
+      logoText: 'HAIZEL',
     }
   );
 

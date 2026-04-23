@@ -51,7 +51,7 @@ export default function ScanQrPage() {
         return;
       }
 
-      toast({ title: 'Not a Blackbook or LinkedIn QR code', variant: 'destructive' });
+      toast({ title: 'Not a Haizel or LinkedIn QR code', variant: 'destructive' });
     },
     [router]
   );
@@ -93,7 +93,7 @@ export default function ScanQrPage() {
       {/* Footer hint */}
       <div className="shrink-0 flex items-center justify-center py-6">
         <p className="font-helvetica text-[10px] font-light text-white/40 tracking-widest uppercase">
-          Point at a Blackbook or LinkedIn QR code
+          Point at a Haizel or LinkedIn QR code
         </p>
       </div>
     </div>

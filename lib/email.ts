@@ -44,7 +44,7 @@ function buildExchangeEmailHtml(vars: {
                                         <p style="margin:0;padding:0"><br /></p>
                                         <div style="margin:0 auto;padding:0;max-width:560px;background:#faf9f7;border-radius:2px;overflow:hidden;border:0.5px solid #e4e0d8">
                                           <div style="margin:0;padding:52px 56px 0">
-                                            <p style="margin:0 0 52px;padding:0;font-size:13px;letter-spacing:0.18em;color:#222;text-transform:uppercase;font-family:&#x27;GranjonRegular&#x27;, Georgia, serif">BLKBOOK</p>
+                                            <p style="margin:0 0 52px;padding:0;font-size:13px;letter-spacing:0.18em;color:#222;text-transform:uppercase;font-family:&#x27;GranjonRegular&#x27;, Georgia, serif">HAIZEL</p>
                                             <p style="margin:0;padding:0;font-size:11px;letter-spacing:0.06em;color:#aaa;font-family:&#x27;HelveticaNeueThin&#x27;, Helvetica, Arial, sans-serif">${vars.when}</p>
                                           </div>
                                           <div style="margin:0;padding:36px 56px 0">
@@ -135,7 +135,7 @@ export async function sendGuestExchangeEmail(
   const { data, error } = await resend.emails.send({
     from: fromAddress,
     to,
-    subject: `${profile.full_name ?? 'Your contact'} on Blackbook`,
+    subject: `${profile.full_name ?? 'Your contact'} on Haizel`,
     html: buildExchangeEmailHtml(vars),
   });
 
@@ -183,12 +183,12 @@ export async function sendApprovalEmail(
   await resend.emails.send({
     from: fromAddress,
     to: to,
-    subject: "You're in — your Blackbook invite is ready",
+    subject: "You're in — your Haizel invite is ready",
     html: [
       '<div style="font-family:helvetica,sans-serif;max-width:480px;margin:0 auto;padding:40px 24px;color:#0E0E0E;">',
-      '<p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:32px;">Blackbook</p>',
+      '<p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:32px;">HAIZEL</p>',
       `<h1 style="font-size:24px;font-weight:400;margin-bottom:16px;">You are approved, ${fullName}.</h1>`,
-      '<p style="font-size:14px;line-height:1.6;color:#9A9691;margin-bottom:32px;">Your request to join Blackbook has been approved. Click below to create your account.</p>',
+      '<p style="font-size:14px;line-height:1.6;color:#9A9691;margin-bottom:32px;">Your request to join Haizel has been approved. Click below to create your account.</p>',
       `<a href="${inviteUrl}" style="display:inline-block;background:#0E0E0E;color:#F5F4F0;padding:14px 28px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;">Create account</a>`,
       '<p style="font-size:11px;color:#9A9691;margin-top:32px;">This invite is single-use and expires in 7 days.</p>',
       '</div>',

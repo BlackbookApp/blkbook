@@ -186,7 +186,7 @@ const PublicProfile = ({
         {/* Fixed wordmark */}
         <div className="fixed top-0 left-0 z-50 pt-6 pl-6">
           <span className="font-granjon font-normal text-[13px] tracking-[0.06em] uppercase text-[var(--pg-ghost)]">
-            BLKBOOK.
+            HAIZEL
           </span>
         </div>
 
@@ -344,7 +344,7 @@ const PublicProfile = ({
             viewport={{ once: true }}
           >
             <span className="font-granjon font-normal text-[18px] tracking-[0.06em] uppercase text-[var(--pg-ghost)]">
-              BLKBOOK.
+              HAIZEL
             </span>
           </motion.div>
         </div>

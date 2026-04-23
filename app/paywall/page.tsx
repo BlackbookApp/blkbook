@@ -12,7 +12,7 @@ const Paywall = () => {
     'Everyone you meet, held privately. No limits.',
     "Find anyone, instantly. Even if you've forgotten the details.",
     'Bring in the people who belong here.',
-    'Personalise your Blackbook link.',
+    'Personalise your Haizel link.',
     'Scan any business card directly into your vault.',
   ];
 

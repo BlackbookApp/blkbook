@@ -42,7 +42,7 @@ export function InviteSheet({ children }: InviteSheetProps) {
       <SheetContent side="bottom" className="bb-drawer-panel rounded-t-xl pb-10">
         <SheetHeader className="mb-6">
           <SheetTitle className="font-display font-light text-[15px] uppercase tracking-tight text-center">
-            Invite to Blackbook
+            Invite to Haizel
           </SheetTitle>
         </SheetHeader>
 
