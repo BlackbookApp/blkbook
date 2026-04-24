@@ -126,19 +126,12 @@ export default function AdminRequestsPage() {
                     </span>
                   </div>
 
-                  {(req.social_handle || req.brand_link) && (
-                    <div className="flex gap-4 text-[11px] text-bb-muted">
-                      {req.social_handle && <span>{req.social_handle}</span>}
-                      {req.brand_link && (
-                        <a
-                          href={req.brand_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline underline-offset-2 hover:text-foreground transition-colors truncate max-w-[200px]"
-                        >
-                          {req.brand_link}
-                        </a>
-                      )}
+                  {(req.social_handle || req.city || req.how_heard || req.notes) && (
+                    <div className="space-y-0.5 text-[11px] text-bb-muted">
+                      {req.social_handle && <p>{req.social_handle}</p>}
+                      {req.city && <p>{req.city}</p>}
+                      {req.how_heard && <p className="italic">{req.how_heard}</p>}
+                      {req.notes && <p className="text-bb-muted/70">{req.notes}</p>}
                     </div>
                   )}
 

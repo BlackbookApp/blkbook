@@ -7,6 +7,9 @@ export interface AccessRequest {
   full_name: string;
   social_handle: string | null;
   brand_link: string | null;
+  city: string | null;
+  how_heard: string | null;
+  notes: string | null;
   attempt_count: number;
   status: 'pending' | 'approved' | 'rejected';
   invite_code: string | null;
@@ -53,7 +56,9 @@ export async function insertAccessRequest(fields: {
   email: string;
   full_name: string;
   social_handle?: string;
-  brand_link?: string;
+  city?: string;
+  how_heard?: string;
+  notes?: string;
 }): Promise<{ id: string } | { error: string }> {
   const existing = await getAccessRequestByEmail(fields.email);
   if (existing) {
@@ -64,7 +69,9 @@ export async function insertAccessRequest(fields: {
       .update({
         full_name: fields.full_name,
         social_handle: fields.social_handle ?? null,
-        brand_link: fields.brand_link ?? null,
+        city: fields.city ?? null,
+        how_heard: fields.how_heard ?? null,
+        notes: fields.notes ?? null,
         status: 'pending',
         attempt_count: existing.attempt_count + 1,
         invite_code: null,
@@ -83,7 +90,9 @@ export async function insertAccessRequest(fields: {
       email: fields.email,
       full_name: fields.full_name,
       social_handle: fields.social_handle ?? null,
-      brand_link: fields.brand_link ?? null,
+      city: fields.city ?? null,
+      how_heard: fields.how_heard ?? null,
+      notes: fields.notes ?? null,
     })
     .select('id')
     .single();

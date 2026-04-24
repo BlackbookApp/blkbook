@@ -33,18 +33,21 @@ const submitSchema = z.object({
   full_name: z.string().min(1, 'Full name is required'),
   email: z.string().email('Invalid email'),
   social_handle: z.string().optional(),
-  brand_link: z.string().url().optional(),
+  city: z.string().optional(),
+  how_heard: z.string().optional(),
+  notes: z.string().optional(),
 });
 
 export type SubmitRequestResult = { id: string } | { error: string };
 
 export async function submitAccessRequest(formData: FormData): Promise<SubmitRequestResult> {
-  const rawBrandLink = formData.get('brand_link');
   const parsed = submitSchema.safeParse({
     full_name: formData.get('full_name'),
     email: formData.get('email'),
     social_handle: formData.get('social_handle') || undefined,
-    brand_link: rawBrandLink ? String(rawBrandLink) : undefined,
+    city: formData.get('city') || undefined,
+    how_heard: formData.get('how_heard') || undefined,
+    notes: formData.get('notes') || undefined,
   });
 
   if (!parsed.success) {
