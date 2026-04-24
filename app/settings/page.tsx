@@ -182,7 +182,7 @@ export default function SettingsPage() {
                   Add to Apple Wallet
                 </p>
                 <p className="font-helvetica text-[11px] font-light text-bb-muted">
-                  {isWalletLoading ? 'Preparing your card…' : 'Download your Blackbook card'}
+                  {isWalletLoading ? 'Preparing your card…' : 'Download your Haizel card'}
                 </p>
               </div>
               {isWalletLoading ? (

@@ -76,7 +76,7 @@ export function ProfileComponentsView({ components, profileView, theme = 'blanc'
       {/* Fixed logo */}
       <div className="fixed top-0 left-0 z-50 bb-safe-top-6 pl-6">
         <span className="font-granjon font-normal text-[12px] tracking-[0.15em] uppercase text-bb-muted">
-          BLKBOOK
+          HAIZEL
         </span>
       </div>
 
@@ -122,7 +122,7 @@ export function ProfileComponentsView({ components, profileView, theme = 'blanc'
           <ScrollReveal margin="0px">
             <div className="py-10 text-center">
               <span className="font-granjon font-normal text-[18px] tracking-[0.15em] uppercase">
-                BLKBOOK
+                HAIZEL
               </span>
             </div>
           </ScrollReveal>

@@ -47,11 +47,11 @@ export function ShareProfileModal({ open, onClose, username }: ShareProfileModal
   };
 
   const handleSendSMS = () => {
-    window.location.href = `sms:?body=${encodeURIComponent(`Connect with me on Blackbook: ${fullUrl}`)}`;
+    window.location.href = `sms:?body=${encodeURIComponent(`Connect with me on Haizel: ${fullUrl}`)}`;
   };
 
   const handleSendEmail = () => {
-    window.location.href = `mailto:?subject=${encodeURIComponent("Let's connect on Blackbook")}&body=${encodeURIComponent(`Here's my Blackbook profile: ${fullUrl}`)}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent("Let's connect on Haizel")}&body=${encodeURIComponent(`Here's my Haizel profile: ${fullUrl}`)}`;
   };
 
   const handleShareProfile = async () => {
@@ -59,7 +59,7 @@ export function ShareProfileModal({ open, onClose, username }: ShareProfileModal
       try {
         await navigator.share({
           title: profileName,
-          text: 'Check out my Blackbook profile',
+          text: 'Check out my Haizel profile',
           url: fullUrl,
         });
       } catch {
@@ -74,7 +74,7 @@ export function ShareProfileModal({ open, onClose, username }: ShareProfileModal
     const canvas = qrRef.current?.querySelector('canvas');
     if (canvas) {
       const link = document.createElement('a');
-      link.download = `${username}-blackbook-qr.png`;
+      link.download = `${username}-haizel-qr.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       toast({ title: 'QR downloaded' });
@@ -205,7 +205,7 @@ export function ShareProfileModal({ open, onClose, username }: ShareProfileModal
                       An invitation, from you.
                     </h2>
                     <p className="blackbook-label text-muted-foreground leading-relaxed mb-4">
-                      Any person you invite will be granted automatic access into Blackbook.
+                      Any person you invite will be granted automatic access into Haizel.
                     </p>
                     <div className="mb-4">
                       <div className="h-[2px] bg-secondary overflow-hidden">

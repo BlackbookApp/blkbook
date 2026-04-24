@@ -27,8 +27,8 @@ const GuestPassActivated = () => {
             </h1>
 
             <p className="font-helvetica text-[11px] font-normal text-bb-muted leading-relaxed mb-8">
-              You have 14 days of full access to Blackbook. Your profile is live. Your vault is
-              ready. At the end of 14 days you&apos;ll be invited to become a member.
+              You have 14 days of full access to Haizel. Your profile is live. Your vault is ready.
+              At the end of 14 days you&apos;ll be invited to become a member.
             </p>
           </motion.div>
 
@@ -42,7 +42,7 @@ const GuestPassActivated = () => {
               onClick={() => router.push('/vault')}
               className="w-full h-[52px] bg-foreground text-background uppercase tracking-[0.12em] text-[11px] font-normal [font-family:'Helvetica_Neue','Helvetica',sans-serif] shadow-[0_2px_8px_-2px_hsl(var(--foreground)/0.25)] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay"
             >
-              Explore My Blackbook
+              Explore Haizel
             </button>
 
             <p className="font-helvetica text-[10px] text-bb-muted font-normal">

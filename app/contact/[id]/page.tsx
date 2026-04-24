@@ -124,10 +124,10 @@ const ContactDetail = () => {
           >
             <div>
               <p className="font-helvetica text-[11px] font-normal uppercase tracking-[0.12em] mb-1.5 text-bb-muted">
-                Blackbook Profile
+                Haizel Profile
               </p>
               <p className="font-garamond text-[14px] italic font-normal tracking-tight text-bb-dark">
-                blkbook/p/{profileUsername}
+                haizel.io/p/{profileUsername}
               </p>
             </div>
             <span className="font-helvetica text-[10px] uppercase tracking-[0.12em] text-bb-muted group-hover:text-bb-dark transition-colors">

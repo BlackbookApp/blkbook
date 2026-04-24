@@ -106,7 +106,7 @@ const MyBlackbook = () => {
               onClick={() => router.push(routes.publicProfile(profile.username!))}
               className="font-granjon text-[13px] italic text-bb-muted/60 hover:text-bb-dark transition-colors normal-case"
             >
-              blkbook.me/p/{profile.username}
+              haizel.io/p/{profile.username}
             </button>
           )}
         </motion.div>

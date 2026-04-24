@@ -62,7 +62,7 @@ const InviteClient = ({ inviteCode, inviterName }: Props) => {
             transition={{ delay: 0.7, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="font-display font-light text-xl tracking-tight text-foreground mb-4 leading-tight uppercase"
           >
-            Welcome to Blackbook.
+            Welcome to Haizel.
           </motion.h1>
 
           <motion.p

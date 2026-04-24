@@ -41,8 +41,8 @@ export function useInvite() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Join me on Blackbook',
-          text: "You've been invited to Blackbook — a private network for creative professionals.",
+          title: 'Join me on Haizel',
+          text: "You've been invited to Haizel — a private network for creative professionals.",
           url: inviteUrl,
         });
       } catch {
