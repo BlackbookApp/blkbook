@@ -119,7 +119,7 @@ const SignUpContent = () => {
         )}
 
         <div className="pt-2">
-          <PrimaryButton type="submit" disabled={isPending || !inviteCode}>
+          <PrimaryButton type="submit" className="uppercase" disabled={isPending || !inviteCode}>
             {isPending ? 'Creating account…' : 'Continue'}
           </PrimaryButton>
         </div>

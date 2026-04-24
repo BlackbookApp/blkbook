@@ -132,9 +132,9 @@ interface PrimaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   children: React.ReactNode;
 }
 
-export const PrimaryButton = ({ children, ...props }: PrimaryButtonProps) => (
+export const PrimaryButton = ({ children, className, ...props }: PrimaryButtonProps) => (
   <button
-    className="group w-full py-[15px] rounded-[4px] transition-all bg-[#1a1814] text-[#fbfaf6] font-helvetica font-normal normal-case text-[13px] tracking-[0.01em] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+    className={`group w-full py-[15px] rounded-[4px] transition-all bg-[#1a1814] text-[#fbfaf6] font-helvetica font-normal normal-case text-[13px] tracking-[0.01em] hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed ${className}`}
     {...props}
   >
     <span className="inline-flex items-center justify-center gap-2">
