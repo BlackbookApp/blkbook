@@ -29,7 +29,7 @@ interface VaultContactListProps {
 export function VaultContactList({ contacts, search, isLoading }: VaultContactListProps) {
   if (isLoading) {
     return (
-      <div className="flex flex-col flex-1 overflow-y-auto pb-28">
+      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto pb-28">
         <VaultSkeleton />
       </div>
     );
@@ -47,7 +47,7 @@ export function VaultContactList({ contacts, search, isLoading }: VaultContactLi
 
   if (filtered.length === 0) {
     return (
-      <div className="flex flex-col flex-1 overflow-y-auto pb-28">
+      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto pb-28">
         <div className="text-center py-20">
           <p className="font-helvetica text-[11px] text-muted-foreground">No contacts found</p>
         </div>
@@ -59,7 +59,7 @@ export function VaultContactList({ contacts, search, isLoading }: VaultContactLi
   const letters = Object.keys(grouped).sort();
 
   return (
-    <div className="flex flex-col flex-1 overflow-y-auto pb-28">
+    <div className="flex flex-col flex-1 min-h-0 overflow-y-auto pb-28">
       {letters.map((letter) => (
         <VaultLetterGroup key={letter} letter={letter} contacts={grouped[letter]} />
       ))}
