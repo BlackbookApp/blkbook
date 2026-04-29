@@ -1,10 +1,9 @@
 'use client';
 
 import { startTransition, useEffect, useState } from 'react';
-import { CreditCard, PenLine, QrCode } from 'lucide-react';
+import { Camera, PenLine, QrCode } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
-import { Text } from '@/components/ui/text';
 import AddContactDrawer from '@/components/AddContactDrawer';
 import { routes } from '@/lib/routes';
 
@@ -14,16 +13,16 @@ interface AddDrawerProps {
 
 const addOptions = [
   {
+    id: 'scan-card',
+    icon: Camera,
+    label: 'Scan Card',
+    description: 'Capture details with your camera',
+  },
+  {
     id: 'scan-qr',
     icon: QrCode,
     label: 'Scan QR Code',
-    description: 'Scan a LinkedIn QR Code',
-  },
-  {
-    id: 'scan-card',
-    icon: CreditCard,
-    label: 'Scan Business Card',
-    description: 'Point camera at a business card',
+    description: 'Scan a LinkedIn QR code',
   },
   {
     id: 'quick-add',
@@ -31,12 +30,6 @@ const addOptions = [
     label: 'Quick Add',
     description: 'Name, role, city, notes',
   },
-  // {
-  //   id: 'import-contacts',
-  //   icon: Users,
-  //   label: 'Import from Contacts',
-  //   description: 'Choose from your device',
-  // },
 ];
 
 const AddDrawer = ({ children }: AddDrawerProps) => {
@@ -78,13 +71,18 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
           aria-describedby={undefined}
         >
           <DrawerTitle className="sr-only">Add Connection</DrawerTitle>
-          <div className="px-6 pt-4 pb-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Text variant="label" className="shrink-0">
-                Add Connection
-              </Text>
-              <div className="flex-1 h-px bg-border/50" />
-            </div>
+          <div className="px-6 sm:px-8 pt-6 pb-8">
+            <p className="font-helvetica text-[10px] uppercase tracking-[0.28em] text-center mb-3">
+              Add connection
+            </p>
+            <h2 className="font-granjon text-[1.6rem] leading-[1.15] tracking-[-0.005em] text-bb-dark text-center mb-2 normal-case">
+              How did you <em className="italic">meet</em>?
+            </h2>
+            <p className="font-helvetica text-[13.5px] leading-[1.65] text-center mb-7">
+              Choose how you&apos;d like to save them to your vault.
+            </p>
+
+            <div className="h-px w-full bg-bb-rule" />
 
             <div>
               {addOptions.map((option) => {
@@ -93,22 +91,25 @@ const AddDrawer = ({ children }: AddDrawerProps) => {
                   <button
                     key={option.id}
                     onClick={() => handleOptionClick(option)}
-                    className="w-full flex items-center gap-4 py-4 group text-left border-b border-border/30 last:border-b-0"
+                    className="group w-full flex items-center gap-4 py-[18px] text-left border-b border-bb-rule transition-opacity hover:opacity-70"
                   >
-                    <div className="w-11 h-11 flex items-center justify-center shrink-0 rounded-full border border-border/60">
-                      <Icon
-                        className="w-[16px] h-[16px] text-bb-dark/70 group-hover:text-bb-dark transition-colors"
-                        strokeWidth={1.4}
-                      />
+                    <div className="w-10 h-10 flex items-center justify-center shrink-0 rounded-[4px] border border-bb-rule">
+                      <Icon className="w-[15px] h-[15px] text-bb-dark/60" strokeWidth={1.4} />
                     </div>
-                    <div className="flex flex-col flex-1 min-w-0">
-                      <span className="font-granjon text-[13px] text-bb-dark leading-tight mb-0.5 group-hover:opacity-60 transition-opacity">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-granjon text-[14px] uppercase tracking-[0.04em] text-bb-dark leading-tight mb-1">
                         {option.label}
-                      </span>
-                      <span className="font-helvetica text-[10px] font-light text-bb-muted">
+                      </p>
+                      <p className="font-helvetica text-[13.5px] leading-[1.65] normal-case ">
                         {option.description}
-                      </span>
+                      </p>
                     </div>
+                    <span
+                      aria-hidden
+                      className="font-helvetica text-[14px] text-bb-dark/60 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+                    >
+                      →
+                    </span>
                   </button>
                 );
               })}
