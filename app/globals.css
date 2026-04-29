@@ -193,7 +193,9 @@
 /* ── CSS custom properties ─────────────────────────────── */
 :root {
   /* Blackbook Design System - Light Luxury */
-  --background: #fafaf9; /* WHITE */
+  /* --background: #fafaf9; /* WHITE */
+  --background: #f0f0eb;
+
   --foreground: #0e0e0d; /* INK */
 
   --card: hsl(45, 20%, 97%);
