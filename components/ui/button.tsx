@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground rounded-md hover:opacity-90 active:scale-[0.99] relative overflow-hidden grain-overlay uppercase font-normal tracking-[0.12em] text-[11px] [font-family:'Helvetica_Neue','Helvetica',sans-serif]",
+          "bg-primary uppercase text-primary-foreground rounded-md hover:opacity-90 active:scale-[0.99] relative overflow-hidden grain-overlay font-normal tracking-[0.12em] text-[11px] [font-family:'Helvetica_Neue','Helvetica',sans-serif]",
         destructive:
           'bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90',
         outline: 'border border-border bg-transparent rounded-md hover:bg-secondary',
