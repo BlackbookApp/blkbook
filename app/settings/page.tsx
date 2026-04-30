@@ -212,6 +212,26 @@ export default function SettingsPage() {
           </div>
         )}
 
+        {/* Admin row */}
+        {profile?.is_admin && (
+          <div className="border-b border-bb-rule">
+            <button
+              onClick={() => router.push(routes.adminUsers)}
+              className="w-full flex items-center justify-between py-5 group"
+            >
+              <div className="text-left">
+                <p className="font-granjon text-[15px] leading-tight mb-0.5 text-bb-dark">
+                  Admin panel
+                </p>
+                <p className="font-helvetica text-[11px] font-light text-bb-muted">
+                  Manage requests and users
+                </p>
+              </div>
+              <ChevronLeft className="w-4 h-4 text-bb-muted/40 rotate-180" strokeWidth={1.2} />
+            </button>
+          </div>
+        )}
+
         {/* Sign out row */}
         <div className="border-b border-bb-rule">
           <form action={logoutAction}>

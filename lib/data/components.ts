@@ -52,6 +52,52 @@ export async function getProfileComponentsAdmin(profileId: string): Promise<Prof
   return data as ProfileComponent[];
 }
 
+export async function insertComponentsForProfileAdmin(
+  profileId: string,
+  types: ComponentType[],
+  role: RoleType,
+  heroData: {
+    name: string;
+    tagline: string | null;
+    company: string | null;
+    avatarUrl: string | null;
+    location: string | null;
+  },
+  dataOverrides?: (unknown | null)[]
+): Promise<{ error: string | null }> {
+  const samples = ROLE_COMPONENT_SAMPLES[role];
+
+  const rows = types.map((type, i) => {
+    let data: unknown;
+    if (dataOverrides?.[i] != null) {
+      data = dataOverrides[i];
+    } else if (type === 'profile_hero_centered') {
+      data = {
+        name: heroData.name,
+        image_url: heroData.avatarUrl,
+        tagline: heroData.tagline,
+        company: heroData.company,
+        location: heroData.location,
+      };
+    } else if (samples[type] !== undefined) {
+      data = samples[type];
+    } else {
+      data = COMPONENT_DEFAULTS[type];
+    }
+    return {
+      profile_id: profileId,
+      type,
+      position: (i + 1) * 1000,
+      data,
+      is_predefined: true,
+      ai_generated: true,
+    };
+  });
+
+  const { error } = await adminClient.from('profile_components').insert(rows);
+  return { error: error?.message ?? null };
+}
+
 export async function insertComponentsForProfile(
   profileId: string,
   types: ComponentType[],

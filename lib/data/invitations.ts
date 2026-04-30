@@ -76,23 +76,27 @@ export async function createInvite(
 
   const { data: profile } = await adminClient
     .from('profiles')
-    .select('id, invites_remaining')
+    .select('id, invites_remaining, is_admin')
     .eq('user_id', user.id)
     .single();
 
-  if (!profile || profile.invites_remaining <= 0) {
-    return { error: 'No invitations remaining' };
+  if (!profile) return { error: 'No invitations remaining' };
+
+  if (!profile.is_admin) {
+    if (profile.invites_remaining <= 0) {
+      return { error: 'No invitations remaining' };
+    }
+
+    const { data: updated } = await adminClient
+      .from('profiles')
+      .update({ invites_remaining: profile.invites_remaining - 1 })
+      .eq('user_id', user.id)
+      .gt('invites_remaining', 0)
+      .select('invites_remaining')
+      .single();
+
+    if (!updated) return { error: 'No invitations remaining' };
   }
-
-  const { data: updated } = await adminClient
-    .from('profiles')
-    .update({ invites_remaining: profile.invites_remaining - 1 })
-    .eq('user_id', user.id)
-    .gt('invites_remaining', 0)
-    .select('invites_remaining')
-    .single();
-
-  if (!updated) return { error: 'No invitations remaining' };
 
   const code = (await import('crypto')).randomBytes(4).toString('hex').toUpperCase();
 
