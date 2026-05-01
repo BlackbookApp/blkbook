@@ -7,7 +7,6 @@ import { Eye, SquarePen, Share2, Settings, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Logo from '@/components/Logo';
 import BottomNav from '@/components/BottomNav';
-import { InviteSheet } from '@/components/invite-sheet';
 import { ShareProfileModal } from '@/components/share-profile-modal';
 import { useProfile } from '@/hooks/use-profile';
 import { useInvite, INVITE_TOTAL } from '@/hooks/use-invite';
@@ -201,19 +200,17 @@ const MyBlackbook = () => {
               </p>
             </div>
 
-            <InviteSheet>
-              <Button className="bb-btn-primary group">
-                <span className="inline-flex items-center gap-2">
-                  Send an Invitation
-                  <span
-                    aria-hidden
-                    className="inline-block transition-transform duration-300 group-hover:translate-x-0.5"
-                  >
-                    →
-                  </span>
+            <Button className="bb-btn-primary group" onClick={() => router.push('/send-invite')}>
+              <span className="inline-flex items-center gap-2">
+                Send an Invitation
+                <span
+                  aria-hidden
+                  className="inline-block transition-transform duration-300 group-hover:translate-x-0.5"
+                >
+                  →
                 </span>
-              </Button>
-            </InviteSheet>
+              </span>
+            </Button>
           </div>
         </motion.div>
       </div>

@@ -115,6 +115,78 @@ export async function createInvite(
   return { code };
 }
 
+export async function sendInviteWithEmail(
+  inviteeName: string,
+  inviteeEmail: string,
+  note?: string
+): Promise<{ error: string | null }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('id, full_name, invites_remaining, is_admin')
+    .eq('user_id', user.id)
+    .single();
+  if (!profile) return { error: 'Profile not found' };
+
+  // Hard error: invitee already a member
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: existingAuthUser } = await (adminClient as any)
+    .schema('auth')
+    .from('users')
+    .select('id')
+    .eq('email', inviteeEmail)
+    .maybeSingle();
+  if (existingAuthUser) return { error: 'This person is already on Haizel' };
+
+  // Hard error: pending invite to this email from this inviter
+  const { data: existingInvite } = await adminClient
+    .from('invitations')
+    .select('code')
+    .eq('inviter_id', profile.id)
+    .eq('invitee_email', inviteeEmail)
+    .is('used_by', null)
+    .gt('expires_at', new Date().toISOString())
+    .maybeSingle();
+  if (existingInvite) return { error: 'You already have a pending invite for this email' };
+
+  const result = await createInvite(inviteeEmail);
+  if ('error' in result) return { error: result.error };
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+  const inviteUrl =
+    `${appUrl}/invite?ref=${result.code}` +
+    `&name=${encodeURIComponent(inviteeName)}` +
+    `&email=${encodeURIComponent(inviteeEmail)}`;
+
+  try {
+    const { sendInviteEmail } = await import('@/lib/email');
+    await sendInviteEmail(
+      inviteeName,
+      inviteeEmail,
+      profile.full_name ?? 'A member',
+      inviteUrl,
+      note
+    );
+  } catch {
+    // Rollback: restore quota and remove invite row
+    await adminClient.from('invitations').delete().eq('code', result.code);
+    if (!profile.is_admin) {
+      await adminClient
+        .from('profiles')
+        .update({ invites_remaining: profile.invites_remaining })
+        .eq('user_id', user.id);
+    }
+    return { error: 'Failed to send email. Your invite was not used.' };
+  }
+
+  return { error: null };
+}
+
 export async function markInviteUsed(code: string, userId: string): Promise<void> {
   await adminClient.rpc('mark_invite_used', { p_code: code, p_user_id: userId });
 }

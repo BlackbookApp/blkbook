@@ -15,6 +15,7 @@ export const authTokens = {
 interface AuthShellProps {
   children: React.ReactNode;
   topRight?: React.ReactNode;
+  headerLeft?: React.ReactNode;
   card?: boolean;
   maxWidth?: number;
   footerRight?: string;
@@ -23,13 +24,15 @@ interface AuthShellProps {
 export const AuthShell = ({
   children,
   topRight,
+  headerLeft,
   card = true,
   maxWidth = 460,
   footerRight,
 }: AuthShellProps) => (
   <div className="h-[100dvh] overflow-hidden bg-[#f2f1ed] text-[#1a1814] flex flex-col">
     <header className="flex items-center justify-between gap-4 px-6 pt-6 pb-0 md:px-10 md:pt-8">
-      <div className="flex items-center min-w-0">
+      <div className="flex items-center gap-3 min-w-0">
+        {headerLeft}
         <Logo />
       </div>
       {topRight && <div className="flex items-center">{topRight}</div>}
@@ -98,10 +101,19 @@ interface AuthFieldProps {
   required?: boolean;
   minLength?: number;
   hint?: string;
+  placeholder?: string;
+  multiline?: boolean;
   isFocused: boolean;
   onFocus: () => void;
   onBlur: () => void;
 }
+
+const inputClass = (isFocused: boolean) =>
+  `w-full px-4 py-[14px] bg-transparent border rounded-[4px] font-helvetica font-normal text-[12px] normal-case tracking-normal text-[#1a1814] focus:outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-[#3d3a34] placeholder:text-[12px] ${
+    isFocused
+      ? 'border-[#1a1814] shadow-[0_0_0_3px_rgba(26,24,20,0.04)]'
+      : 'border-[#e6e1d6] shadow-none'
+  }`;
 
 export const AuthField = ({
   id,
@@ -113,6 +125,8 @@ export const AuthField = ({
   required,
   minLength,
   hint,
+  placeholder,
+  multiline = false,
   isFocused,
   onFocus,
   onBlur,
@@ -126,23 +140,34 @@ export const AuthField = ({
     >
       {label}
     </label>
-    <input
-      id={id}
-      name={id}
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      autoComplete={autoComplete}
-      required={required}
-      minLength={minLength}
-      className={`w-full px-4 py-[14px] bg-transparent border rounded-[4px] font-helvetica font-normal text-[12px] normal-case tracking-normal text-[#1a1814] focus:outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-[#3d3a34] placeholder:text-[12px] ${
-        isFocused
-          ? 'border-[#1a1814] shadow-[0_0_0_3px_rgba(26,24,20,0.04)]'
-          : 'border-[#e6e1d6] shadow-none'
-      }`}
-    />
+    {multiline ? (
+      <textarea
+        id={id}
+        name={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        placeholder={placeholder}
+        rows={3}
+        className={`${inputClass(isFocused)} resize-none`}
+      />
+    ) : (
+      <input
+        id={id}
+        name={id}
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        autoComplete={autoComplete}
+        required={required}
+        minLength={minLength}
+        placeholder={placeholder}
+        className={inputClass(isFocused)}
+      />
+    )}
     {hint && (
       <p className="px-1 font-helvetica font-normal normal-case text-[11.5px] tracking-normal text-[#5e5950]">
         {hint}

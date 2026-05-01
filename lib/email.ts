@@ -165,6 +165,62 @@ export async function sendRequestReceivedEmail(email: string, firstName: string)
   });
 }
 
+export async function sendInviteEmail(
+  inviteeName: string,
+  inviteeEmail: string,
+  inviterName: string,
+  inviteUrl: string,
+  note?: string
+): Promise<void> {
+  const fromRaw = process.env.EMAIL_FROM_ADDRESS;
+  if (!fromRaw) return;
+  // Extract bare email from "Name <email>" or plain "email" formats
+  const emailMatch = fromRaw.match(/<([^>]+)>/) ?? fromRaw.match(/(\S+@\S+)/);
+  const fromAddress = emailMatch ? emailMatch[1] : fromRaw;
+  const to = process.env.NODE_ENV === 'production' ? inviteeEmail : 'delivered+invite@resend.dev';
+
+  const noteHtml = note
+    ? `<div style="margin:0;padding:20px 56px 0"><p style="margin:0;padding:0;font-size:15px;color:#555;line-height:1.85;font-family:'GranjonItalic',Georgia,serif;font-style:italic">"${note}"</p></div>`
+    : '';
+
+  const html = [
+    '<!DOCTYPE html>',
+    '<html><head>',
+    '<meta content="width=device-width" name="viewport"/>',
+    '<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>',
+    '</head><body>',
+    '<div style="margin:0 auto;padding:0;max-width:560px;background:#faf9f7;border-radius:2px;overflow:hidden;border:0.5px solid #e4e0d8">',
+    '<div style="margin:0;padding:52px 56px 0">',
+    '<p style="margin:0 0 52px;padding:0;font-size:13px;letter-spacing:0.18em;color:#222;text-transform:uppercase;font-family:\'GranjonRegular\',Georgia,serif">HAIZEL</p>',
+    '</div>',
+    '<div style="margin:0;padding:36px 56px 0">',
+    `<p style="margin:0 0 12px;padding:0;font-size:16px;color:#222;line-height:1.6;font-family:'GranjonItalic',Georgia,serif;font-style:italic"><em>${inviterName} has invited you.</em></p>`,
+    `<p style="margin:0;padding:0;font-size:15px;color:#555;line-height:1.85;font-family:'GranjonRegular',Georgia,serif">You have been personally invited to join Haizel — a private network for creative professionals.</p>`,
+    '</div>',
+    noteHtml,
+    '<div style="margin:0;padding:36px 56px">',
+    `<a href="${inviteUrl}" style="display:inline-block;background:#0E0E0E;color:#F5F4F0;padding:14px 28px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;font-family:'HelveticaNeueThin',Helvetica,Arial,sans-serif">Accept invitation</a>`,
+    '</div>',
+    '<div style="margin:0;padding:20px 56px 48px;border-top:0.5px solid #ede9e2">',
+    '<p style="margin:0;padding:0;font-size:11px;color:#aaa;font-family:\'HelveticaNeueThin\',Helvetica,Arial,sans-serif">This invite is single-use and expires in 30 days.</p>',
+    '</div>',
+    '</div>',
+    '</body></html>',
+  ].join('');
+
+  const { error } = await resend.emails.send({
+    from: `${inviterName} via Haizel <${fromAddress}>`,
+    to,
+    subject: `${inviterName} invited you to Haizel`,
+    html,
+  });
+
+  if (error) {
+    console.error('[invite-email] FAILED:', error);
+    throw error;
+  }
+}
+
 export async function sendApprovalEmail(
   email: string,
   fullName: string,
