@@ -40,7 +40,9 @@ export async function saveOnboardingAction(params: {
 
   if (!profile) return { profileId: null, error: 'Profile not found' };
 
-  // 3. Insert the predefined component stack for the role
+  // 3. Replace the component stack for the selected role
+  await supabase.from('profile_components').delete().eq('profile_id', profile.id);
+
   const { error: componentsError } = await insertComponentsForProfile(
     profile.id,
     ROLE_SCHEMAS[roleType],
