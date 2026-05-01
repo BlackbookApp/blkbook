@@ -3,8 +3,10 @@
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { adminClient } from '@/lib/supabase/admin';
 import { getInviteByCode, markInviteUsed } from '@/lib/data/invitations';
 import { createProfile } from '@/lib/data/profiles';
+import { sendPasswordResetEmail } from '@/lib/email';
 import { routes } from '@/lib/routes';
 
 const signUpSchema = z.object({
@@ -92,6 +94,29 @@ export async function updatePasswordAction(
   const { error } = await supabase.auth.updateUser({ password: newPassword });
   if (error) return { error: error.message };
   return { success: true };
+}
+
+export type ForgotPasswordActionResult = { error: string | null };
+
+export async function forgotPasswordAction(email: string): Promise<ForgotPasswordActionResult> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+
+  const { data, error } = await adminClient.auth.admin.generateLink({
+    type: 'recovery',
+    email,
+  });
+
+  if (!error && data?.properties?.hashed_token) {
+    const resetUrl = `${appUrl}/auth/callback?token_hash=${data.properties.hashed_token}&type=recovery`;
+    try {
+      await sendPasswordResetEmail(email, resetUrl);
+    } catch {
+      // Swallow — don't expose send failures
+    }
+  }
+
+  // Always return success to prevent email enumeration
+  return { error: null };
 }
 
 export async function logoutAction(): Promise<void> {

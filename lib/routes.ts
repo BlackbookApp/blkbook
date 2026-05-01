@@ -33,4 +33,6 @@ export const routes = {
   settings: '/settings',
   scanQr: '/scan-qr',
   scanCard: '/scan-card',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password',
 } as const;

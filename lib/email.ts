@@ -221,6 +221,34 @@ export async function sendInviteEmail(
   }
 }
 
+export async function sendPasswordResetEmail(email: string, resetLink: string): Promise<void> {
+  const fromAddress = process.env.EMAIL_FROM_ADDRESS;
+  const to = process.env.NODE_ENV === 'production' ? email : 'delivered+reset@resend.dev';
+  if (!fromAddress) return;
+
+  const html = [
+    '<div style="font-family:helvetica,sans-serif;max-width:480px;margin:0 auto;padding:40px 24px;color:#0E0E0E;">',
+    '<p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:32px;">HAIZEL</p>',
+    '<h1 style="font-size:24px;font-weight:400;margin-bottom:16px;">Reset your password.</h1>',
+    '<p style="font-size:14px;line-height:1.6;color:#9A9691;margin-bottom:32px;">Click below to set a new password for your account. This link expires in 1 hour and can only be used once.</p>',
+    `<a href="${resetLink}" style="display:inline-block;background:#0E0E0E;color:#F5F4F0;padding:14px 28px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;">Reset password</a>`,
+    '<p style="font-size:11px;color:#9A9691;margin-top:32px;">If you did not request a password reset, you can safely ignore this email.</p>',
+    '</div>',
+  ].join('');
+
+  const { error } = await resend.emails.send({
+    from: fromAddress,
+    to,
+    subject: 'Reset your Haizel password',
+    html,
+  });
+
+  if (error) {
+    console.error('[reset-email] FAILED:', error);
+    throw error;
+  }
+}
+
 export async function sendApprovalEmail(
   email: string,
   fullName: string,

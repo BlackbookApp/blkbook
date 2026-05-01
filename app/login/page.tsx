@@ -3,7 +3,13 @@
 import { useState, useTransition, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { AuthShell, AuthHeading, AuthField, PrimaryButton } from '@/components/auth/AuthShell';
+import {
+  AuthShell,
+  AuthHeading,
+  AuthField,
+  PrimaryButton,
+  QuietLink,
+} from '@/components/auth/AuthShell';
 import { loginAction } from '@/app/actions/auth';
 import { routes } from '@/lib/routes';
 
@@ -99,6 +105,12 @@ const LoginContent = () => {
           <PrimaryButton type="submit" disabled={isPending}>
             {isPending ? 'Signing in…' : 'Continue'}
           </PrimaryButton>
+        </div>
+
+        <div className="pt-4 text-center">
+          <QuietLink type="button" onClick={() => router.push(routes.forgotPassword)}>
+            Forgot password?
+          </QuietLink>
         </div>
       </motion.form>
     </AuthShell>
