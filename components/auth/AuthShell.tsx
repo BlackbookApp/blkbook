@@ -30,9 +30,9 @@ export const AuthShell = ({
   footerRight,
 }: AuthShellProps) => (
   <div className="h-[100dvh] overflow-hidden bg-[#f2f1ed] text-[#1a1814] flex flex-col">
-    <header className="flex items-center justify-between gap-4 px-6 pt-6 pb-0 md:px-10 md:pt-8">
+    <header className="flex items-center justify-between gap-4 px-6 pt-6 pb-0 md:px-10 md:pt-8 w-full">
+      {headerLeft}
       <div className="flex items-center gap-3 min-w-0">
-        {headerLeft}
         <Logo />
       </div>
       {topRight && <div className="flex items-center">{topRight}</div>}
