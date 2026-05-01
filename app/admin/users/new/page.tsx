@@ -16,9 +16,11 @@ import {
   type CreateUserParams,
 } from '@/app/actions/admin-users';
 import { EDITOR_MAP } from '@/config/editorMap';
+import { DISPLAY_MAP } from '@/config/displayMap';
 import { ROLE_SCHEMAS } from '@/config/roleSchemas';
 import { ROLE_COMPONENT_SAMPLES, COMPONENT_DEFAULTS } from '@/config/componentSchemas';
 import { InMemoryEditorProvider } from '@/contexts/component-editor';
+import { Button } from '@/components/ui/button';
 import type { RoleType, ComponentType } from '@/config/roleSchemas';
 import type { ProfileComponent } from '@/lib/data/components';
 
@@ -339,16 +341,16 @@ function AdminEditableSection({
   onEdit: () => void;
   onDone: () => void;
 }) {
+  const displayEntry = DISPLAY_MAP[component.type as ComponentType];
   const editorEntry = EDITOR_MAP[component.type as ComponentType];
-  if (!editorEntry) return null;
+  if (!displayEntry || !editorEntry) return null;
+
+  const Display = displayEntry.component;
   const Editor = editorEntry.component;
 
   return (
-    <div className="border border-border mb-2">
-      <div className="flex items-center justify-between px-4 py-3">
-        <span className="text-[10px] uppercase tracking-widest text-bb-muted">
-          {editorEntry.label}
-        </span>
+    <div className="mb-2">
+      <div className="flex items-center justify-end px-4 py-3">
         <button
           type="button"
           onClick={isEditing ? onDone : onEdit}
@@ -359,11 +361,31 @@ function AdminEditableSection({
           {isEditing ? 'Done' : 'Edit'}
         </button>
       </div>
-      {isEditing && (
-        <div className="px-4 pb-4 border-t border-border">
-          <Editor component={component} />
-        </div>
-      )}
+      <AnimatePresence mode="wait" initial={false}>
+        {isEditing ? (
+          <motion.div
+            key="editor"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18 }}
+            className="px-4 pb-4 border-t border-border"
+          >
+            <Editor component={component} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="display"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18 }}
+            className="px-4 pb-4"
+          >
+            <Display data={component.data} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -601,14 +623,9 @@ export default function CreateUserPage() {
       >
         <div className="flex items-end justify-between mb-1">
           <h1 className="text-2xl tracking-tight uppercase">Create User</h1>
-          <button
-            type="button"
-            onClick={handleBack}
-            disabled={isPending}
-            className="text-[10px] uppercase tracking-widest text-bb-muted hover:text-foreground transition-colors disabled:opacity-40"
-          >
+          <Button variant="ghost" size="sm" type="button" onClick={handleBack} disabled={isPending}>
             {step === 0 ? 'Cancel' : 'Back'}
-          </button>
+          </Button>
         </div>
 
         <OnboardingProgress step={step + 1} total={7} />
@@ -654,11 +671,12 @@ export default function CreateUserPage() {
         {error && <p className="text-[11px] text-red-500 mt-4 font-helvetica">{error}</p>}
 
         <div className="mt-8 space-y-3">
-          <button
+          <Button
+            variant="blackbook"
+            size="full"
             type="button"
             onClick={handleNext}
             disabled={!canProceed()}
-            className="bb-btn-primary disabled:opacity-30"
           >
             {isPending
               ? step === 6
@@ -667,16 +685,17 @@ export default function CreateUserPage() {
               : step === 6
                 ? 'Create User'
                 : 'Continue'}
-          </button>
+          </Button>
           {step > 0 && (
-            <button
+            <Button
+              variant="blackbook-ghost"
               type="button"
               onClick={handleBack}
               disabled={isPending}
-              className="w-full py-2 uppercase font-helvetica text-[10px] tracking-[0.25em] font-light text-bb-muted/60 hover:text-bb-muted transition-colors disabled:opacity-30"
+              className="w-full"
             >
               Back
-            </button>
+            </Button>
           )}
         </div>
       </motion.div>

@@ -8,6 +8,7 @@ import {
   approveRequest,
   rejectRequest,
 } from '@/app/actions/access-requests';
+import { Button } from '@/components/ui/button';
 
 type Filter = 'pending' | 'approved' | 'rejected' | 'all';
 
@@ -145,20 +146,17 @@ export default function AdminRequestsPage() {
 
                   {req.status === 'pending' && (
                     <div className="flex gap-2 pt-1">
-                      <button
-                        onClick={() => handleApprove(req.id)}
-                        disabled={isPending}
-                        className="text-[10px] uppercase tracking-widest px-4 py-2 bg-foreground text-background hover:opacity-80 transition-opacity disabled:opacity-40"
-                      >
+                      <Button size="sm" onClick={() => handleApprove(req.id)} disabled={isPending}>
                         Approve
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleReject(req.id)}
                         disabled={isPending}
-                        className="text-[10px] uppercase tracking-widest px-4 py-2 border border-border text-bb-muted hover:text-foreground hover:border-foreground transition-colors disabled:opacity-40"
                       >
                         Reject
-                      </button>
+                      </Button>
                     </div>
                   )}
                 </div>

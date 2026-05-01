@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { routes } from '@/lib/routes';
 import { getAllUsersAction, deleteUserAction, type AdminUser } from '@/app/actions/admin-users';
+import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -139,21 +140,20 @@ export default function AdminUsersPage() {
                 </p>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <Link
-                    href={routes.adminUserEdit(user.id)}
-                    className="text-[10px] uppercase tracking-widest px-3 py-1.5 border border-border text-bb-muted hover:text-foreground hover:border-foreground transition-colors"
-                  >
-                    Edit
-                  </Link>
-                  <button
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={routes.adminUserEdit(user.id)}>Edit</Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="hover:text-red-600 hover:border-red-300"
                     onClick={() => {
                       setDeleteError(null);
                       setPendingDelete(user);
                     }}
-                    className="text-[10px] uppercase tracking-widest px-3 py-1.5 border border-border text-bb-muted hover:text-red-600 hover:border-red-300 transition-colors"
                   >
                     Delete
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}

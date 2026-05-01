@@ -3,23 +3,51 @@
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { OnboardingProgress } from '@/components/onboarding-v2/OnboardingProgress';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { routes } from '@/lib/routes';
 import { useImageUpload } from '@/hooks/use-image-upload';
 import { AdminPatchEditorProvider } from '@/contexts/component-editor';
+import { Button } from '@/components/ui/button';
 import { EDITOR_MAP } from '@/config/editorMap';
+import { DISPLAY_MAP } from '@/config/displayMap';
+import { cn } from '@/lib/utils';
+import { authTokens } from '@/components/edit-profile/step1';
 import {
   getUserForEditAction,
   updateAuthUserAction,
   updateUserProfileFieldsAction,
   patchUserComponentAction,
+  patchComponentVisibilityAction,
   type UserForEdit,
 } from '@/app/actions/admin-users';
 import type { ComponentType } from '@/config/roleSchemas';
 import type { ProfileComponent } from '@/lib/data/components';
+
+const { helvetica, granjon, card, inkSoft, muted, hairline, hairlineSoft } = authTokens;
+
+const EXAMPLE_ATTRIBUTION: Partial<Record<ComponentType, string>> = {
+  quote_block: "— Harper's Bazaar",
+};
+
+const EXAMPLE_COPY: Partial<Record<ComponentType, string>> = {
+  top_bio:
+    "Specialising in timeless, fine-art weddings across Europe and beyond. My work has been featured in Vogue, Elle, and Harper's Bazaar.",
+  quote_block: 'Named one of the top wedding photographers in the world.',
+  venture_card: 'Founder of Atelier Studio and co-creator of the Lumen Design System.',
+  experience_timeline: 'Creative Director at LVMH, previously Head of Brand at Spotify.',
+  portfolio_card: 'Selected projects from five years of independent creative practice.',
+  image_portfolio: 'A curated selection of editorial and commercial photography.',
+  image_gallery: 'Behind the scenes and finished work, side by side.',
+  client_list: 'Apple, Chanel, The Guardian, Nike, and Tiffany & Co.',
+  recognition_list: 'D&AD Yellow Pencil · Cannes Lions Grand Prix · Forbes 30 Under 30.',
+  press_strip: 'As seen in The New York Times, Monocle, and Wallpaper*.',
+  about_section: 'A longer introduction — your background, values, and what drives your work.',
+  now_block: 'Writing a book on design systems. Based in Lisbon until June.',
+  logo: 'Your studio or personal brand mark, displayed prominently.',
+};
 
 // ─── Shared UI helpers ────────────────────────────────────────────────────────
 
@@ -295,46 +323,6 @@ function StepContactsEdit({
   );
 }
 
-function AdminEditableSection({
-  component,
-  isEditing,
-  onEdit,
-  onDone,
-}: {
-  component: ProfileComponent;
-  isEditing: boolean;
-  onEdit: () => void;
-  onDone: () => void;
-}) {
-  const editorEntry = EDITOR_MAP[component.type as ComponentType];
-  if (!editorEntry) return null;
-  const Editor = editorEntry.component;
-
-  return (
-    <div className="border border-border mb-2">
-      <div className="flex items-center justify-between px-4 py-3">
-        <span className="text-[10px] uppercase tracking-widest text-bb-muted">
-          {editorEntry.label}
-        </span>
-        <button
-          type="button"
-          onClick={isEditing ? onDone : onEdit}
-          className={`text-[10px] uppercase tracking-widest transition-colors ${
-            isEditing ? 'text-foreground' : 'text-bb-muted hover:text-foreground'
-          }`}
-        >
-          {isEditing ? 'Done' : 'Edit'}
-        </button>
-      </div>
-      {isEditing && (
-        <div className="px-4 pb-4 border-t border-border">
-          <Editor component={component} />
-        </div>
-      )}
-    </div>
-  );
-}
-
 function StepComponentsLive({
   components,
   patchOverride,
@@ -342,21 +330,164 @@ function StepComponentsLive({
   components: ProfileComponent[];
   patchOverride: (componentId: string, patch: Record<string, unknown>) => Promise<void>;
 }) {
-  const [activeEditId, setActiveEditId] = useState<string | null>(null);
+  const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(components.map((c) => [c.id, c.is_visible]))
+  );
+
+  const handleHide = async (id: string) => {
+    setVisibilityMap((prev) => ({ ...prev, [id]: false }));
+    await patchComponentVisibilityAction(id, false);
+  };
+
+  const handleShow = async (id: string) => {
+    setVisibilityMap((prev) => ({ ...prev, [id]: true }));
+    await patchComponentVisibilityAction(id, true);
+  };
+
+  const visibleComponents = components
+    .filter((c) => visibilityMap[c.id])
+    .sort((a, b) => a.position - b.position);
+
+  const hiddenComponents = components
+    .filter((c) => !visibilityMap[c.id])
+    .sort((a, b) => a.position - b.position);
 
   return (
     <AdminPatchEditorProvider patchOverride={patchOverride}>
-      <div>
-        {components.map((component) => (
-          <AdminEditableSection
-            key={component.id}
-            component={component}
-            isEditing={activeEditId === component.id}
-            onEdit={() => setActiveEditId(component.id)}
-            onDone={() => setActiveEditId(null)}
-          />
-        ))}
+      <div className="space-y-4 mb-4">
+        <AnimatePresence initial={false}>
+          {visibleComponents.map((component) => {
+            const type = component.type as ComponentType;
+            const entry = EDITOR_MAP[type];
+            if (!entry) return null;
+            const example = EXAMPLE_COPY[type];
+            const attribution = EXAMPLE_ATTRIBUTION[type];
+            const EditorComponent = entry.component;
+
+            return (
+              <motion.div
+                key={component.id}
+                layout
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8, height: 0 }}
+                transition={{ duration: 0.25 }}
+                className="rounded-[6px] overflow-hidden"
+                style={{ background: card, border: `1px solid ${hairline}` }}
+              >
+                <div
+                  className="flex items-center justify-between px-4 pt-3.5 pb-3"
+                  style={{ borderBottom: `1px solid ${hairlineSoft}` }}
+                >
+                  <span
+                    style={{
+                      fontFamily: helvetica,
+                      fontSize: '11px',
+                      color: inkSoft,
+                      letterSpacing: '0.04em',
+                    }}
+                  >
+                    {entry.label}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleHide(component.id)}
+                    className="w-6 h-6 flex items-center justify-center rounded-full transition-opacity hover:opacity-60"
+                    aria-label={`Hide ${entry.label}`}
+                  >
+                    <X className="w-3.5 h-3.5" strokeWidth={1.5} style={{ color: muted }} />
+                  </button>
+                </div>
+
+                {(example || type === 'logo') && (
+                  <div
+                    className="px-4 py-3"
+                    style={{ borderBottom: `1px solid ${hairlineSoft}`, background: '#f7f5ee' }}
+                  >
+                    <p
+                      className="uppercase mb-1.5"
+                      style={{
+                        fontFamily: helvetica,
+                        fontSize: '9.5px',
+                        letterSpacing: '0.22em',
+                        color: muted,
+                      }}
+                    >
+                      Example
+                    </p>
+                    <p
+                      className="text-[12.5px] italic leading-[1.65]"
+                      style={{ fontFamily: granjon, color: inkSoft }}
+                    >
+                      &ldquo;{example}&rdquo;
+                    </p>
+                    {attribution && (
+                      <p
+                        className="mt-1.5"
+                        style={{
+                          fontFamily: helvetica,
+                          fontSize: '10px',
+                          letterSpacing: '0.04em',
+                          color: muted,
+                        }}
+                      >
+                        {attribution}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                <div className="px-4 py-4 [&_input]:font-granjon [&_textarea]:font-granjon">
+                  <EditorComponent component={component} />
+                </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
+
+      {hiddenComponents.length > 0 && (
+        <div className="mb-4">
+          <p
+            className="mb-3"
+            style={{
+              fontFamily: helvetica,
+              fontSize: '9.5px',
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: muted,
+            }}
+          >
+            Add a section
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {hiddenComponents.map((component) => {
+              const type = component.type as ComponentType;
+              const entry = EDITOR_MAP[type];
+              if (!entry) return null;
+              return (
+                <button
+                  key={component.id}
+                  type="button"
+                  onClick={() => handleShow(component.id)}
+                  className="transition-opacity hover:opacity-70"
+                  style={{
+                    fontFamily: helvetica,
+                    fontSize: '10px',
+                    letterSpacing: '0.15em',
+                    border: `1px solid ${hairline}`,
+                    borderRadius: '4px',
+                    padding: '6px 12px',
+                    color: inkSoft,
+                  }}
+                >
+                  + {entry.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </AdminPatchEditorProvider>
   );
 }
@@ -693,14 +824,9 @@ export default function EditUserPage() {
       >
         <div className="flex items-end justify-between mb-1">
           <h1 className="text-2xl tracking-tight uppercase">Edit User</h1>
-          <button
-            type="button"
-            onClick={handleBack}
-            disabled={isPending}
-            className="text-[10px] uppercase tracking-widest text-bb-muted hover:text-foreground transition-colors disabled:opacity-40"
-          >
+          <Button variant="ghost" size="sm" type="button" onClick={handleBack} disabled={isPending}>
             {step === 0 ? 'Cancel' : 'Back'}
-          </button>
+          </Button>
         </div>
 
         <OnboardingProgress step={step + 1} total={6} />
@@ -744,23 +870,25 @@ export default function EditUserPage() {
         {stepError && <p className="text-[11px] text-red-500 mt-4 font-helvetica">{stepError}</p>}
 
         <div className="mt-8 space-y-3">
-          <button
+          <Button
+            variant="blackbook"
+            size="full"
             type="button"
             onClick={handleNext}
             disabled={!canProceed()}
-            className="bb-btn-primary disabled:opacity-30"
           >
             {isPending ? 'Saving…' : step === 5 ? 'Save Changes' : 'Continue'}
-          </button>
+          </Button>
           {step > 0 && (
-            <button
+            <Button
+              variant="blackbook-ghost"
               type="button"
               onClick={handleBack}
               disabled={isPending}
-              className="w-full py-2 uppercase font-helvetica text-[10px] tracking-[0.25em] font-light text-bb-muted/60 hover:text-bb-muted transition-colors disabled:opacity-30"
+              className="w-full"
             >
               Back
-            </button>
+            </Button>
           )}
         </div>
       </motion.div>
