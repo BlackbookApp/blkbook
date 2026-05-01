@@ -34,6 +34,7 @@ export interface AdminUser {
   is_published: boolean;
   is_admin: boolean;
   created_at: string;
+  username: string;
 }
 
 export async function getAllUsersAction(): Promise<AdminUser[]> {
@@ -46,7 +47,7 @@ export async function getAllUsersAction(): Promise<AdminUser[]> {
       adminClient
         .from('profiles')
         .select(
-          'id, user_id, full_name, avatar_url, membership_type, is_published, is_admin, created_at'
+          'id, user_id, full_name, avatar_url, membership_type, is_published, is_admin, created_at, username'
         )
         .order('created_at', { ascending: false }),
     ]);
@@ -68,6 +69,7 @@ export async function getAllUsersAction(): Promise<AdminUser[]> {
     is_published: p.is_published ?? false,
     is_admin: p.is_admin ?? false,
     created_at: p.created_at,
+    username: p.username,
   }));
 }
 

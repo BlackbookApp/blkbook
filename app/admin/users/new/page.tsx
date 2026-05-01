@@ -417,6 +417,20 @@ function StepComponentsEditor({
           company: wizardData.company || null,
           location: wizardData.location || null,
         };
+      } else if (type === 'social_stat') {
+        const socialItems = SOCIAL_BUTTONS.filter(
+          (btn) => (wizardData.buttonValues[btn.id] ?? '').trim().length > 0
+        ).map((btn) => ({
+          platform: btn.id,
+          handle: wizardData.buttonValues[btn.id] ?? null,
+          count: null,
+          url: null,
+        }));
+        defaultData =
+          socialItems.length > 0
+            ? { items: socialItems }
+            : ((samples as Partial<Record<ComponentType, unknown>>)[type] ??
+              COMPONENT_DEFAULTS[type]);
       } else {
         defaultData =
           (samples as Partial<Record<ComponentType, unknown>>)[type] ?? COMPONENT_DEFAULTS[type];

@@ -787,6 +787,11 @@ export default function EditUserPage() {
       if (step === 5) {
         router.push(routes.adminUsers);
       } else {
+        // Refresh original after contacts step so StepComponentsLive sees updated social_stat
+        if (step === 3) {
+          const refreshed = await getUserForEditAction(profileId);
+          if (refreshed) setOriginal(refreshed);
+        }
         setStep((s) => s + 1);
       }
     });

@@ -5,7 +5,15 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { routes } from '@/lib/routes';
 import { getAllUsersAction, deleteUserAction, type AdminUser } from '@/app/actions/admin-users';
+import { MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,6 +48,7 @@ export default function AdminUsersPage() {
 
   const filtered = users.filter((u) => {
     const q = search.toLowerCase();
+    console.log(u);
     return (u.full_name?.toLowerCase().includes(q) ?? false) || u.email.toLowerCase().includes(q);
   });
 
@@ -139,22 +148,31 @@ export default function AdminUsersPage() {
                   })}
                 </p>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={routes.adminUserEdit(user.id)}>Edit</Link>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="hover:text-red-600 hover:border-red-300"
-                    onClick={() => {
-                      setDeleteError(null);
-                      setPendingDelete(user);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="w-8 h-8 p-0">
+                      <MoreHorizontal className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                      <Link href={routes.adminUserEdit(user.id)}>Edit</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href={routes.publicProfile(user.username)}>View profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="text-red-600 focus:text-red-600"
+                      onClick={() => {
+                        setDeleteError(null);
+                        setPendingDelete(user);
+                      }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ))}
           </div>
