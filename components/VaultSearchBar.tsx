@@ -41,7 +41,7 @@ const VaultSearchBar = ({ onSearchChange }: VaultSearchBarProps) => {
 
   return (
     <div className="relative mt-3 mb-3" data-tour="search">
-      <div className="relative border border-border bg-background h-9 flex items-center px-2.5">
+      <div className="relative border border-border bg-white h-9 flex items-center px-2.5">
         <input
           type="text"
           value={search}

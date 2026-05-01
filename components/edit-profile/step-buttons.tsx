@@ -2,6 +2,7 @@
 
 import { Check } from 'lucide-react';
 import { useComponentEditor } from '@/hooks/use-component-editor';
+import { Button } from '@/components/ui/button';
 import type { ProfileComponent } from '@/lib/data/components';
 import type { SocialLinks } from '@/lib/data/profiles';
 
@@ -383,20 +384,12 @@ export function StepButtons({
 
       {/* CTAs */}
       <div className="pt-6 space-y-3">
-        <button
-          onClick={handleContinue}
-          disabled={isSaving}
-          className="w-full h-[52px] bg-foreground text-background font-helvetica uppercase tracking-[0.12em] text-[11px] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay"
-        >
+        <Button variant="blackbook" size="full" onClick={handleContinue} disabled={isSaving}>
           {isSaving ? 'Saving…' : 'Continue'}
-        </button>
-        <button
-          onClick={onBack}
-          disabled={isSaving}
-          className="w-full py-2 font-helvetica text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground/50 transition-colors"
-        >
+        </Button>
+        <Button variant="blackbook-ghost" onClick={onBack} disabled={isSaving} className="w-full">
           Back
-        </button>
+        </Button>
       </div>
     </div>
   );

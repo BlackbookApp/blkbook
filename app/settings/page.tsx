@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '@/components/Logo';
 import { updatePasswordAction, logoutAction } from '@/app/actions/auth';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { routes } from '@/lib/routes';
 import { useProfile } from '@/hooks/use-profile';
 
@@ -53,12 +54,9 @@ export default function SettingsPage() {
       {/* Header */}
       <div className="flex items-center justify-between px-6 pt-6 pb-4 flex-shrink-0">
         <Logo />
-        <button
-          onClick={() => router.push(routes.myBlackbook)}
-          className="font-helvetica text-[11px] font-light tracking-widest uppercase text-bb-muted/50 hover:text-foreground transition-colors"
-        >
+        <Button variant="blackbook-ghost" onClick={() => router.push(routes.myBlackbook)}>
           BACK
-        </button>
+        </Button>
       </div>
 
       <div className="px-6 pt-6 pb-2 max-w-md mx-auto w-full">
@@ -152,13 +150,14 @@ export default function SettingsPage() {
                   {passwordSuccess && (
                     <p className="font-helvetica text-[10px] text-bb-dark">Password updated.</p>
                   )}
-                  <button
+                  <Button
+                    variant="blackbook"
+                    size="full"
                     onClick={handleUpdatePassword}
                     disabled={isPending || !newPassword || !confirmPassword}
-                    className="bb-btn-primary disabled:opacity-30"
                   >
                     {isPending ? 'Updating…' : 'Update password'}
-                  </button>
+                  </Button>
                 </div>
               </motion.div>
             )}
@@ -208,6 +207,26 @@ export default function SettingsPage() {
               ) : (
                 <ChevronLeft className="w-4 h-4 text-bb-muted/40 rotate-180" strokeWidth={1.2} />
               )}
+            </button>
+          </div>
+        )}
+
+        {/* Admin row */}
+        {profile?.is_admin && (
+          <div className="border-b border-bb-rule">
+            <button
+              onClick={() => router.push(routes.adminUsers)}
+              className="w-full flex items-center justify-between py-5 group"
+            >
+              <div className="text-left">
+                <p className="font-granjon text-[15px] leading-tight mb-0.5 text-bb-dark">
+                  Admin panel
+                </p>
+                <p className="font-helvetica text-[11px] font-light text-bb-muted">
+                  Manage requests and users
+                </p>
+              </div>
+              <ChevronLeft className="w-4 h-4 text-bb-muted/40 rotate-180" strokeWidth={1.2} />
             </button>
           </div>
         )}

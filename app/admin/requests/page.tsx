@@ -8,6 +8,7 @@ import {
   approveRequest,
   rejectRequest,
 } from '@/app/actions/access-requests';
+import { Button } from '@/components/ui/button';
 
 type Filter = 'pending' | 'approved' | 'rejected' | 'all';
 
@@ -126,19 +127,12 @@ export default function AdminRequestsPage() {
                     </span>
                   </div>
 
-                  {(req.social_handle || req.brand_link) && (
-                    <div className="flex gap-4 text-[11px] text-bb-muted">
-                      {req.social_handle && <span>{req.social_handle}</span>}
-                      {req.brand_link && (
-                        <a
-                          href={req.brand_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline underline-offset-2 hover:text-foreground transition-colors truncate max-w-[200px]"
-                        >
-                          {req.brand_link}
-                        </a>
-                      )}
+                  {(req.social_handle || req.city || req.how_heard || req.notes) && (
+                    <div className="space-y-0.5 text-[11px] text-bb-muted">
+                      {req.social_handle && <p>{req.social_handle}</p>}
+                      {req.city && <p>{req.city}</p>}
+                      {req.how_heard && <p className="italic">{req.how_heard}</p>}
+                      {req.notes && <p className="text-bb-muted/70">{req.notes}</p>}
                     </div>
                   )}
 
@@ -152,20 +146,17 @@ export default function AdminRequestsPage() {
 
                   {req.status === 'pending' && (
                     <div className="flex gap-2 pt-1">
-                      <button
-                        onClick={() => handleApprove(req.id)}
-                        disabled={isPending}
-                        className="text-[10px] uppercase tracking-widest px-4 py-2 bg-foreground text-background hover:opacity-80 transition-opacity disabled:opacity-40"
-                      >
+                      <Button size="sm" onClick={() => handleApprove(req.id)} disabled={isPending}>
                         Approve
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleReject(req.id)}
                         disabled={isPending}
-                        className="text-[10px] uppercase tracking-widest px-4 py-2 border border-border text-bb-muted hover:text-foreground hover:border-foreground transition-colors disabled:opacity-40"
                       >
                         Reject
-                      </button>
+                      </Button>
                     </div>
                   )}
                 </div>

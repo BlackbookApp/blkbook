@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { motion } from 'framer-motion';
 import { resetProfileCompleteAction } from '@/app/actions/profiles';
+import { Button } from '@/components/ui/button';
 
 export default function AdminResetProfilePage() {
   const [profileId, setProfileId] = useState('');
@@ -61,13 +62,9 @@ export default function AdminResetProfilePage() {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={isPending || !profileId.trim() || !userId.trim()}
-              className="text-[10px] uppercase tracking-widest px-6 py-2.5 bg-foreground text-background hover:opacity-80 transition-opacity disabled:opacity-40"
-            >
+            <Button type="submit" disabled={isPending || !profileId.trim() || !userId.trim()}>
               {isPending ? 'Resetting…' : 'Reset'}
-            </button>
+            </Button>
           </form>
 
           {result && (

@@ -1,6 +1,7 @@
 'use client';
 
 import { startTransition, useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { z } from 'zod';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { useCreateVaultContact } from '@/hooks/use-vault-contacts';
@@ -169,13 +170,9 @@ const AddContactDrawer = ({ open, onOpenChange, prefillData }: AddContactDrawerP
 
             <div className="h-px bg-border/50 mb-6" />
 
-            <button
-              type="submit"
-              disabled={isPending}
-              className="bb-btn-primary disabled:opacity-50"
-            >
+            <Button variant="blackbook" size="full" type="submit" disabled={isPending}>
               {isPending ? 'Saving...' : 'Save Contact'}
-            </button>
+            </Button>
           </form>
         </div>
       </DrawerContent>

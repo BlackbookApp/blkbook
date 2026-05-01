@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { routes } from '@/lib/routes';
+import { AdminNav } from '@/components/admin/AdminNav';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -18,5 +19,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (!profile?.is_admin) redirect(routes.myBlackbook);
 
-  return <>{children}</>;
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <AdminNav />
+      {children}
+    </div>
+  );
 }

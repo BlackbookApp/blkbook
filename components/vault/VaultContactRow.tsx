@@ -17,12 +17,12 @@ export function VaultContactRow({ contact, showDivider }: VaultContactRowProps) 
       onClick={() => router.push(routes.contact(contact.id))}
       className="w-full text-left group"
     >
-      {showDivider && <div className="h-px bg-border" />}
-      <div className="py-3">
-        <h2 className="font-granjon font-normal text-[16px] tracking-[0.01em] uppercase text-foreground mb-0.5 group-hover:opacity-60 transition-opacity">
+      {showDivider && <div className="h-px bg-bb-rule opacity-60" />}
+      <div className="py-4 transition-opacity group-hover:opacity-60">
+        <span className="block font-granjon font-normal text-[16px] tracking-[0.005em] text-foreground">
           {contact.name}
-        </h2>
-        <p className="font-helvetica font-normal text-[10px] tracking-[0.08em] text-bb-muted uppercase">
+        </span>
+        <p className="font-helvetica font-normal text-[11px] tracking-[0.06em] uppercase mt-1">
           {contact.role}
           {contact.city && <> · {contact.city}</>}
         </p>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { VaultContact, VaultContactInsert } from '@/lib/data/vault-contacts';
 
@@ -64,19 +65,12 @@ export function EditContactDialog({
           ))}
         </div>
         <div className="flex gap-3">
-          <button
-            onClick={() => onOpenChange(false)}
-            className="flex-1 py-3 font-helvetica text-[11px] font-normal uppercase tracking-[0.1em] border border-border text-bb-dark bg-transparent transition-opacity hover:opacity-70"
-          >
+          <Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>
             Cancel
-          </button>
-          <button
-            onClick={() => onSave(form)}
-            disabled={isPending}
-            className="flex-1 py-3 font-helvetica text-[11px] font-normal uppercase tracking-[0.1em] bg-bb-dark text-white transition-opacity hover:opacity-80 disabled:opacity-50"
-          >
+          </Button>
+          <Button className="flex-1" onClick={() => onSave(form)} disabled={isPending}>
             Save Changes
-          </button>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

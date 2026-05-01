@@ -41,6 +41,7 @@ export interface Profile {
   membership_type: 'guest' | 'member' | null;
   profile_complete: boolean;
   is_published: boolean;
+  is_admin: boolean;
   invited_by: string | null;
   invite_code: string;
   invites_remaining: number;

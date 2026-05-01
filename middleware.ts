@@ -12,6 +12,8 @@ const PUBLIC_ROUTES = [
   '/p',
   '/api/vcard',
   '/test-profile-components',
+  '/forgot-password',
+  '/reset-password',
 ];
 const AUTH_ONLY_ROUTES = ['/login', '/signup']; // redirect to /my-blackbook if already authed
 const ONBOARDING_EXEMPT = ['/onboarding', '/paywall', '/auth/callback', '/api'];

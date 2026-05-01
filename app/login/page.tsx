@@ -1,23 +1,36 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
 import { motion } from 'framer-motion';
-import Logo from '@/components/Logo';
+import {
+  AuthShell,
+  AuthHeading,
+  AuthField,
+  PrimaryButton,
+  QuietLink,
+} from '@/components/auth/AuthShell';
 import { loginAction } from '@/app/actions/auth';
 import { routes } from '@/lib/routes';
-import { Input } from '@/components/ui/input';
 
 const LoginContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(searchParams.get('error') ?? null);
+  const [focused, setFocused] = useState<string | null>(null);
+
+  const [form, setForm] = useState({ email: '', password: '' });
+
+  const handleChange = (field: keyof typeof form, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData();
+    formData.set('email', form.email);
+    formData.set('password', form.password);
     setError(null);
 
     startTransition(async () => {
@@ -32,70 +45,75 @@ const LoginContent = () => {
   };
 
   return (
-    <div className="min-h-dvh bg-background text-foreground flex flex-col relative">
-      <div className="px-6 bb-safe-top-6">
-        <Logo />
-      </div>
+    <AuthShell
+      topRight={
+        <button
+          type="button"
+          onClick={() => router.push(routes.requestAccess)}
+          className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-bb-dark hover:text-bb-muted transition-colors"
+        >
+          Apply
+        </button>
+      }
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        <AuthHeading title="Welcome back" italicWord="back" />
+      </motion.div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-6 ">
-        <div className="max-w-[300px] w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-center mb-10"
-          >
-            <h1 className="text-xl tracking-tight text-foreground mb-3 uppercase">Sign in</h1>
-          </motion.div>
+      <motion.form
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.25, duration: 0.7 }}
+        onSubmit={handleSubmit}
+        className="space-y-5"
+        noValidate
+      >
+        <AuthField
+          id="email"
+          label="Email"
+          type="email"
+          value={form.email}
+          onChange={(v) => handleChange('email', v)}
+          autoComplete="email"
+          required
+          isFocused={focused === 'email'}
+          onFocus={() => setFocused('email')}
+          onBlur={() => setFocused(null)}
+        />
+        <AuthField
+          id="password"
+          label="Password"
+          type="password"
+          value={form.password}
+          onChange={(v) => handleChange('password', v)}
+          autoComplete="current-password"
+          required
+          isFocused={focused === 'password'}
+          onFocus={() => setFocused('password')}
+          onBlur={() => setFocused(null)}
+        />
 
-          <motion.form
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            onSubmit={handleSubmit}
-            className="space-y-6"
-          >
-            <Input type="email" name="email" placeholder="Email" required autoComplete="email" />
-            <Input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-              autoComplete="current-password"
-            />
+        {error && (
+          <p className="font-helvetica text-[11px] text-red-500 leading-relaxed">{error}</p>
+        )}
 
-            {error && <p className="text-[11px] text-red-500 leading-relaxed">{error}</p>}
-
-            <div className="pt-6">
-              <button
-                type="submit"
-                disabled={isPending}
-                className="font-helvetica font-normal text-[11px] w-full bg-foreground text-background py-4 uppercase tracking-[0.12em] hover:opacity-90 active:scale-[0.99] transition-all relative overflow-hidden grain-overlay disabled:opacity-50"
-              >
-                {isPending ? 'Signing in…' : 'Enter'}
-              </button>
-            </div>
-          </motion.form>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.0, duration: 0.8 }}
-            className="mt-8 text-center"
-          >
-            <button
-              type="button"
-              onClick={() => router.push(routes.requestAccess)}
-              className="text-[10px] text-muted-foreground hover:text-foreground/60 transition-colors tracking-wide"
-            >
-              Don&apos;t have an account? Request access
-            </button>
-          </motion.div>
+        <div className="pt-2">
+          <PrimaryButton type="submit" disabled={isPending}>
+            {isPending ? 'Signing in…' : 'Continue'}
+          </PrimaryButton>
         </div>
-      </div>
 
-      <div className="h-12" />
-    </div>
+        <div className="pt-4 text-center">
+          <QuietLink type="button" onClick={() => router.push(routes.forgotPassword)}>
+            Forgot password?
+          </QuietLink>
+        </div>
+      </motion.form>
+    </AuthShell>
   );
 };
 

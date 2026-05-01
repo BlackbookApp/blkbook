@@ -36,13 +36,20 @@ export default function VaultPage() {
   return (
     /* max-w-md mx-auto instead of blackbook-container — avoids min-h-screen (100vh) which
        exceeds 100svh in Safari browser (address bar), causing document-level scroll */
-    <div className="max-w-md mx-auto bg-background flex flex-col border-box h-[100svh] overflow-hidden px-6 bb-safe-top-6">
+    <div className="max-w-md mx-auto bg-background flex flex-col border-box min-h-[100svh] overflow-scroll px-2 bb-safe-top-6">
       {/* Logo already has py-4 internally — no wrapper needed */}
       <Logo />
 
-      <VaultSearchBar onSearchChange={setSearch} />
-
-      <VaultContactList contacts={contacts} search={search} isLoading={isLoading} />
+      <div
+        className="mt-3 rounded-[6px] border border-bb-rule bg-white px-6 pt-4 pb-2 flex flex-col flex-1 min-h-0"
+        style={{
+          boxShadow:
+            '0 1px 0 rgba(255,255,255,0.6) inset, 0 30px 60px -40px rgba(26,24,20,0.18), 0 8px 20px -16px rgba(26,24,20,0.10)',
+        }}
+      >
+        <VaultSearchBar onSearchChange={setSearch} />
+        <VaultContactList contacts={contacts} search={search} isLoading={isLoading} />
+      </div>
 
       <BottomNav />
 

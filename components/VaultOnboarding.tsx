@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 
 interface TourStep {
   target: string;
@@ -169,7 +170,7 @@ const VaultOnboarding = ({ onComplete }: { onComplete: () => void }) => {
             </div>
 
             <div className="px-5 py-5">
-              <p className="font-helvetica uppercase mb-3 text-[9px] tracking-[0.2em] text-[#999] font-normal">
+              <p className="font-helvetica uppercase mb-3 text-[9px] tracking-[0.2em] text-bb-dark font-normal">
                 {current + 1} of {steps.length}
               </p>
 
@@ -177,24 +178,25 @@ const VaultOnboarding = ({ onComplete }: { onComplete: () => void }) => {
                 {step.title}
               </h3>
 
-              <p className="font-helvetica leading-relaxed mb-5 text-[12px] font-light text-[#666]">
+              <p className="font-helvetica leading-relaxed mb-5 text-[12px] font-light text-bb-dark">
                 {step.body}
               </p>
 
               <div className="flex items-center justify-between">
-                <button
+                <Button
+                  variant="blackbook-ghost"
                   onClick={onComplete}
-                  className="font-helvetica uppercase text-[10px] tracking-[0.15em] text-[#999] font-normal hover:text-foreground/50 transition-colors"
+                  className="text-bb-dark hover:text-foreground/50 text-[10px] tracking-[0.15em] h-auto p-0"
                 >
                   Skip
-                </button>
+                </Button>
 
-                <button
+                <Button
                   onClick={handleNext}
-                  className="font-helvetica uppercase relative overflow-hidden grain-overlay text-[10px] tracking-[0.12em] font-normal bg-bb-dark text-bb-cream py-[10px] px-6"
+                  className="bg-bb-dark text-bb-cream text-[10px] tracking-[0.12em] py-[10px] px-6 h-auto"
                 >
                   {isLast ? 'Get Started' : 'Next'}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
