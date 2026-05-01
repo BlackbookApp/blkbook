@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EDITOR_MAP } from '@/config/editorMap';
 import { updateComponentVisibilityAction } from '@/app/actions/components';
@@ -231,16 +232,12 @@ export function Step3({ components, onFinish, onBack }: Step3Props) {
       )}
 
       <div className="pt-2">
-        <button className="bb-btn-primary" onClick={onFinish}>
+        <Button variant="blackbook" size="full" onClick={onFinish}>
           Save profile
-        </button>
-        <button
-          type="button"
-          className="w-full mt-3 font-helvetica text-[11px] tracking-[0.1em] text-bb-muted/50 hover:text-foreground transition-colors text-center"
-          onClick={onBack}
-        >
+        </Button>
+        <Button variant="blackbook-ghost" type="button" className="w-full mt-3" onClick={onBack}>
           BACK
-        </button>
+        </Button>
       </div>
     </motion.div>
   );

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 
 interface ContactNotesProps {
   notes: string | null;
@@ -42,30 +43,25 @@ export function ContactNotes({ notes, onAddNote }: ContactNotesProps) {
             autoFocus
           />
           <div className="flex gap-2">
-            <button
-              onClick={handleSave}
-              className="font-helvetica text-[10px] font-normal uppercase tracking-[0.14em] py-2 px-5 bg-bb-dark text-white transition-opacity hover:opacity-80"
-            >
+            <Button size="sm" onClick={handleSave}>
               Save
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 setShowInput(false);
                 setNewNote('');
               }}
-              className="font-helvetica text-[10px] font-normal uppercase tracking-[0.14em] py-2 px-5 text-bb-muted transition-opacity hover:opacity-60"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
-        <button
-          onClick={() => setShowInput(true)}
-          className="w-full border border-border py-3 mt-4 text-center font-helvetica text-[11px] font-normal uppercase tracking-[0.12em] text-bb-dark transition-opacity hover:opacity-60"
-        >
+        <Button variant="outline" className="w-full mt-4" onClick={() => setShowInput(true)}>
           Add Note
-        </button>
+        </Button>
       )}
     </div>
   );

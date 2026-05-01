@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 import { Camera, Pencil } from 'lucide-react';
 import { TextInput } from '@/components/ui/text-input';
 import { useComponentEditor } from '@/hooks/use-component-editor';
@@ -198,9 +199,9 @@ export function Step1({ component, onContinue }: Props) {
       )}
 
       <div className="pt-4">
-        <button className="bb-btn-primary" onClick={onContinue}>
+        <Button variant="blackbook" size="full" onClick={onContinue}>
           Continue
-        </button>
+        </Button>
       </div>
     </motion.div>
   );

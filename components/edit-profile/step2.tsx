@@ -2,6 +2,7 @@
 
 import { Check } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 import { TextInput } from '@/components/ui/text-input';
 import { authTokens } from './step1';
 
@@ -300,17 +301,18 @@ export function Step2({
       <div className="mb-8">{renderGroup(SOCIAL_BUTTONS)}</div>
 
       <div className="pt-2">
-        <button className="bb-btn-primary" onClick={onContinue} disabled={isSaving}>
+        <Button variant="blackbook" size="full" onClick={onContinue} disabled={isSaving}>
           {isSaving ? 'Saving…' : 'Continue'}
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="blackbook-ghost"
           type="button"
-          className="w-full mt-3 font-helvetica text-[11px] tracking-[0.1em] text-bb-muted/50 hover:text-foreground transition-colors text-center"
+          className="w-full mt-3"
           onClick={onBack}
           disabled={isSaving}
         >
           BACK
-        </button>
+        </Button>
       </div>
     </motion.div>
   );

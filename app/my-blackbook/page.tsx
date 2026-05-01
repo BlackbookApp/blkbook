@@ -12,6 +12,7 @@ import { ShareProfileModal } from '@/components/share-profile-modal';
 import { useProfile } from '@/hooks/use-profile';
 import { useInvite, INVITE_TOTAL } from '@/hooks/use-invite';
 import { routes } from '@/lib/routes';
+import { Button } from '@/components/ui/button';
 
 function getInitials(name: string | null): string {
   if (!name) return '?';
@@ -201,7 +202,7 @@ const MyBlackbook = () => {
             </div>
 
             <InviteSheet>
-              <button className="bb-btn-primary group">
+              <Button className="bb-btn-primary group">
                 <span className="inline-flex items-center gap-2">
                   Send an Invitation
                   <span
@@ -211,7 +212,7 @@ const MyBlackbook = () => {
                     →
                   </span>
                 </span>
-              </button>
+              </Button>
             </InviteSheet>
           </div>
         </motion.div>

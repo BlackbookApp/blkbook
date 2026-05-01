@@ -339,3 +339,18 @@ export async function patchUserComponentAction(
 
   return { error: error?.message ?? null };
 }
+
+export async function patchComponentVisibilityAction(
+  componentId: string,
+  isVisible: boolean
+): Promise<{ error: string | null }> {
+  const auth = await assertAdmin();
+  if ('error' in auth) return { error: auth.error };
+
+  const { error } = await adminClient
+    .from('profile_components')
+    .update({ is_visible: isVisible })
+    .eq('id', componentId);
+
+  return { error: error?.message ?? null };
+}

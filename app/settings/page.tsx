@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '@/components/Logo';
 import { updatePasswordAction, logoutAction } from '@/app/actions/auth';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { routes } from '@/lib/routes';
 import { useProfile } from '@/hooks/use-profile';
 
@@ -53,12 +54,9 @@ export default function SettingsPage() {
       {/* Header */}
       <div className="flex items-center justify-between px-6 pt-6 pb-4 flex-shrink-0">
         <Logo />
-        <button
-          onClick={() => router.push(routes.myBlackbook)}
-          className="font-helvetica text-[11px] font-light tracking-widest uppercase text-bb-muted/50 hover:text-foreground transition-colors"
-        >
+        <Button variant="blackbook-ghost" onClick={() => router.push(routes.myBlackbook)}>
           BACK
-        </button>
+        </Button>
       </div>
 
       <div className="px-6 pt-6 pb-2 max-w-md mx-auto w-full">
@@ -152,13 +150,14 @@ export default function SettingsPage() {
                   {passwordSuccess && (
                     <p className="font-helvetica text-[10px] text-bb-dark">Password updated.</p>
                   )}
-                  <button
+                  <Button
+                    variant="blackbook"
+                    size="full"
                     onClick={handleUpdatePassword}
                     disabled={isPending || !newPassword || !confirmPassword}
-                    className="bb-btn-primary disabled:opacity-30"
                   >
                     {isPending ? 'Updating…' : 'Update password'}
-                  </button>
+                  </Button>
                 </div>
               </motion.div>
             )}

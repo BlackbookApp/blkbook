@@ -12,10 +12,10 @@ import { routes } from '@/lib/routes';
 import type { SocialLinks } from '@/lib/data/profiles';
 
 const PRIMARY_BTN =
-  'h-[48px] border-box rounded-none w-full py-4 font-helvetica font-normal text-[11px] tracking-[0.14em] bg-[var(--pg-btn-bg)] text-[var(--pg-btn-fg)] border-none hover:opacity-80 hover:bg-[var(--pg-btn-bg)]';
+  'h-[48px]  border-box rounded-md w-full py-4 font-helvetica font-normal text-[11px] tracking-[0.14em] bg-[var(--pg-btn-bg)] text-[var(--pg-btn-fg)] border-none hover:opacity-80 hover:bg-[var(--pg-btn-bg)]';
 
 const SECONDARY_BTN =
-  'h-[48px] border-box rounded-none w-full py-3 font-helvetica font-normal text-[11px] tracking-[0.1em] bg-transparent text-[var(--pg-btn-sec-fg)] border-[var(--pg-btn-sec-border)] hover:bg-transparent hover:opacity-70';
+  'h-[48px] border-box rounded-md w-full py-3 font-helvetica font-normal text-[11px] tracking-[0.1em] bg-transparent text-[var(--pg-btn-sec-fg)] border-[var(--pg-btn-sec-border)] hover:bg-transparent hover:opacity-70';
 
 const COMPACT_BTN =
   'rounded-none py-2.5 font-helvetica font-normal text-[10px] tracking-[0.14em] bg-transparent text-[var(--pg-btn-sec-fg)] border-[var(--pg-btn-sec-border)] hover:bg-transparent hover:opacity-70';
