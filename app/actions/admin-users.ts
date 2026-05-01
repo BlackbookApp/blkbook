@@ -139,6 +139,7 @@ export async function createUserAction(
     email: params.email,
     password: params.password,
     email_confirm: true,
+    user_metadata: { profile_complete: true },
   });
   if (authError || !authData.user) {
     return { error: authError?.message ?? 'Failed to create auth user' };
