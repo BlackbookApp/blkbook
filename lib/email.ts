@@ -132,19 +132,19 @@ export async function sendGuestExchangeEmail(
 
   console.log('[exchange-email] to:', to, 'vars:', vars);
 
-  const { data, error } = await resend.emails.send({
-    from: fromAddress,
-    to,
-    subject: `${profile.full_name ?? 'Your contact'} on Haizel`,
-    html: buildExchangeEmailHtml(vars),
-  });
+  // const { data, error } = await resend.emails.send({
+  //   from: fromAddress,
+  //   to,
+  //   subject: `${profile.full_name ?? 'Your contact'} on Haizel`,
+  //   html: buildExchangeEmailHtml(vars),
+  // });
 
-  if (error) {
-    console.error('[exchange-email] FAILED:', error);
-    throw error;
-  }
+  // if (error) {
+  //   console.error('[exchange-email] FAILED:', error);
+  //   throw error;
+  // }
 
-  console.log('[exchange-email] sent:', data?.id);
+  // console.log('[exchange-email] sent:', data?.id);
 }
 
 export async function sendRequestReceivedEmail(email: string, firstName: string): Promise<void> {
